@@ -14,7 +14,7 @@ interface Item {
 let notifications = [
   {
     name: "Payment received",
-    description: "Magic UI",
+    description: "Invoice",
     time: "15m ago",
 
     icon: "💸",
@@ -22,21 +22,21 @@ let notifications = [
   },
   {
     name: "User signed up",
-    description: "Magic UI",
+    description: "Invoice",
     time: "10m ago",
     icon: "👤",
     color: "#FFB800",
   },
   {
     name: "New message",
-    description: "Magic UI",
+    description: "Invoice",
     time: "5m ago",
     icon: "💬",
     color: "#FF3D71",
   },
   {
     name: "New event",
-    description: "Magic UI",
+    description: "Invoice",
     time: "2m ago",
     icon: "🗞️",
     color: "#1E86FF",

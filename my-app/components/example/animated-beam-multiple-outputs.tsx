@@ -4,6 +4,7 @@ import React, { forwardRef, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 import { AnimatedBeam } from "@/components/magicui/animated-beam";
+import Image from "next/image";
 
 const Circle = forwardRef<
   HTMLDivElement,
@@ -54,25 +55,20 @@ export function AnimatedBeamMultipleOutputDemo({
         </div>
         <div className="flex flex-col justify-center">
           <Circle ref={div6Ref} className="size-16">
-            <Icons.openai />
+            <Image src={'/wavein.webp'} width="100" height="100" alt="Wavein" className="rounded-full" />
           </Circle>
         </div>
         <div className="flex flex-col justify-center gap-2">
-          <Circle ref={div1Ref}>
-            <Icons.googleDrive />
+          <Circle ref={div1Ref} className="size-14">
+          <Image src={'/request.png'} width="200" height="200" alt="Wavein" className="rounded-full" />
           </Circle>
-          <Circle ref={div2Ref}>
-            <Icons.googleDocs />
+          <Circle ref={div2Ref} className="size-14">
+          <Image src={'/sablier.png'} width="200" height="200" alt="Wavein" className="rounded-full" />
           </Circle>
-          <Circle ref={div3Ref}>
-            <Icons.whatsapp />
+          <Circle ref={div3Ref} className="size-14">
+          <Image src={'/blockchain.png'} width="200" height="200" alt="Wavein" className="rounded-full" />
           </Circle>
-          <Circle ref={div4Ref}>
-            <Icons.messenger />
-          </Circle>
-          <Circle ref={div5Ref}>
-            <Icons.notion />
-          </Circle>
+     
         </div>
       </div>
 
@@ -80,7 +76,7 @@ export function AnimatedBeamMultipleOutputDemo({
       <AnimatedBeam
         containerRef={containerRef}
         fromRef={div1Ref}
-        toRef={div6Ref}
+        toRef={div3Ref}
         duration={3}
       />
       <AnimatedBeam
@@ -101,16 +97,17 @@ export function AnimatedBeamMultipleOutputDemo({
         toRef={div6Ref}
         duration={3}
       />
-      <AnimatedBeam
-        containerRef={containerRef}
-        fromRef={div5Ref}
-        toRef={div6Ref}
-        duration={3}
-      />
+  
       <AnimatedBeam
         containerRef={containerRef}
         fromRef={div6Ref}
         toRef={div7Ref}
+        duration={3}
+      />
+      <AnimatedBeam
+        containerRef={containerRef}
+        fromRef={div1Ref}
+        toRef={div6Ref}
         duration={3}
       />
     </div>
