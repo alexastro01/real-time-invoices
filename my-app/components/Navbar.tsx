@@ -3,14 +3,16 @@
  * @see https://v0.dev/t/iPmURCa2xQk
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
+import { ConnectButton } from "@rainbow-me/rainbowkit"
+import { CircleIcon } from "lucide-react"
 import Link from "next/link"
 
 export default function Navbar() {
   return (
     <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6">
       <Link href="#" className="mr-6 flex items-center" prefetch={false}>
-        <MountainIcon className="h-6 w-6" />
-        <span className="sr-only">Acme Inc</span>
+        <CircleIcon className="h-6 w-6" />
+        <span className="sr-only">Invoice Streaming</span>
       </Link>
       <nav className="hidden lg:flex">
         <ul className="flex items-center gap-4">
@@ -53,20 +55,7 @@ export default function Navbar() {
         </ul>
       </nav>
       <div className="ml-auto flex items-center gap-2">
-        <Link
-          href="#"
-          className="inline-flex h-9 w-max items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-          prefetch={false}
-        >
-          Login
-        </Link>
-        <Link
-          href="#"
-          className="inline-flex h-9 w-max items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-          prefetch={false}
-        >
-          Sign Up
-        </Link>
+       <ConnectButton  accountStatus="address" /> 
       </div>
     </header>
   )
