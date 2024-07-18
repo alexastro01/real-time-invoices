@@ -13,7 +13,7 @@ module.exports = {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 200,
+        runs: 1000,
         details: {
           yulDetails: {
             optimizerSteps: "u",
@@ -31,7 +31,7 @@ module.exports = {
     },
     opencampus: {
       url: "https://rpc.open-campus-codex.gelato.digital",
-      accounts: [`${process.env.PRIVATE_KEY}`],
+      accounts: [`${process.env.PRIVATE_KEY_ACCOUNT_4}`],
     },
   },
   etherscan: {
