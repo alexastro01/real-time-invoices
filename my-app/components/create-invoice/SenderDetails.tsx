@@ -18,7 +18,7 @@ import { useToast } from "../ui/use-toast"
 type ReceiverDetailsProps = {
   setStep: React.Dispatch<React.SetStateAction<number>>;
 };
-export function ReceiverDetails({
+export function SenderDetails({
   setStep
 }: ReceiverDetailsProps) {
 

@@ -45,7 +45,9 @@ export function PaymentDetails({
   }, [invoiceItems]);
 
   function validateAndProceed() {
-    if (receiverName.trim() === "" || receiverEmail.trim() === "" || receiverAddress.trim() === "" || amount.trim() === "") {
+    if (
+        // receiverName.trim() === "" || receiverEmail.trim() === "" ||
+     receiverAddress.trim() === "" || amount.trim() === "") {
       setFormError("Please fill in all required fields.");
       toast({
         variant: "destructive",
@@ -53,7 +55,7 @@ export function PaymentDetails({
       })
     } else {
       setFormError("");
-      setStep(1);
+      setStep(2);
     }
   }
 
