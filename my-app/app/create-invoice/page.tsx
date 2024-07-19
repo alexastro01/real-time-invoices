@@ -8,14 +8,16 @@ import React from 'react'
 import { useAccount } from 'wagmi'
 
 const Page = () => {
+    
 
-    const {address, isConnected} = useAccount();
+
+    const {address} = useAccount();
 
   return (
     <>
        <Navbar />
        {
-        isConnected === true ? <CreateInvoiceComponent /> : <NotConnected />
+        address !== undefined ? <CreateInvoiceComponent /> : <NotConnected />
        }
     </>
   )
