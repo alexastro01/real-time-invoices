@@ -5,17 +5,75 @@ import { SenderDetails } from './SenderDetails'
 import { PaymentDetails } from './PaymentDetails';
 import { StreamTypeSelector } from './StreamTypeSelector';
 
-const CreateInvoiceComponent = () => {
-   
-    const [step, setStep] = useState(0);
+import { SenderDetailsType, PaymentDetailsType, FormDataType, StreamType  } from '@/types/types';
+import { ConfirmationComponent } from './ConfirmationComponent';
 
-  return (
-    <div className='flex justify-center mt-8'>
-        {step === 0 &&   <SenderDetails setStep={setStep} /> }
-        {step === 1 && <PaymentDetails setStep={setStep} />}
-        {step === 2 && <StreamTypeSelector setStep={setStep} />}
-    </div>
-  )
+const CreateInvoiceComponent = () => {
+    const [step, setStep] = useState(0);
+    const [formData, setFormData] = useState<FormDataType>({
+      senderDetails: {
+          name: "",
+          email: "",
+          address: "",
+          city: "",
+          state: "",
+          zip: "",
+          country: ""
+      },
+      paymentDetails: {
+          receiverAddress: "",
+          chain: "EDU",
+          currency: "USDC",
+          amount: "",
+          invoiceItems: []
+      },
+      streamType: "linear"
+    });
+
+    const updateFormData = <T extends keyof FormDataType>(
+      section: T,
+      newData: Partial<FormDataType[T]> | FormDataType[T]
+    ) => {
+      setFormData((prevData) => ({
+        ...prevData,
+        [section]: 
+          (typeof prevData[section] === 'object' && prevData[section] !== null)
+            ? { ...(prevData[section] as object), ...(newData as object) }
+            : newData,
+      }));
+    };
+      
+    return (
+        <div className='flex justify-center mt-8'>
+            {step === 0 && (
+                <SenderDetails 
+                    setStep={setStep} 
+                    senderDetails={formData.senderDetails}
+                    updateSenderDetails={(newDetails) => updateFormData('senderDetails', newDetails)}
+                />
+            )}
+            {step === 1 && (
+                <PaymentDetails 
+                    setStep={setStep}
+                    paymentDetails={formData.paymentDetails}
+                    updatePaymentDetails={(newDetails) => updateFormData('paymentDetails', newDetails)}
+                />
+            )}
+            {step === 2 && (
+                <StreamTypeSelector 
+                    setStep={setStep}
+                    streamType={formData.streamType}
+                    updateStreamType={(newStreamType) => setFormData(prev => ({ ...prev, streamType: newStreamType }))}
+                />
+            )}
+            {step === 3 && (
+                <ConfirmationComponent 
+                    formData={formData}
+                    setStep={setStep}
+                />
+            )}
+        </div>
+    )
 }
 
 export default CreateInvoiceComponent

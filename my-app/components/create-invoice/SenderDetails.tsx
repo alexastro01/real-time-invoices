@@ -1,5 +1,4 @@
 import * as React from "react"
-
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -12,24 +11,33 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Progress } from "../ui/progress"
-import {useState} from 'react'
 import { useToast } from "../ui/use-toast"
 
-type ReceiverDetailsProps = {
+type SenderDetailsProps = {
   setStep: React.Dispatch<React.SetStateAction<number>>;
+  senderDetails: {
+    name: string;
+    email: string;
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
+  };
+  updateSenderDetails: (newDetails: Partial<SenderDetailsProps['senderDetails']>) => void;
 };
-export function SenderDetails({
-  setStep
-}: ReceiverDetailsProps) {
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [formError, setFormError] = useState("");
+export function SenderDetails({
+  setStep,
+  senderDetails,
+  updateSenderDetails
+}: SenderDetailsProps) {
+
+  const [formError, setFormError] = React.useState("");
   const { toast } = useToast()
 
-
   function validateAndProceed() {
-    if (name.trim() === "" || email.trim() === "") {
+    if (senderDetails.name.trim() === "" || senderDetails.email.trim() === "") {
       setFormError("Please fill in all required fields.");
       toast({
         variant: "destructive",
@@ -41,8 +49,9 @@ export function SenderDetails({
     }
   }
 
-
-
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateSenderDetails({ [e.target.id]: e.target.value });
+  };
 
   return (
     <div className="w-[50%]" >
@@ -60,8 +69,8 @@ export function SenderDetails({
                 <Input 
                   id="name" 
                   placeholder="Full name" 
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={senderDetails.name}
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
@@ -70,35 +79,60 @@ export function SenderDetails({
                   id="email" 
                   type="email" 
                   placeholder="Email address" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={senderDetails.email}
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="address">Address </Label>
-                <Input id="address" placeholder="Street address" />
+                <Input 
+                  id="address" 
+                  placeholder="Street address" 
+                  value={senderDetails.address}
+                  onChange={handleInputChange}
+                />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="city">City</Label>
-                <Input id="city" placeholder="City" />
+                <Input 
+                  id="city" 
+                  placeholder="City" 
+                  value={senderDetails.city}
+                  onChange={handleInputChange}
+                />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="state">State/Province</Label>
-                <Input id="state" placeholder="State or Province" />
+                <Input 
+                  id="state" 
+                  placeholder="State or Province" 
+                  value={senderDetails.state}
+                  onChange={handleInputChange}
+                />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="zip">Zip/Postal Code</Label>
-                <Input id="zip" placeholder="Zip or Postal Code" />
+                <Input 
+                  id="zip" 
+                  placeholder="Zip or Postal Code" 
+                  value={senderDetails.zip}
+                  onChange={handleInputChange}
+                />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="country">Country</Label>
-                <Input id="country" placeholder="Country" />
+                <Input 
+                  id="country" 
+                  placeholder="Country" 
+                  value={senderDetails.country}
+                  onChange={handleInputChange}
+                />
               </div>
             </div>
           </form>
         </CardContent>
         <CardFooter className="flex justify-between">
-        <Button variant={"ghost"}>Back</Button>
+          <Button variant={"ghost"}>Back</Button>
           <Button onClick={validateAndProceed}>Next</Button>
         </CardFooter>
       </Card>

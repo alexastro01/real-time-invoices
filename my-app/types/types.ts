@@ -36,3 +36,30 @@ export type WaveInData = {
     expectedFlowRate: string
     currentBalance: number
 }
+
+
+export type SenderDetailsType = {
+    name: string;
+    email: string;
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
+  };
+  
+ export type PaymentDetailsType = {
+    receiverAddress: string;
+    chain: string;
+    currency: string;
+    amount: string;
+    invoiceItems: Array<{ name: string; quantity: number; price: number }>;
+  };
+  
+ export type StreamType = 'linear' | 'monthly';
+  
+ export type FormDataType = {
+    senderDetails: SenderDetailsType;
+    paymentDetails: PaymentDetailsType;
+    streamType: StreamType;
+  };
