@@ -10,6 +10,7 @@ import { calculateUSDCPerSecond } from "@/utils/sablier/getUSDCperSecond";
 import { parseEther } from "viem";
 import Spinner from "../helpers/Spinner";
 import ShimmerButton from "../magicui/shimmer-button";
+import RequestConfirmed from "./RequestConfirmed";
 
 
 const CreateRequestButton = ({
@@ -36,7 +37,8 @@ const CreateRequestButton = ({
       alert("Please fill in all the fields");
       return;
     }
-    
+  
+    setIsConfirmed(false);
     setLoading(true);
     setDialogOpen(true);
     setDialogMessage("Creating Request...");
@@ -66,6 +68,7 @@ const CreateRequestButton = ({
 
       const request = await requestClient.createRequest(requestParameters);
       setDialogMessage("Request Created Successfully! Confirming Request...");
+      
 
       const confirmedRequestData = await request.waitForConfirmation();
       setDialogMessage("Request Confirmed");
@@ -77,13 +80,16 @@ const CreateRequestButton = ({
 
     
         setDialogMessage("Request Created Successfully");
-   
+        setIsConfirmed(true);
+        setLoading(false)
 
     } catch(error: any) {
         console.log(error)
       setDialogMessage(`Error: ${error.message}`);
+      setLoading(false)
     } finally {
-      setLoading(false);
+
+    //   setIsConfirmed(false);
     }
   };
 
@@ -99,12 +105,24 @@ const CreateRequestButton = ({
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Creating Request</DialogTitle>
+            <DialogTitle>{isConfirmed ? "Request created" : "Creating Request"}</DialogTitle>
           </DialogHeader>
-          <div className="flex flex-col items-center justify-center p-4">
-            <Spinner className="mb-4" />
-            <p>{dialogMessage}</p>
-          </div>
+          {loading === true && isConfirmed === false &&
+           <div className="flex flex-col items-center justify-center p-4">
+          
+           <Spinner className="mb-4" />
+           <p>{dialogMessage}</p>
+         </div>  
+        }
+
+          {isConfirmed === true &&
+           <div className="flex flex-col items-center justify-center p-4">
+          
+             <RequestConfirmed />
+           
+         </div>  
+        }
+       
         </DialogContent>
       </Dialog>
     </>
