@@ -46,13 +46,14 @@ export type SenderDetailsType = {
     state: string;
     zip: string;
     country: string;
+    evmAddress?: string;
   };
   
  export type PaymentDetailsType = {
     receiverAddress: string;
     chain: string;
     currency: string;
-    amount: string;
+    dueDate: Date | undefined;
     invoiceItems: Array<{ name: string; quantity: number; price: number }>;
   };
   

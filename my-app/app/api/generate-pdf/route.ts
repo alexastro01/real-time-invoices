@@ -38,14 +38,15 @@ export async function POST(req: NextRequest) {
   doc.fontSize(10)
      .text(`Chain: ${invoiceData.paymentDetails.chain}`, 50, 350)
      .text(`Currency: ${invoiceData.paymentDetails.currency}`, 50, 370)
-     .text(`Stream Type: ${invoiceData.paymentDetails.streamType}`, 50, 390);
+     .text(`Stream Type: ${invoiceData.paymentDetails.streamType}`, 50, 390)
+     .text(`Due Date: ${invoiceData.paymentDetails.dueDate}`, 50, 410);
 
   // Add invoice items
   doc.fontSize(14)
-     .text('Invoice Items', 50, 420);
-     doc.moveTo(50, 440).lineTo(545, 440).stroke(); // Underline
+     .text('Invoice Items', 50, 440);
+     doc.moveTo(50, 430).lineTo(545, 430).stroke(); // Underline
 
-  const tableTop = 450;
+  const tableTop = 460;
   doc.fontSize(10);
 
   generateTable(doc, invoiceData.invoiceItems, tableTop);

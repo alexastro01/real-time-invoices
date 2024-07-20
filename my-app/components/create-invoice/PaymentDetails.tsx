@@ -14,6 +14,16 @@ import { Progress } from "../ui/progress"
 import { useToast } from "../ui/use-toast"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Calendar } from "../ui/calendar"
+import { format } from "date-fns"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
+import { CalendarIcon } from "lucide-react"
+
 
 type PaymentDetailsProps = {
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -21,7 +31,7 @@ type PaymentDetailsProps = {
     receiverAddress: string;
     chain: string;
     currency: string;
-    amount: string;
+    dueDate: Date | undefined;
     invoiceItems: InvoiceItem[];
   };
   updatePaymentDetails: (newDetails: Partial<PaymentDetailsProps['paymentDetails']>) => void;
@@ -40,14 +50,18 @@ export function PaymentDetails({
 }: PaymentDetailsProps) {
   const [newItem, setNewItem] = React.useState<InvoiceItem>({ name: "", quantity: 0, price: 0 });
   const [formError, setFormError] = React.useState("");
+  const [date, setDate] = React.useState<Date | undefined>(paymentDetails.dueDate);
+
   const { toast } = useToast();
 
   const grandTotal = React.useMemo(() => {
     return paymentDetails.invoiceItems.reduce((total, item) => total + (item.quantity * item.price), 0);
   }, [paymentDetails.invoiceItems]);
 
+  
+
   function validateAndProceed() {
-    if (paymentDetails.receiverAddress.trim() === "" || paymentDetails.amount.trim() === "") {
+    if (paymentDetails.receiverAddress.trim() === "") {
       setFormError("Please fill in all required fields.");
       toast({
         variant: "destructive",
@@ -129,16 +143,35 @@ export function PaymentDetails({
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="amount">Amount<span className="text-red-600">*</span></Label>
-                <Input
-                  id="amount"
-                  type="number"
-                  placeholder="Amount"
-                  value={paymentDetails.amount}
-                  onChange={handleInputChange}
-                />
-              </div>
+              <div className="flex flex-col space-y-1.5 mt-4">
+              <Label htmlFor="dueDate">Due Date</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-[240px] pl-3 text-left font-normal",
+                      !paymentDetails.dueDate && "text-muted-foreground"
+                    )}
+                  >
+                    {paymentDetails.dueDate ? (
+                      format(paymentDetails.dueDate, "PPP")
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
+                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={paymentDetails.dueDate}
+                    onSelect={(date) => updatePaymentDetails({ dueDate: date })}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
             </div>
 
             {/* Invoice Items section remains the same */}

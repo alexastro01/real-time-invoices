@@ -24,7 +24,7 @@ const CreateInvoiceComponent = () => {
           receiverAddress: "",
           chain: "EDU",
           currency: "USDC",
-          amount: "",
+          dueDate: new Date(),
           invoiceItems: []
       },
       streamType: "linear"

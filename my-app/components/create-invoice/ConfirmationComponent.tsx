@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { FormDataType } from '@/types/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { mockDataInvoice } from '@/helper/mockDataInvoice';
+import { format } from 'date-fns';
+
 
 interface ConfirmationComponentProps {
   formData: FormDataType;
@@ -14,18 +16,23 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const totalAmount = formData.paymentDetails.invoiceItems.reduce(
-    (sum, item) => sum + item.quantity * item.price, 
+    (sum, item) => sum + item.quantity * item.price,
     0
   );
 
   const compileInvoiceData = () => {
     return {
       seller: mockDataInvoice,
-      client: formData.senderDetails,
+      client:
+      {
+        ...formData.senderDetails,
+        evmAddress: formData.paymentDetails.receiverAddress
+      },
       paymentDetails: {
         chain: formData.paymentDetails.chain,
         currency: formData.paymentDetails.currency,
         receiverAddress: formData.paymentDetails.receiverAddress,
+        dueDate: formData.paymentDetails.dueDate,
         streamType: formData.streamType
       },
       invoiceItems: formData.paymentDetails.invoiceItems,
@@ -44,7 +51,7 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
         },
         body: JSON.stringify(invoiceData),
       });
-      
+
       if (response.ok) {
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
@@ -100,8 +107,8 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
             <p>Chain: {formData.paymentDetails.chain}</p>
             <p>Currency: {formData.paymentDetails.currency}</p>
             <p>Stream Type: {formData.streamType}</p>
+            <p>Due Date: {formData.paymentDetails.dueDate ? format(formData.paymentDetails.dueDate, 'PP') : 'Not set'}</p>
           </div>
-
           <Table>
             <TableHeader>
               <TableRow>
