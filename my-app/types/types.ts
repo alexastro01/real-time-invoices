@@ -53,7 +53,7 @@ export type SenderDetailsType = {
     receiverAddress: string;
     chain: string;
     currency: string;
-    dueDate: Date | undefined;
+    dueDate: Date | undefined | number;
     invoiceItems: Array<{ name: string; quantity: number; price: number }>;
   };
   

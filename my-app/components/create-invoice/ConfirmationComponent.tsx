@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { FormDataType } from '@/types/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { mockDataInvoice } from '@/helper/mockDataInvoice';
-import { format } from 'date-fns';
+import { format, getUnixTime } from 'date-fns';
+import CreateRequestButton from './CreateRequestButton';
 
 
 interface ConfirmationComponentProps {
@@ -19,6 +20,8 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
     (sum, item) => sum + item.quantity * item.price,
     0
   );
+
+
 
   const compileInvoiceData = () => {
     return {
@@ -136,10 +139,18 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
         </CardContent>
         <CardFooter className="flex justify-between border-t pt-6">
           <Button variant="outline" onClick={() => setStep(2)}>Back</Button>
-          <Button onClick={generatePDF} disabled={isGeneratingPDF}>
+          {/* <Button onClick={generatePDF} disabled={isGeneratingPDF}>
             {isGeneratingPDF ? 'Generating PDF...' : 'Generate PDF'}
-          </Button>
-          <Button onClick={() => console.log('Submit invoice')}>Confirm and Submit Invoice</Button>
+          </Button> */}
+          <CreateRequestButton
+            payeeIdentity={mockDataInvoice.evmAddress}
+            payerIdentity={formData.paymentDetails.receiverAddress}
+            expectedAmount={totalAmount.toString()}
+            dueDate={getUnixTime(formData.paymentDetails.dueDate as number)}
+            //add invoice items
+            reason={"Hard coded"}
+            expectedFlowRate={"1"}
+          />
         </CardFooter>
       </Card>
     </div>

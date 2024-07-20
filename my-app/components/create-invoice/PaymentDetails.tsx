@@ -31,7 +31,7 @@ type PaymentDetailsProps = {
     receiverAddress: string;
     chain: string;
     currency: string;
-    dueDate: Date | undefined;
+    dueDate: Date | undefined | number;
     invoiceItems: InvoiceItem[];
   };
   updatePaymentDetails: (newDetails: Partial<PaymentDetailsProps['paymentDetails']>) => void;
@@ -50,7 +50,7 @@ export function PaymentDetails({
 }: PaymentDetailsProps) {
   const [newItem, setNewItem] = React.useState<InvoiceItem>({ name: "", quantity: 0, price: 0 });
   const [formError, setFormError] = React.useState("");
-  const [date, setDate] = React.useState<Date | undefined>(paymentDetails.dueDate);
+  // const [date, setDate] = React.useState<Date | undefined | number>(paymentDetails.dueDate);
 
   const { toast } = useToast();
 
@@ -165,7 +165,7 @@ export function PaymentDetails({
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={paymentDetails.dueDate}
+                    selected={paymentDetails.dueDate as Date | undefined}
                     onSelect={(date) => updatePaymentDetails({ dueDate: date })}
                     initialFocus
                   />
