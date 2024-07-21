@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "../ui/button";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { generateRequestParameters } from "@/utils/request-network/generateRequestParamaters";
 import { generateRequestParamatersParams } from "@/types/types";
 import { useWalletClient } from "wagmi";
 import { Web3SignatureProvider } from "@requestnetwork/web3-signature";
 import { RequestNetwork } from "@requestnetwork/request-client.js";
-import { calculateUSDCPerSecond } from "@/utils/sablier/getUSDCperSecond";
-import { parseEther } from "viem";
+
 import Spinner from "../helpers/Spinner";
 import ShimmerButton from "../magicui/shimmer-button";
 import RequestConfirmed from "./RequestConfirmed";

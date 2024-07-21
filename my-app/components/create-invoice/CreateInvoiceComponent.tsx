@@ -5,7 +5,7 @@ import { SenderDetails } from './SenderDetails'
 import { PaymentDetails } from './PaymentDetails';
 import { StreamTypeSelector } from './StreamTypeSelector';
 
-import { SenderDetailsType, PaymentDetailsType, FormDataType, StreamType  } from '@/types/types';
+import { FormDataType  } from '@/types/types';
 import { ConfirmationComponent } from './ConfirmationComponent';
 
 const CreateInvoiceComponent = () => {

@@ -37,10 +37,14 @@ export function SenderDetails({
   const { toast } = useToast()
 
   function validateAndProceed() {
-    if (senderDetails.name.trim() === "" || senderDetails.email.trim() === "") {
+    if (senderDetails.name.trim() === "" ||
+     senderDetails.email.trim() === "") {
       setFormError("Please fill in all required fields.");
       toast({
         variant: "destructive",
+       
+       
+       
         title: "Please fill out all required forms",
       })
     } else {
@@ -58,8 +62,8 @@ export function SenderDetails({
       <Progress value={33} className="my-8" />
       <Card className="">
         <CardHeader>
-          <CardTitle>Sender's Details</CardTitle>
-          <CardDescription>Please input the sender's information</CardDescription>
+          <CardTitle>Sender`&apos;`s Details</CardTitle>
+          <CardDescription>Please input the sender`&apos;`s information</CardDescription>
         </CardHeader>
         <CardContent>
           <form>

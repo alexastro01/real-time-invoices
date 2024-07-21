@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, {useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FormDataType } from '@/types/types';
@@ -139,9 +139,9 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
         </CardContent>
         <CardFooter className="flex justify-between border-t pt-6">
           <Button variant="outline" onClick={() => setStep(2)}>Back</Button>
-          {/* <Button onClick={generatePDF} disabled={isGeneratingPDF}>
+          <Button onClick={generatePDF} disabled={isGeneratingPDF}>
             {isGeneratingPDF ? 'Generating PDF...' : 'Generate PDF'}
-          </Button> */}
+          </Button>
           <CreateRequestButton
             payeeIdentity={mockDataInvoice.evmAddress}
             payerIdentity={formData.paymentDetails.receiverAddress}

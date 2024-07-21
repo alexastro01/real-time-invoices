@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { CalendarIcon } from "lucide-react"
+import Image from "next/image"
 
 
 type PaymentDetailsProps = {
@@ -102,7 +103,7 @@ export function PaymentDetails({
           <form onSubmit={(e) => e.preventDefault()}>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="receiverAddress">Sender's EVM Address<span className="text-red-600">*</span></Label>
+                <Label htmlFor="receiverAddress">Sender`&lsquo;`s EVM Address<span className="text-red-600">*</span></Label>
                 <Input
                   id="receiverAddress"
                   placeholder="EVM Address"
@@ -120,7 +121,7 @@ export function PaymentDetails({
                   <SelectContent>
                     <SelectItem value="EDU">
                       <div className="flex items-center font-semibold">
-                        <img src="https://www.opencampus.xyz/static/media/coin-logo.39cbd6c42530e57817a5b98ac7621ca7.svg" alt="EDU Chain" className="w-6 h-6 mr-2" />
+                        <Image src="https://www.opencampus.xyz/static/media/coin-logo.39cbd6c42530e57817a5b98ac7621ca7.svg" alt="EDU Chain" className="w-6 h-6 mr-2" />
                         EDU Chain
                       </div>
                     </SelectItem>
@@ -136,7 +137,7 @@ export function PaymentDetails({
                   <SelectContent>
                     <SelectItem value="USDC">
                       <div className="flex items-center font-semibold">
-                        <img src="./usdc.png" alt="USDC" className="w-6 h-6 mr-2" />
+                        <Image src="./usdc.png" alt="USDC" className="w-6 h-6 mr-2" />
                         USDC
                       </div>
                     </SelectItem>
