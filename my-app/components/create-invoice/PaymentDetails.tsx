@@ -121,7 +121,7 @@ export function PaymentDetails({
                   <SelectContent>
                     <SelectItem value="EDU">
                       <div className="flex items-center font-semibold">
-                        <Image src="https://www.opencampus.xyz/static/media/coin-logo.39cbd6c42530e57817a5b98ac7621ca7.svg" alt="EDU Chain" className="w-6 h-6 mr-2" />
+                        <Image src="https://www.opencampus.xyz/static/media/coin-logo.39cbd6c42530e57817a5b98ac7621ca7.svg" alt="EDU Chain" className="w-6 h-6 mr-2" width={24} height={24} />
                         EDU Chain
                       </div>
                     </SelectItem>
@@ -137,7 +137,7 @@ export function PaymentDetails({
                   <SelectContent>
                     <SelectItem value="USDC">
                       <div className="flex items-center font-semibold">
-                        <Image src="./usdc.png" alt="USDC" className="w-6 h-6 mr-2" />
+                        <Image src="/usdc.png" alt="USDC" className="w-6 h-6 mr-2"  width={24} height={24}/>
                         USDC
                       </div>
                     </SelectItem>
