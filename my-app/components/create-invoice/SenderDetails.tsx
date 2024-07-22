@@ -62,8 +62,8 @@ export function SenderDetails({
       <Progress value={33} className="my-8" />
       <Card className="">
         <CardHeader>
-          <CardTitle>Sender`&apos;`s Details</CardTitle>
-          <CardDescription>Please input the sender`&apos;`s information</CardDescription>
+          <CardTitle>Sender Details</CardTitle>
+          <CardDescription>Please input the sender's information</CardDescription>
         </CardHeader>
         <CardContent>
           <form>

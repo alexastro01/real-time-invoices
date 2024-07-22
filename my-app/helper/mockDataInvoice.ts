@@ -1,5 +1,5 @@
-export const mockDataInvoice = {
-
+export function mockDataInvoiceFunction(address: string) {
+      return{
       name: "Alice Johnson",
       email: "alice.johnson@example.com",
       address: "123 Blockchain Street",
@@ -7,6 +7,7 @@ export const mockDataInvoice = {
       state: "Ethereum",
       zip: "12345",
       country: "Decentraland",
-      evmAddress : "0x909957dcc1B114Fe262F4779e6aeD4d034D96B0f"
+      evmAddress : address
+      }
     
   };

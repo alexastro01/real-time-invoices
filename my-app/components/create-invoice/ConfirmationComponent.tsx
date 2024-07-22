@@ -3,9 +3,10 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { FormDataType } from '@/types/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { mockDataInvoice } from '@/helper/mockDataInvoice';
+import { mockDataInvoiceFunction } from '@/helper/mockDataInvoice';
 import { format, getUnixTime } from 'date-fns';
 import CreateRequestButton from './CreateRequestButton';
+import { useAccount } from 'wagmi';
 
 
 interface ConfirmationComponentProps {
@@ -20,6 +21,10 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
     (sum, item) => sum + item.quantity * item.price,
     0
   );
+   
+  const {address} = useAccount();
+
+   const mockDataInvoice = mockDataInvoiceFunction(address as string)
 
 
 

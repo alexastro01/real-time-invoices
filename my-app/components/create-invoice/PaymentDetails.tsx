@@ -103,7 +103,7 @@ export function PaymentDetails({
           <form onSubmit={(e) => e.preventDefault()}>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="receiverAddress">Sender`&lsquo;`s EVM Address<span className="text-red-600">*</span></Label>
+                <Label htmlFor="receiverAddress">Sender EVM Address<span className="text-red-600">*</span></Label>
                 <Input
                   id="receiverAddress"
                   placeholder="EVM Address"
