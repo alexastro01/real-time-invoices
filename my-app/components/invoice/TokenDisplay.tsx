@@ -1,6 +1,6 @@
 import useCountUp from '@/hooks/useCountUp';
 import React from 'react';
-
+import { Progress } from "@/components/ui/progress";
 
 interface TokenDisplayProps {
   maxValue: number;
@@ -10,36 +10,75 @@ interface TokenDisplayProps {
 
 const TokenDisplay: React.FC<TokenDisplayProps> = ({ maxValue, duration, tokenSymbol }) => {
   const currentValue = useCountUp(0, maxValue, duration);
+  
+  const amountWithdrawn = maxValue * 0.3; // Mock value
+
+  const streamedPercentage = (currentValue / maxValue) * 100;
+  const withdrawnPercentage = (amountWithdrawn / maxValue) * 100;
+
+  // Format the number with exactly 8 decimal places
+  const formattedNumber = currentValue.toFixed(8);
+
+  // Split the number into integer and decimal parts
+  const [integerPart, decimalPart] = formattedNumber.split('.');
+
+  // Function to render the integer part with grayed out leading zeros
+  const renderIntegerPart = () => {
+    const paddedInteger = integerPart.padStart(3, '0');
+    return paddedInteger.split('').map((digit, index) => (
+      <span key={index} className={
+        index < paddedInteger.length - integerPart.length
+          ? "text-gray-400"
+          : "text-gray-800"
+      }>
+        {digit}
+      </span>
+    ));
+  };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-900">
-      <div className="relative">
-        {/* Circular background */}
-        <div className="w-64 h-64 bg-gray-800 rounded-full flex items-center justify-center">
-          {/* Status dots */}
-          <div className="absolute top-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
-            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-            <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+    <div className="flex flex-col items-center justify-center space-y-8 p-8 rounded-2xl shadow-lg
+                    bg-gradient-to-br from-white via-gray-100 to-gray-200
+                    border border-gray-200
+                    transition-all duration-300 ease-in-out
+                    hover:shadow-xl hover:scale-105">
+      {/* Big beautiful number */}
+      <div className="text-7xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-zinc-600">
+        {renderIntegerPart()}.
+        <span className="text-4xl">{decimalPart}</span>
+      </div>
+      
+      <div className="w-full max-w-md space-y-6">
+        {/* Amount Streamed Progress Bar */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <div className="flex justify-between mb-2">
+            <span className="text-sm font-semibold text-gray-700">Amount Streamed</span>
+            <span className="text-sm font-bold text-yellow-600">{streamedPercentage.toFixed(2)}%</span>
           </div>
-          
-          {/* Token icon */}
-          <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center text-2xl font-bold">
-            {tokenSymbol}
+          <Progress value={streamedPercentage} className="h-3 bg-yellow-100 rounded-full" 
+                    indicatorClassName="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full" />
+          <div className="mt-2 text-xs text-gray-500 text-right">
+            {currentValue.toFixed(4)} / {maxValue} {tokenSymbol}
           </div>
-          
-          {/* Number display */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-700 rounded-lg px-4 py-2">
-            <div className="font-mono text-2xl text-white">
-            {currentValue.toFixed(6).padStart(10, '0')}
+        </div>
 
-            </div>
+        {/* Amount Withdrawn Progress Bar */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <div className="flex justify-between mb-2">
+            <span className="text-sm font-semibold text-gray-700">Amount Withdrawn</span>
+            <span className="text-sm font-bold text-green-600">{withdrawnPercentage.toFixed(2)}%</span>
+          </div>
+          <Progress value={withdrawnPercentage} className="h-3 bg-green-100 rounded-full" 
+                    indicatorClassName="bg-gradient-to-r from-green-400 to-green-600 rounded-full" />
+          <div className="mt-2 text-xs text-gray-500 text-right">
+            {amountWithdrawn.toFixed(4)} / {maxValue} {tokenSymbol}
           </div>
         </div>
-        
-        {/* Label */}
-        <div className="text-center mt-4 text-gray-400">
-          Out of {tokenSymbol} {maxValue}
-        </div>
+      </div>
+
+      {/* Label */}
+      <div className="text-center text-gray-600 font-medium">
+        Out of {tokenSymbol} {maxValue}
       </div>
     </div>
   );

@@ -1,25 +1,33 @@
 import { useState, useEffect } from 'react';
 
 const useCountUp = (start: number, end: number, duration: number) => {
-  const [current, setCurrent] = useState(start);
+  const [displayValue, setDisplayValue] = useState(start);
 
   useEffect(() => {
-    const step = (end - start) / (duration / 10); // Update every 10ms
-    let value = start;
+    const updateInterval = 100; // Update every 200ms
+    const totalSteps = duration / updateInterval;
+    const stepValue = (end - start) / totalSteps;
+
+    let currentValue = start;
+    let step = 0;
+
     const timer = setInterval(() => {
-      value += step;
-      if (value >= end) {
+      step++;
+      currentValue += stepValue;
+
+      if (step >= totalSteps) {
         clearInterval(timer);
-        setCurrent(end);
+        setDisplayValue(end);
       } else {
-        setCurrent(value);
+        // Round to 8 decimal places
+        setDisplayValue(Math.round(currentValue * 100000000) / 100000000);
       }
-    }, 10);
+    }, updateInterval);
 
     return () => clearInterval(timer);
   }, [start, end, duration]);
 
-  return current;
+  return displayValue;
 };
 
 export default useCountUp;

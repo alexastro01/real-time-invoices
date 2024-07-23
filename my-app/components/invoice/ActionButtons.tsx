@@ -8,8 +8,8 @@ const ActionButtons: React.FC = () => {
   return (
     <div className="flex flex-col space-y-4 w-full max-w-md">
           <TokenDisplay 
-      maxValue={10}
-      duration={3000000000} // 5 minutes in milliseconds
+      maxValue={1500}
+      duration={60000} // 5 minutes in milliseconds
       tokenSymbol="DAI"
     />
       <Button variant="default" className="w-full">
