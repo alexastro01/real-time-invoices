@@ -38,7 +38,7 @@ const TokenDisplay: React.FC<TokenDisplayProps> = ({ maxValue, duration, tokenSy
 
   return (
     <div className="flex flex-col items-center justify-center space-y-8 p-8 rounded-2xl shadow-lg
-                    bg-gradient-to-br from-white via-gray-100 to-gray-200
+                    bg-gradient-to-br from-white via-gray-100 to-gray-100
                     border border-gray-200
                     transition-all duration-300 ease-in-out
                     hover:shadow-xl hover:scale-105">
