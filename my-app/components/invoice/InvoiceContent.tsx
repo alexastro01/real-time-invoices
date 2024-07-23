@@ -3,54 +3,17 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format, getUnixTime } from 'date-fns';
+import { InvoiceContentProps } from '@/types/interfaces';
 
-interface MockDataInvoice {
-    name: string;
-    email: string;
-    address: string;
-    city: string;
-    state: string;
-    zip: string;
-    country: string;
-    evmAddress: string;
-  }
-  
-  interface SenderDetails {
-    name: string;
-    email: string;
-    address: string;
-    city: string;
-    state: string;
-    zip: string;
-    country: string;
-  }
-  
-  interface PaymentDetails {
-    chain: string;
-    currency: string;
-    receiverAddress: string;
-    dueDate: Date | null;
-    invoiceItems: Array<{
-      name: string;
-      quantity: number;
-      price: number;
-    }>;
-  }
-  
-  interface FormData {
-    senderDetails: SenderDetails;
-    paymentDetails: PaymentDetails;
-    streamType: string;
-  }
-  
-  interface InvoiceContentProps {
-    mockDataInvoice: MockDataInvoice;
-    formData: FormData;
-    totalAmount: number;
-  }
+
 
 // New InvoiceContent component
 const InvoiceContent: React.FC<InvoiceContentProps> = ({ mockDataInvoice, formData, totalAmount }) => (
+  <div className="w-[80%] max-w-4xl">
+  <Card className="border-2">
+    <CardHeader className="border-b">
+      <CardTitle className="text-3xl font-bold text-center">Invoice</CardTitle>
+    </CardHeader>
   <CardContent className="pt-6">
     <div className="flex justify-between mb-8">
       <div>
@@ -107,6 +70,8 @@ const InvoiceContent: React.FC<InvoiceContentProps> = ({ mockDataInvoice, formDa
       <p className="font-semibold">Total Amount: {totalAmount.toFixed(2)} {formData.paymentDetails.currency}</p>
     </div>
   </CardContent>
+  </Card>
+  </div>
 );
 
 export default InvoiceContent;

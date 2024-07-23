@@ -54,3 +54,50 @@ export interface IRequestCreateParameters {
   }
   
 }
+
+
+
+export interface MockDataInvoice {
+  name: string;
+  email: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+  evmAddress: string;
+}
+
+export interface SenderDetails {
+  name: string;
+  email: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+}
+
+export interface PaymentDetails {
+  chain: string;
+  currency: string;
+  receiverAddress: string;
+  dueDate: Date | null;
+  invoiceItems: Array<{
+    name: string;
+    quantity: number;
+    price: number;
+  }>;
+}
+
+export interface FormData {
+  senderDetails: SenderDetails;
+  paymentDetails: PaymentDetails;
+  streamType: string;
+}
+
+export interface InvoiceContentProps {
+  mockDataInvoice: MockDataInvoice;
+  formData: FormData;
+  totalAmount: number;
+}
