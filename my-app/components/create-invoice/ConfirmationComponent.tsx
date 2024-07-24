@@ -1,4 +1,4 @@
-import React, {useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FormDataType } from '@/types/types';
@@ -7,6 +7,9 @@ import { mockDataInvoiceFunction } from '@/helper/mockDataInvoice';
 import { format, getUnixTime } from 'date-fns';
 import CreateRequestButton from './CreateRequestButton';
 import { useAccount } from 'wagmi';
+import { UserDetailsFromSupabase } from '@/types/interfaces';
+import SellerDataFromSupabase from './SellerDataFromSupabase';
+import Spinner from '../helpers/Spinner';
 
 
 interface ConfirmationComponentProps {
@@ -16,6 +19,9 @@ interface ConfirmationComponentProps {
 
 export function ConfirmationComponent({ formData, setStep }: ConfirmationComponentProps) {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [sellerDetailsSupabase, setSellerDetailsSupabase] = useState<UserDetailsFromSupabase | null>(null);
+  const [loading, setLoading] = useState(true);
+
 
   const totalAmount = formData.paymentDetails.invoiceItems.reduce(
     (sum, item) => sum + item.quantity * item.price,
@@ -27,58 +33,82 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
    const mockDataInvoice = mockDataInvoiceFunction(address as string)
 
 
+   useEffect(() => {
+    async function fetchUserDetails() {
+      if (!address) return;
 
-  const compileInvoiceData = () => {
-    return {
-      seller: mockDataInvoice,
-      client:
-      {
-        ...formData.senderDetails,
-        evmAddress: formData.paymentDetails.receiverAddress
-      },
-      paymentDetails: {
-        chain: formData.paymentDetails.chain,
-        currency: formData.paymentDetails.currency,
-        receiverAddress: formData.paymentDetails.receiverAddress,
-        dueDate: formData.paymentDetails.dueDate,
-        streamType: formData.streamType
-      },
-      invoiceItems: formData.paymentDetails.invoiceItems,
-      totalAmount: totalAmount
-    };
-  };
-
-  const generatePDF = async () => {
-    setIsGeneratingPDF(true);
-    const invoiceData = compileInvoiceData();
-    try {
-      const response = await fetch('/api/generate-pdf', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(invoiceData),
-      });
-
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        a.download = 'invoice.pdf';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-      } else {
-        console.error('Failed to generate PDF');
+      try {
+        const response = await fetch(`/api/get-user-details?address=${address}`);
+        if (!response.ok) throw new Error('Failed to fetch user details');
+        
+        const data = await response.json();
+        setSellerDetailsSupabase(data);
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+        // Handle the error appropriately
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      setIsGeneratingPDF(false);
     }
-  };
+
+    fetchUserDetails();
+  }, [address]);
+
+
+
+  // ! SEPARATE COMPONENT FOR PDF GENERATION
+  // const compileInvoiceData = () => {
+  //   return {
+  //     seller: sellerDetailsSupabase,
+  //     client:
+  //     {
+  //       ...formData.senderDetails,
+  //       evmAddress: formData.paymentDetails.receiverAddress
+  //     },
+  //     paymentDetails: {
+  //       chain: formData.paymentDetails.chain,
+  //       currency: formData.paymentDetails.currency,
+  //       receiverAddress: formData.paymentDetails.receiverAddress,
+  //       dueDate: formData.paymentDetails.dueDate,
+  //       streamType: formData.streamType
+  //     },
+  //     invoiceItems: formData.paymentDetails.invoiceItems,
+  //     totalAmount: totalAmount
+  //   };
+  // };
+
+
+  // const generatePDF = async () => {
+  //   setIsGeneratingPDF(true);
+  //   const invoiceData = compileInvoiceData();
+  //   try {
+  //     const response = await fetch('/api/generate-pdf', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(invoiceData),
+  //     });
+
+  //     if (response.ok) {
+  //       const blob = await response.blob();
+  //       const url = window.URL.createObjectURL(blob);
+  //       const a = document.createElement('a');
+  //       a.style.display = 'none';
+  //       a.href = url;
+  //       a.download = 'invoice.pdf';
+  //       document.body.appendChild(a);
+  //       a.click();
+  //       window.URL.revokeObjectURL(url);
+  //     } else {
+  //       console.error('Failed to generate PDF');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //   } finally {
+  //     setIsGeneratingPDF(false);
+  //   }
+  // };
 
   return (
     <div className="w-[80%] max-w-4xl">
@@ -88,17 +118,19 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
         </CardHeader>
         <CardContent className="pt-6">
           <div className="flex justify-between mb-8">
-            <div>
-              <h3 className="font-semibold text-lg mb-2">Seller:</h3>
-              <p>{mockDataInvoice.name}</p>
-              <p>{mockDataInvoice.email}</p>
-              <p>{mockDataInvoice.address}</p>
-              <p>{mockDataInvoice.city} {mockDataInvoice.state} {mockDataInvoice.zip}</p>
-              <p>{mockDataInvoice.country}</p>
-              <p className="mt-2">EVM Address:</p>
-              <p className="font-mono">{mockDataInvoice.evmAddress}</p>
-            </div>
-            <div>
+            {sellerDetailsSupabase ?
+              <SellerDataFromSupabase 
+              name={sellerDetailsSupabase.name}
+              email={sellerDetailsSupabase.email}
+              evmAddress={sellerDetailsSupabase?.evmAddress as string}
+              zip={sellerDetailsSupabase?.zip}
+              country={sellerDetailsSupabase?.country}
+              state={sellerDetailsSupabase?.state}
+              address={sellerDetailsSupabase?.address}
+              />
+            : <p>loading...</p>}
+          
+            <div> 
               <h3 className="font-semibold text-lg mb-2">Client:</h3>
               <p>{formData.senderDetails.name}</p>
               <p>{formData.senderDetails.email}</p>
@@ -144,20 +176,23 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
         </CardContent>
         <CardFooter className="flex justify-between border-t pt-6">
           <Button variant="outline" onClick={() => setStep(2)}>Back</Button>
-          <Button onClick={generatePDF} disabled={isGeneratingPDF}>
+          {/* <Button onClick={generatePDF} disabled={isGeneratingPDF}>
             {isGeneratingPDF ? 'Generating PDF...' : 'Generate PDF'}
-          </Button>
-          <CreateRequestButton
-            payeeEVMAddress={mockDataInvoice.evmAddress}
-            payerEVMAddress={formData.paymentDetails.receiverAddress}
-            payeeDetails={mockDataInvoice}
-            payerDetails={formData.senderDetails}
-            expectedAmount={totalAmount.toString()}
-            dueDate={getUnixTime(formData.paymentDetails.dueDate as number)}
-            //add invoice items
-            reason={"Hard coded"}
-            expectedFlowRate={"1"}
-          />
+          </Button> */}
+          {sellerDetailsSupabase ?
+                <CreateRequestButton
+                payeeEVMAddress={sellerDetailsSupabase.evmAddress}
+                payerEVMAddress={formData.paymentDetails.receiverAddress}
+                payeeDetails={sellerDetailsSupabase}
+                payerDetails={formData.senderDetails}
+                expectedAmount={totalAmount.toString()}
+                dueDate={getUnixTime(formData.paymentDetails.dueDate as number)}
+                //add invoice items
+                reason={"Hard coded"}
+                expectedFlowRate={"1"}
+              />
+          : <Spinner className='h-4 w-4' />}
+    
         </CardFooter>
       </Card>
     </div>

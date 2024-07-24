@@ -10,20 +10,13 @@ import { RequestNetwork } from "@requestnetwork/request-client.js";
 import Spinner from "../helpers/Spinner";
 import ShimmerButton from "../magicui/shimmer-button";
 import RequestConfirmed from "./RequestConfirmed";
+import { UserDetailsFromSupabase } from "@/types/interfaces";
 
 
 interface CreateRequestButtonProps {
   payeeEVMAddress: string;
   payerEVMAddress: string;
-  payeeDetails: {
-    name: string;
-    email: string;
-    address: string;
-    city: string;
-    state: string;
-    zip: string;
-    country: string;
-  };
+  payeeDetails: UserDetailsFromSupabase;
   payerDetails: {
     name: string;
     email: string;

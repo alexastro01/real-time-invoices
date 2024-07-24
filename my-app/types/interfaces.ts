@@ -101,3 +101,15 @@ export interface InvoiceContentProps {
   formData: FormData;
   totalAmount: number;
 }
+
+
+export interface  UserDetailsFromSupabase {
+  evmAddress: string;
+  name: string;
+  email: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  country?: string;
+}
