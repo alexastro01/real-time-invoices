@@ -132,3 +132,10 @@ export interface CreateRequestButtonProps {
   dueDate: number;
   invoiceItems: invoiceItems;
 }
+
+export interface IInvoiceData {
+   partiesDetails : {
+      seller : UserDetailsFromSupabase,
+      client : UserDetailsFromSupabase
+   }
+}
