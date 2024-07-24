@@ -1,3 +1,5 @@
+import { IRequestDataWithEvents } from "@requestnetwork/request-client.js/dist/types"
+
 export type SupportedNetwork = "sepolia" | "mumbai"
 
 

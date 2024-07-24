@@ -1,6 +1,7 @@
 import { Types, Utils } from "@requestnetwork/request-client.js";
 import { invoiceItems, SupportedNetwork } from "./types";
 
+
 export interface IRequestCreateParameters {
 
   requestInfo: {
@@ -115,6 +116,18 @@ export interface  UserDetailsFromSupabase {
 }
 
 
+export interface  UserDetailsFromSupabaseOnInvoice {
+  name: string;
+  email: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  country?: string;
+}
+
+
+
 export interface CreateRequestButtonProps {
   payeeEVMAddress: string;
   payerEVMAddress: string;
@@ -133,9 +146,23 @@ export interface CreateRequestButtonProps {
   invoiceItems: invoiceItems;
 }
 
+
+export interface IPaymentDetails {
+  payeeAddress: string,
+  payerAddress: string,
+  chain: string,
+  currency: string,
+  streamType: string,
+  dueDate: Date | string | number,
+  totalAmount: string | number,
+  invoiceItems: invoiceItems,
+
+}
+
 export interface IInvoiceData {
    partiesDetails : {
-      seller : UserDetailsFromSupabase,
-      client : UserDetailsFromSupabase
-   }
+      seller : UserDetailsFromSupabaseOnInvoice,
+      client : UserDetailsFromSupabaseOnInvoice
+   },
+   paymentDetails: IPaymentDetails
 }

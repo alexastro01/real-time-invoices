@@ -29,7 +29,8 @@ export function generateRequestParameters({
         type: Types.RequestLogic.CURRENCY.ERC777,
         //ADD TOKEN ADDERSS
         value: tokenAddress || "token address",
-        network: 'sepolia',
+        // ! MAKE IT REPLACEBLE
+        network: 'EDU',
       },
       
       // The expected amount as a string, in parsed units, respecting `decimals`

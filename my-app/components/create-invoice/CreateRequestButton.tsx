@@ -27,6 +27,7 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
   const [loading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState("");
+  const [requestId, setRequestId] = useState("");
 
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [linkState, setLinkState] = useState("");
@@ -41,12 +42,12 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
       dueDate,
       invoiceItems
     });
-    if (!payerEVMAddress || !expectedAmount || !dueDate || invoiceItems.length  < 1 ) {
+    if (!payerEVMAddress || !expectedAmount || !dueDate || invoiceItems.length < 1) {
 
       alert("Please fill in all the fields");
       return;
     }
-  
+
     setIsConfirmed(false);
     setLoading(true);
     setDialogOpen(true);
@@ -61,8 +62,8 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
         signatureProvider: web3SignatureProvider,
       });
 
-    //   const flowRate = calculateUSDCPerSecond(dueDate.toString(), parseInt(expectedAmount));
-      
+      //   const flowRate = calculateUSDCPerSecond(dueDate.toString(), parseInt(expectedAmount));
+
       const requestParameters = generateRequestParameters({
         payeeIdentity: payeeEVMAddress,
         payerIdentity: payerEVMAddress,
@@ -77,43 +78,45 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
 
       const request = await requestClient.createRequest(requestParameters);
       setDialogMessage("Request Created Successfully! Confirming Request...");
-      
+
 
       const confirmedRequestData = await request.waitForConfirmation();
       setDialogMessage("Request Confirmed");
 
       console.log(confirmedRequestData.requestId);
-      
+
       setLinkState(`https://wavein.vercel.app/confirm-wavein/${confirmedRequestData.requestId}`);
 
-        // Create invoice in Supabase
-        const response = await fetch('/api/post-invoice', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            requestId: confirmedRequestData.requestId,
-            payeeDetails,
-            payerDetails,
-          }),
-        });
-        
-        if (!response.ok) {
-          throw new Error('Failed to create invoice');
-        }
-    
-        setDialogMessage("Request Created Successfully");
-        setIsConfirmed(true);
-        setLoading(false)
+      // Create invoice in Supabase
+      const response = await fetch('/api/post-invoice', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          requestId: confirmedRequestData.requestId,
+          payeeDetails,
+          payerDetails,
+        }),
+      });
 
-    } catch(error: any) {
-        console.log(error)
+      setRequestId(confirmedRequestData.requestId)
+
+      if (!response.ok) {
+        throw new Error('Failed to create invoice');
+      }
+
+      setDialogMessage("Request Created Successfully");
+      setIsConfirmed(true);
+      setLoading(false)
+
+    } catch (error: any) {
+      console.log(error)
       setDialogMessage(`Error: ${error.message}`);
       setLoading(false)
     } finally {
 
-    //   setIsConfirmed(false);
+      //   setIsConfirmed(false);
     }
   };
 
@@ -132,21 +135,23 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
             <DialogTitle>{isConfirmed ? "Request created" : "Creating Request"}</DialogTitle>
           </DialogHeader>
           {loading === true && isConfirmed === false &&
-           <div className="flex flex-col items-center justify-center p-4">
-          
-           <Spinner className="mb-4" />
-           <p>{dialogMessage}</p>
-         </div>  
-        }
+            <div className="flex flex-col items-center justify-center p-4">
 
-          {isConfirmed === true &&
-           <div className="flex flex-col items-center justify-center p-4">
-          
-             <RequestConfirmed />
-           
-         </div>  
-        }
-       
+              <Spinner className="mb-4" />
+              <p>{dialogMessage}</p>
+            </div>
+          }
+
+          {isConfirmed === true && 
+            <div className="flex flex-col items-center justify-center p-4">
+
+              <RequestConfirmed requestId={requestId} />
+
+            </div>
+
+    
+          }
+
         </DialogContent>
       </Dialog>
     </>

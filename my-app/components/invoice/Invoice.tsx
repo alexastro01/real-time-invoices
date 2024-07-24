@@ -1,69 +1,57 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { InvoiceContentProps } from '@/types/interfaces';
 import InvoiceContent from './InvoiceContent';
 import ActionButtons from './ActionButtons';
+import Spinner from '../helpers/Spinner';
 
 
-const Invoice = () => {
-    const mockData: InvoiceContentProps = {
-        mockDataInvoice: {
-          name: "Acme Corporation",
-          email: "billing@acmecorp.com",
-          address: "123 Main St",
-          city: "Metropolis",
-          state: "NY",
-          zip: "10001",
-          country: "USA",
-          evmAddress: "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
-        },
-        formData: {
-          senderDetails: {
-            name: "John Doe",
-            email: "john.doe@example.com",
-            address: "456 Elm St",
-            city: "Springfield",
-            state: "IL",
-            zip: "62701",
-            country: "USA"
-          },
-          paymentDetails: {
-            chain: "Ethereum",
-            currency: "ETH",
-            receiverAddress: "0x3F2e30B1E5954d777727c0D9dB0d9485a06C2708",
-            dueDate: new Date("2024-08-15"),
-            invoiceItems: [
-              {
-                name: "Web Development",
-                quantity: 40,
-                price: 100
-              },
-              {
-                name: "UI/UX Design",
-                quantity: 20,
-                price: 150
-              },
-              {
-                name: "Server Maintenance",
-                quantity: 10,
-                price: 80
-              }
-            ]
-          },
-          streamType: "Instant"
-        },
-        totalAmount: 8800
-      };
+type InvoiceProps = {
+  requestId: string
+}
+
+const Invoice = ({
+  requestId
+}: InvoiceProps) => {
+  const [invoiceData, setInvoiceData] = useState();
+
+
+  async function getInvoiceData(requestId: string) {
+    const res = await fetch(`/api/get-invoice?request_id=${requestId}`, { cache: 'no-store' });
+    if (!res.ok) {
+      throw new Error('Failed to fetch invoice data');
+    }
+    return res.json();
+  }
+
+  useEffect(() => {
+    async function fetchInvoiceData() {
+      if (requestId) {
+        try {
+          const data = await getInvoiceData(requestId as string);
+          setInvoiceData(data)
+          console.log('Invoice Data:', data);
+        } catch (error) {
+          console.error('Error fetching invoice data:', error);
+        }
+      }
+    }
+
+    fetchInvoiceData();
+  }, [requestId]);
 
   return (
     <div className='grid grid-cols-1 lg:grid-cols-2 items-center justify-items-center mt-8'>
-        {/* Invoice */}
-        <InvoiceContent 
-        mockDataInvoice={mockData.mockDataInvoice}
-        formData={mockData.formData}
-        totalAmount={mockData.totalAmount}
-      />
+      {/* Invoice */}
 
-        <ActionButtons/>
+      {invoiceData ?
+        <InvoiceContent
+          invoiceData={invoiceData}
+        /> :
+        <Spinner className='w-24 h-24' />
+      }
+
+
+      <ActionButtons />
 
     </div>
   )
