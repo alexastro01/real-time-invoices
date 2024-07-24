@@ -148,8 +148,10 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
             {isGeneratingPDF ? 'Generating PDF...' : 'Generate PDF'}
           </Button>
           <CreateRequestButton
-            payeeIdentity={mockDataInvoice.evmAddress}
-            payerIdentity={formData.paymentDetails.receiverAddress}
+            payeeEVMAddress={mockDataInvoice.evmAddress}
+            payerEVMAddress={formData.paymentDetails.receiverAddress}
+            payeeDetails={mockDataInvoice}
+            payerDetails={formData.senderDetails}
             expectedAmount={totalAmount.toString()}
             dueDate={getUnixTime(formData.paymentDetails.dueDate as number)}
             //add invoice items

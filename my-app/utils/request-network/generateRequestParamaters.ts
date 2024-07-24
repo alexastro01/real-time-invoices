@@ -12,7 +12,7 @@ import { ICreateRequestParameters } from "@requestnetwork/request-client.js/dist
 
 
 export function generateRequestParameters({
-  payeeIdentity,
+   payeeIdentity,
   payerIdentity,
   expectedAmount,
   tokenAddress,

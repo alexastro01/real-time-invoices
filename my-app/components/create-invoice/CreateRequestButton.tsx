@@ -12,16 +12,42 @@ import ShimmerButton from "../magicui/shimmer-button";
 import RequestConfirmed from "./RequestConfirmed";
 
 
-const CreateRequestButton = ({
-  payeeIdentity,
-  payerIdentity,
+interface CreateRequestButtonProps {
+  payeeEVMAddress: string;
+  payerEVMAddress: string;
+  payeeDetails: {
+    name: string;
+    email: string;
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
+  };
+  payerDetails: {
+    name: string;
+    email: string;
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
+  };
+  expectedAmount: string;
+  dueDate: number;
+  reason: string;
+  expectedFlowRate: string;
+}
+
+const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
+  payeeEVMAddress,
+  payerEVMAddress,
+  payeeDetails,
+  payerDetails,
   expectedAmount,
   dueDate,
   reason,
   expectedFlowRate,
-
-}: generateRequestParamatersParams & {
-
 }) => {
   const { data: walletClient } = useWalletClient();
   const [loading, setLoading] = useState(false);
@@ -32,7 +58,7 @@ const CreateRequestButton = ({
   const [linkState, setLinkState] = useState("");
 
   const handleClick = async () => {
-    if (!payerIdentity || !expectedAmount || !dueDate || !reason) {
+    if (!payerEVMAddress || !expectedAmount || !dueDate || !reason) {
       alert("Please fill in all the fields");
       return;
     }
@@ -54,8 +80,8 @@ const CreateRequestButton = ({
     //   const flowRate = calculateUSDCPerSecond(dueDate.toString(), parseInt(expectedAmount));
       
       const requestParameters = generateRequestParameters({
-        payeeIdentity,
-        payerIdentity,
+        payeeIdentity: payeeEVMAddress,
+        payerIdentity: payerEVMAddress,
         expectedAmount,
         dueDate,
         reason,
@@ -76,7 +102,22 @@ const CreateRequestButton = ({
       
       setLinkState(`https://wavein.vercel.app/confirm-wavein/${confirmedRequestData.requestId}`);
 
-
+        // Create invoice in Supabase
+        const response = await fetch('/api/post-invoice', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            requestId: confirmedRequestData.requestId,
+            payeeDetails,
+            payerDetails,
+          }),
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to create invoice');
+        }
     
         setDialogMessage("Request Created Successfully");
         setIsConfirmed(true);
