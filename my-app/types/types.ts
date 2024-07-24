@@ -8,14 +8,14 @@ export type generateRequestParamatersParams = {
     feeRecipient?: string,
     tokenAddress?: string,
     dueDate: string | Date | number,
-    reason: string,
+    invoiceItems: invoiceItems,
     expectedFlowRate: string
 
 }
 
 export type WaveInConfirmationData = {
     dueDate: string,
-    reason: string,
+    reason?: string,
     payee: string,
     payer: string
     currencyAddress: string,
@@ -27,7 +27,7 @@ export type WaveInConfirmationData = {
 
 export type WaveInData = {
     dueDate: string,
-    reason: string,
+    reason?: string,
     payee: string,
     payer: string
     currencyAddress: string,
@@ -64,3 +64,6 @@ export type SenderDetailsType = {
     paymentDetails: PaymentDetailsType;
     streamType: StreamType;
   };
+
+
+  export type invoiceItems = Array<{ name: string; quantity: number; price: number }>;

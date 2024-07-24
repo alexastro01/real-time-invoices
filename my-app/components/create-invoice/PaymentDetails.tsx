@@ -22,7 +22,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, XIcon } from "lucide-react"
 import Image from "next/image"
 
 
@@ -59,7 +59,7 @@ export function PaymentDetails({
     return paymentDetails.invoiceItems.reduce((total, item) => total + (item.quantity * item.price), 0);
   }, [paymentDetails.invoiceItems]);
 
-  
+
 
   function validateAndProceed() {
     if (paymentDetails.receiverAddress.trim() === "") {
@@ -91,6 +91,15 @@ export function PaymentDetails({
     const { id, value } = e.target;
     updatePaymentDetails({ [id]: value });
   };
+
+
+  const removeInvoiceItem = (index: number) => {
+    const newInvoiceItems = [...paymentDetails.invoiceItems];
+    newInvoiceItems.splice(index, 1);
+    updatePaymentDetails({ invoiceItems: newInvoiceItems });
+  };
+
+
   return (
     <div className="w-[50%]" >
       <Progress value={66} className="my-8" />
@@ -137,7 +146,7 @@ export function PaymentDetails({
                   <SelectContent>
                     <SelectItem value="USDC">
                       <div className="flex items-center font-semibold">
-                        <Image src="/usdc.png" alt="USDC" className="w-6 h-6 mr-2"  width={24} height={24}/>
+                        <Image src="/usdc.png" alt="USDC" className="w-6 h-6 mr-2" width={24} height={24} />
                         USDC
                       </div>
                     </SelectItem>
@@ -145,34 +154,34 @@ export function PaymentDetails({
                 </Select>
               </div>
               <div className="flex flex-col space-y-1.5 mt-4">
-              <Label htmlFor="dueDate">Due Date</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-[240px] pl-3 text-left font-normal",
-                      !paymentDetails.dueDate && "text-muted-foreground"
-                    )}
-                  >
-                    {paymentDetails.dueDate ? (
-                      format(paymentDetails.dueDate, "PPP")
-                    ) : (
-                      <span>Pick a date</span>
-                    )}
-                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={paymentDetails.dueDate as Date | undefined}
-                    onSelect={(date) => updatePaymentDetails({ dueDate: date })}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
+                <Label htmlFor="dueDate">Due Date</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[240px] pl-3 text-left font-normal",
+                        !paymentDetails.dueDate && "text-muted-foreground"
+                      )}
+                    >
+                      {paymentDetails.dueDate ? (
+                        format(paymentDetails.dueDate, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={paymentDetails.dueDate as Date | undefined}
+                      onSelect={(date) => updatePaymentDetails({ dueDate: date })}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
             </div>
 
             {/* Invoice Items section remains the same */}
@@ -200,31 +209,40 @@ export function PaymentDetails({
                 <Button onClick={addInvoiceItem}>Add</Button>
               </div>
               <Table className="mt-4">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Item Name</TableHead>
-                    <TableHead>Quantity</TableHead>
-                    <TableHead>Price</TableHead>
-                    <TableHead>Total</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {paymentDetails.invoiceItems.map((item, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{item.name}</TableCell>
-                      <TableCell>{item.quantity}</TableCell>
-                      <TableCell>{item.price}</TableCell>
-                      <TableCell>{item.quantity * item.price}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-                <TableFooter>
-                  <TableRow>
-                    <TableCell colSpan={3}>Grand Total</TableCell>
-                    <TableCell>{grandTotal.toFixed(2)}</TableCell>
-                  </TableRow>
-                </TableFooter>
-              </Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead className="w-1/3">Item Name</TableHead>
+      <TableHead className="text-right w-1/6">Quantity</TableHead>
+      <TableHead className="text-right w-1/6">Price</TableHead>
+      <TableHead className="text-right w-1/6">Total</TableHead>
+      <TableHead className="w-1/12"></TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    {paymentDetails.invoiceItems.map((item, index) => (
+      <TableRow key={index}>
+        <TableCell>{item.name}</TableCell>
+        <TableCell className="text-right">{item.quantity}</TableCell>
+        <TableCell className="text-right">{item.price.toFixed(2)}</TableCell>
+        <TableCell className="text-right">{(item.quantity * item.price).toFixed(2)}</TableCell>
+        <TableCell className="text-center">
+          <XIcon
+            className="cursor-pointer text-gray-400 hover:text-red-500 transition-colors mx-auto"
+            size={18}
+            onClick={() => removeInvoiceItem(index)}
+          />
+        </TableCell>
+      </TableRow>
+    ))}
+  </TableBody>
+  <TableFooter>
+    <TableRow>
+      <TableCell colSpan={3} className="font-semibold">Grand Total</TableCell>
+      <TableCell className="text-right font-semibold">{grandTotal.toFixed(2)}</TableCell>
+      <TableCell></TableCell>
+    </TableRow>
+  </TableFooter>
+</Table>
             </div>
 
           </form>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SenderDetails } from './SenderDetails'
 import { PaymentDetails } from './PaymentDetails';
 import { StreamTypeSelector } from './StreamTypeSelector';
@@ -42,6 +42,11 @@ const CreateInvoiceComponent = () => {
             : newData,
       }));
     };
+
+
+    useEffect(() => {
+     console.log(formData)
+    }, [formData])
       
     return (
         <div className='flex justify-center mt-8'>

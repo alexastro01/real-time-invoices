@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { generateRequestParameters } from "@/utils/request-network/generateRequestParamaters";
-import { generateRequestParamatersParams } from "@/types/types";
+import { generateRequestParamatersParams, invoiceItems } from "@/types/types";
 import { useWalletClient } from "wagmi";
 import { Web3SignatureProvider } from "@requestnetwork/web3-signature";
 import { RequestNetwork } from "@requestnetwork/request-client.js";
@@ -10,27 +10,9 @@ import { RequestNetwork } from "@requestnetwork/request-client.js";
 import Spinner from "../helpers/Spinner";
 import ShimmerButton from "../magicui/shimmer-button";
 import RequestConfirmed from "./RequestConfirmed";
-import { UserDetailsFromSupabase } from "@/types/interfaces";
+import { CreateRequestButtonProps, UserDetailsFromSupabase } from "@/types/interfaces";
 
 
-interface CreateRequestButtonProps {
-  payeeEVMAddress: string;
-  payerEVMAddress: string;
-  payeeDetails: UserDetailsFromSupabase;
-  payerDetails: {
-    name: string;
-    email: string;
-    address: string;
-    city: string;
-    state: string;
-    zip: string;
-    country: string;
-  };
-  expectedAmount: string;
-  dueDate: number;
-  reason: string;
-  expectedFlowRate: string;
-}
 
 const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
   payeeEVMAddress,
@@ -39,8 +21,7 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
   payerDetails,
   expectedAmount,
   dueDate,
-  reason,
-  expectedFlowRate,
+  invoiceItems,
 }) => {
   const { data: walletClient } = useWalletClient();
   const [loading, setLoading] = useState(false);
@@ -51,7 +32,17 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
   const [linkState, setLinkState] = useState("");
 
   const handleClick = async () => {
-    if (!payerEVMAddress || !expectedAmount || !dueDate || !reason) {
+    console.log({
+      payeeEVMAddress,
+      payerEVMAddress,
+      payeeDetails,
+      payerDetails,
+      expectedAmount,
+      dueDate,
+      invoiceItems
+    });
+    if (!payerEVMAddress || !expectedAmount || !dueDate || invoiceItems.length  < 1 ) {
+
       alert("Please fill in all the fields");
       return;
     }
@@ -77,7 +68,7 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
         payerIdentity: payerEVMAddress,
         expectedAmount,
         dueDate,
-        reason,
+        invoiceItems,
         tokenAddress: "0xc75ab970D9492f6b04d66153CcCED146e60A7D5B",
         expectedFlowRate: "15"
       });

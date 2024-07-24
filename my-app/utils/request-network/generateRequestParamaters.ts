@@ -1,4 +1,4 @@
-import { generateRequestParamatersParams } from "@/types/types";
+import { generateRequestParamatersParams, invoiceItems } from "@/types/types";
 import { Types, Utils } from "@requestnetwork/request-client.js";
 import {IRequestCreateParameters} from "@/types/interfaces";
 import { SupportedNetwork } from "@/types/types";
@@ -11,14 +11,15 @@ import { ICreateRequestParameters } from "@requestnetwork/request-client.js/dist
 
 
 
+
 export function generateRequestParameters({
    payeeIdentity,
   payerIdentity,
   expectedAmount,
   tokenAddress,
   dueDate,
-  reason,
-  expectedFlowRate
+  invoiceItems,
+  expectedFlowRate,
 }: generateRequestParamatersParams): ICreateRequestParameters  {
   const requestCreateParameters: ICreateRequestParameters = {
     requestInfo: {
@@ -69,9 +70,9 @@ export function generateRequestParameters({
     // The contentData can contain anything.
     // Consider using rnf_invoice format from @requestnetwork/data-format
     contentData: {
-      reason: reason,
+      invoiceItems: invoiceItems,
       dueDate: dueDate,
-      RequestType: 'wavein'
+      RequestType: 'InvoiceStreaming'
     },
     
     // The identity that signs the request, either payee or payer identity.
@@ -85,6 +86,9 @@ export function generateRequestParameters({
 
 
 }
+
+console.log(invoiceItems)
 return requestCreateParameters;
+
 
 }

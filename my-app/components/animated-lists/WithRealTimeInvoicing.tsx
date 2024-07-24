@@ -89,7 +89,7 @@ export function WithRealTimeInvoicing({
   return (
     <div
       className={cn(
-        "relative flex h-[500px] w-full flex-col p-6 overflow-hidden rounded-lg border bg-background md:shadow-xl bg-gradient-to-r from-green-300 to-green-500 bg-opacity-10",
+        "relative flex h-[500px] w-full flex-col p-6 overflow-hidden rounded-lg  md:shadow-xl bg-opacity-10",
         className,
       )}
     >

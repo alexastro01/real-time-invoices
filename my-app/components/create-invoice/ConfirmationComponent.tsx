@@ -30,7 +30,7 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
    
   const {address} = useAccount();
 
-   const mockDataInvoice = mockDataInvoiceFunction(address as string)
+
 
 
    useEffect(() => {
@@ -188,8 +188,8 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
                 expectedAmount={totalAmount.toString()}
                 dueDate={getUnixTime(formData.paymentDetails.dueDate as number)}
                 //add invoice items
-                reason={"Hard coded"}
-                expectedFlowRate={"1"}
+                invoiceItems={formData.paymentDetails.invoiceItems}
+  
               />
           : <Spinner className='h-4 w-4' />}
     

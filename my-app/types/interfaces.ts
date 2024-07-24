@@ -1,5 +1,5 @@
 import { Types, Utils } from "@requestnetwork/request-client.js";
-import { SupportedNetwork } from "./types";
+import { invoiceItems, SupportedNetwork } from "./types";
 
 export interface IRequestCreateParameters {
 
@@ -112,4 +112,23 @@ export interface  UserDetailsFromSupabase {
   state?: string;
   zip?: string;
   country?: string;
+}
+
+
+export interface CreateRequestButtonProps {
+  payeeEVMAddress: string;
+  payerEVMAddress: string;
+  payeeDetails: UserDetailsFromSupabase;
+  payerDetails: {
+    name: string;
+    email: string;
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
+  };
+  expectedAmount: string;
+  dueDate: number;
+  invoiceItems: invoiceItems;
 }

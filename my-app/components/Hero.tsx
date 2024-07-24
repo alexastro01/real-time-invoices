@@ -28,7 +28,7 @@ export default function Hero() {
       
        
         </div>
-      <LoomDemo />
+      {/* <LoomDemo /> */}
       </div>
     </section>
   )
