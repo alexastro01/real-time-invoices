@@ -32,12 +32,12 @@ const reviews = [
     body: "There's no better feeling for an infrastructure project than having past hackathon alums use your infra repeatedly in other hackathons 🛠️",
     img: "/request.png",
   },
-//   {
-//     name: "James",
-//     username: "@james",
-//     body: "I'm at a loss for words. This is amazing. I love it.",
-//     img: "https://avatar.vercel.sh/james",
-//   },
+  {
+    name: "Pieter Claesen",
+    username: "@Pclaesen",
+    body: "Looking forward to the launch",
+    img: "/pieter.jpg",
+  },
 ];
 
 const firstRow = reviews.slice(0, reviews.length / 2);

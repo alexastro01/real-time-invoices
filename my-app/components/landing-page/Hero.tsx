@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import DotPattern from "@/components/magicui/dot-pattern";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function Hero() {
   return (
@@ -18,7 +19,26 @@ export default function Hero() {
           </p>
           <div className="flex w-full max-w-md space-x-4">
             <Input className="flex-grow" placeholder="Enter your email" />
-            <Button className=" font-bold">Join Waitlist</Button>
+            <Button className="font-bold">Join Waitlist</Button>
+          </div>
+          
+          {/* Built with section */}
+          <div className="flex flex-col items-center space-y-2 mt-4">
+            <p className="text-sm text-muted-foreground">Built with</p>
+            <div className="flex space-x-2">
+              <Avatar>
+                <AvatarImage src="/request.png" alt="RequestNetwork" />
+                <AvatarFallback>RN</AvatarFallback>
+              </Avatar>
+              <Avatar>
+                <AvatarImage src="/opencampus.png" alt="EDUCHAIN"  />
+                <AvatarFallback>EDU</AvatarFallback>
+              </Avatar>
+              <Avatar>
+                <AvatarImage src="/sablier.png" alt="Sablier"  />
+                <AvatarFallback>SB</AvatarFallback>
+              </Avatar>
+            </div>
           </div>
         </div>
       </div>
