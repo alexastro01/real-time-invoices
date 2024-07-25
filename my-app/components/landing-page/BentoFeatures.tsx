@@ -1,5 +1,7 @@
+"use client";
+
 import { CalendarIcon, FileTextIcon } from "@radix-ui/react-icons";
-import { BellIcon, Share2Icon } from "lucide-react";
+import { BellIcon, HandCoinsIcon, HandshakeIcon, Share2Icon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
@@ -7,27 +9,31 @@ import {AnimatedBeamMultipleOutputDemo} from "@/components/example/animated-beam
 import { BentoCard, BentoGrid } from "@/components/magicui/bento-grid";
 import Marquee from "@/components/magicui/marquee";
 import {AnimatedListDemo} from "@/components/example/animated-list-demo";
+import { WithRealTimeInvoicing } from "../animated-lists/WithRealTimeInvoicing";
+import CountUp from "../invoice/CountUp";
+import TokenDisplay from "../invoice/TokenDisplay";
+import DisplayCountUp from "./DisplayCountUp";
 
 const files = [
   {
-    name: "bitcoin.pdf",
-    body: "Bitcoin is a cryptocurrency invented in 2008 by an unknown person or group of people using the name Satoshi Nakamoto.",
+    name: "Invoice-March.pdf",
+    body: "Amount: $8500, Reason: Website Development, Payer: 0x742d35Cc6634C0532925a3b844Bc454e4438f44e, Payee: 0x123F681646d4A755815f9CB19e1aCc8565A0c2AC",
   },
   {
-    name: "finances.xlsx",
-    body: "A spreadsheet or worksheet is a file made of rows and columns that help sort data, arrange data easily, and calculate numerical data.",
+    name: "Invoice-July.pdf",
+    body: "Amount: $3200, Reason: Graphic Design Work, Payer: 0x8474DdbE98F5aA3179B3B3F5942D724aFcdec9f6, Payee: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   },
   {
-    name: "logo.svg",
-    body: "Scalable Vector Graphics is an Extensible Markup Language-based vector image format for two-dimensional graphics with support for interactivity and animation.",
+    name: "Invoice-November.pdf",
+    body: "Amount: $12000, Reason: Software Consultancy, Payer: 0x6B175474E89094C44Da98b954EedeAC495271d0F, Payee: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
   },
   {
-    name: "keys.gpg",
-    body: "GPG keys are used to encrypt and decrypt email, files, directories, and whole disk partitions and to authenticate messages.",
+    name: "Invoice-February.pdf",
+    body: "Amount: $5800, Reason: Content Writing, Payer: 0xdAC17F958D2ee523a2206206994597C13D831ec7, Payee: 0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
   },
   {
-    name: "seed.txt",
-    body: "A seed phrase, seed recovery phrase or backup seed phrase is a list of words which store all the information needed to recover Bitcoin funds on-chain.",
+    name: "Invoice-September.pdf",
+    body: "Amount: $18500, Reason: Marketing Campaign, Payer: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599, Payee: 0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
   },
 ];
 
@@ -75,13 +81,13 @@ const features = [
     cta: "Learn more",
     className: "col-span-3 lg:col-span-2",
     background: (
-      <AnimatedListDemo className="absolute right-2 top-4 h-[300px] w-[600px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] group-hover:scale-105" />
+      <WithRealTimeInvoicing className="absolute right-2 top-4 h-[300px] w-[600px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] group-hover:scale-105" />
     ),
   },
   {
     Icon: Share2Icon,
-    name: "Integrations",
-    description: "Supports 100+ integrations and counting.",
+    name: "Built on reliable protocols",
+    description: "We are using Request Network to handle invoicing and Sablier to integrate real time payments. Both of them are reliable, safe, battle-tested protocols.",
     href: "#",
     cta: "Learn more",
     className: "col-span-3 lg:col-span-2",
@@ -90,18 +96,20 @@ const features = [
     ),
   },
   {
-    Icon: CalendarIcon,
-    name: "Calendar",
-    description: "Use the calendar to filter your files by date.",
+    Icon: HandCoinsIcon,
+    name: "Get paid, for real",
+    description: "Real time invoicing solves diverse problems encountered by freelancers in their day to day activity",
     className: "col-span-3 lg:col-span-1",
     href: "#",
     cta: "Learn more",
     background: (
-      <Calendar
-        mode="single"
-        selected={new Date(2022, 4, 11, 0, 0, 0)}
-        className="absolute right-0 top-10 origin-top rounded-md border transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)] group-hover:scale-105"
-      />
+      <div className="absolute inset-0 [mask-image:linear-gradient(to_top,transparent_20%,#000_100%)]">
+        <DisplayCountUp 
+          maxValue={5000}
+          tokenSymbol="USDC"
+          duration={6000000}
+        />
+      </div>
     ),
   },
 ];

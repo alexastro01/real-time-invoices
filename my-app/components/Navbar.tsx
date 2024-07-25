@@ -9,14 +9,14 @@ import Link from "next/link"
 
 export default function Navbar() {
   return (
-    <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6">
+    <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6 ">
       <Link href="/" className="mr-6 flex items-center" >
         <CircleIcon className="h-6 w-6" />
-        <span className="sr-only">Invoice Streaming</span>
+        <span className="sr-only">StreamBill</span>
       </Link>
       <nav className="hidden lg:flex">
         <ul className="flex items-center gap-4">
-        <li>
+        {/* <li>
             <Link
               href="/create-invoice"
               className="inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
@@ -24,9 +24,9 @@ export default function Navbar() {
             >
               Create Invoice
             </Link>
-          </li>
+          </li> */}
 
-          <li>
+          {/* <li>
             <Link
               href="/dashboard"
               className="inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
@@ -34,7 +34,7 @@ export default function Navbar() {
             >
               Dashboard
             </Link>
-          </li>
+          </li> */}
       
         </ul>
       </nav>

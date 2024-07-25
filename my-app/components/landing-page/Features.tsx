@@ -1,4 +1,6 @@
-import { BentoDemo } from "./BentoDemo";
+import { BentoDemo } from "./BentoFeatures"
+
+
 
 /**
  * v0 by Vercel.
