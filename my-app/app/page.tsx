@@ -5,6 +5,7 @@ import Benefits from "@/components/Benefits";
 import Hero from "@/components/landing-page/Hero";
 import Features from "@/components/landing-page/Features";
 import { MarqueeDemo } from "@/components/landing-page/MarqueePeople";
+import PeopleShowcase from "@/components/landing-page/PeopleShowcase";
 
 export default function Home() {
   return (
@@ -13,7 +14,7 @@ export default function Home() {
     <Hero />
     {/* <Benefits /> */}
     <Features />
-    <MarqueeDemo />
+     <PeopleShowcase />
     </main>
   );
 }

@@ -5,39 +5,39 @@ const reviews = [
   {
     name: "BlackIcon.eth",
     username: "@TBlackicon",
-    body: "I've never seen anything like this before. It's amazing. I love it.",
-    img: "https://avatar.vercel.sh/jack",
+    body: "Exciting ! Can't wait to use Stream Bill 🔥",
+    img: "/blackicon.png",
   },
   {
-    name: "Jill",
-    username: "@jill",
-    body: "I don't know what to say. I'm speechless. This is amazing.",
-    img: "https://avatar.vercel.sh/jill",
+    name: "Will Fan",
+    username: "@hellowillfan",
+    body: "Great job by @_AlexAstro, who's leveraging blockchain to ensure that teachers receive timely and secure payments.",
+    img: "/will_fan.jpg",
   },
   {
-    name: "John",
-    username: "@john",
-    body: "I'm at a loss for words. This is amazing. I love it.",
-    img: "https://avatar.vercel.sh/john",
+    name: "Harry Zhang",
+    username: "@harryzhangs",
+    body: "love the shout-out, @_AlexAstro keep building my guy 🔥",
+    img: "/harry_zhang.jpg",
   },
   {
-    name: "Jane",
-    username: "@jane",
-    body: "I'm at a loss for words. This is amazing. I love it.",
-    img: "https://avatar.vercel.sh/jane",
+    name: "Open Campus",
+    username: "@opencampus_xyz",
+    body: "@_AlexAstro is enabling a reliable method for teachers to manage their finances and receive payments promptly.",
+    img: "/opencampus.png",
   },
   {
-    name: "Jenny",
-    username: "@jenny",
-    body: "I'm at a loss for words. This is amazing. I love it.",
-    img: "https://avatar.vercel.sh/jenny",
+    name: "Request Network",
+    username: "@RequestNetwork",
+    body: "There's no better feeling for an infrastructure project than having past hackathon alums use your infra repeatedly in other hackathons 🛠️",
+    img: "/request.png",
   },
-  {
-    name: "James",
-    username: "@james",
-    body: "I'm at a loss for words. This is amazing. I love it.",
-    img: "https://avatar.vercel.sh/james",
-  },
+//   {
+//     name: "James",
+//     username: "@james",
+//     body: "I'm at a loss for words. This is amazing. I love it.",
+//     img: "https://avatar.vercel.sh/james",
+//   },
 ];
 
 const firstRow = reviews.slice(0, reviews.length / 2);
@@ -80,7 +80,7 @@ const ReviewCard = ({
 
 export function MarqueeDemo() {
   return (
-    <div className="relative flex h-[500px] w-full flex-col items-center justify-center overflow-hidden rounded-lg border bg-background md:shadow-xl">
+    <div className="relative flex h-[500px] w-full flex-col  items-center justify-center overflow-hidden rounded-lg border bg-background md:shadow-xl ">
       <Marquee pauseOnHover className="[--duration:20s]">
         {firstRow.map((review) => (
           <ReviewCard key={review.username} {...review} />
