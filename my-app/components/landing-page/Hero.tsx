@@ -5,6 +5,8 @@ import DotPattern from "@/components/magicui/dot-pattern";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ConfettiFireworks } from "./ConfettiFireWorksButton";
+import JoinWaitlistForm from "./JoinWaitlistForm";
 
 export default function Hero() {
   return (
@@ -17,10 +19,7 @@ export default function Hero() {
           <p className="max-w-[600px] text-muted-foreground md:text-xl">
             Real time invoicing for students, teachers, freelancers and more! Using Sablier and Request Network
           </p>
-          <div className="flex w-full max-w-md space-x-4">
-            <Input className="flex-grow" placeholder="Enter your email" />
-            <Button className="font-bold">Join Waitlist</Button>
-          </div>
+           <JoinWaitlistForm />
           
           {/* Built with section */}
           <div className="flex flex-col items-center space-y-2 mt-4">

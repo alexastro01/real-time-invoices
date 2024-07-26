@@ -12,7 +12,7 @@ export default function Navbar() {
     <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6 ">
       <Link href="/" className="mr-6 flex items-center" >
         <CircleIcon className="h-6 w-6" />
-        <span className="sr-only">StreamBill</span>
+        <span className="ml-2 font-semibold">StreamBill</span>
       </Link>
       <nav className="hidden lg:flex">
         <ul className="flex items-center gap-4">
@@ -39,7 +39,7 @@ export default function Navbar() {
         </ul>
       </nav>
       <div className="ml-auto flex items-center gap-2">
-       <ConnectButton  accountStatus="address" /> 
+       {/* <ConnectButton  accountStatus="address" />  */}
       </div>
     </header>
   )
