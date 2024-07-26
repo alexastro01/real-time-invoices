@@ -66,7 +66,7 @@ const JoinWaitlistForm = () => {
   }
 
   const handleShareOnX = () => {
-    const tweetText = encodeURIComponent("I just joined the waitlist for an amazing new product! Check it out!")
+    const tweetText = encodeURIComponent("I just joined the waitlist for an amazing new product! Check it out! https://streambill.xyz")
     const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}`
     window.open(tweetUrl, '_blank')
   }
