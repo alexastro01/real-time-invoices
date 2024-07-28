@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     siteName: "StreamBill.xyz",
     images: [
       {
-        url: "/waitlist.png",
+        url: "https://www.streambill.xyz/waitlist.png",
         width: 1200,
         height: 630,
       }
@@ -30,9 +30,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Join StreamBill.xyz Waitlist",
     description: "StreamBill.xyz - Revolutionizing payments for teachers using blockchain technology.",
-    site: "@YourTwitterHandle",
-    creator: "@YourTwitterHandle",
-    images: ["/waitlist.png"],
+    site: "@_alexastro",
+    creator: "@_alexastro",
+    images: ["https://www.streambill.xyz/waitlist.png"],
   },
 }
 
