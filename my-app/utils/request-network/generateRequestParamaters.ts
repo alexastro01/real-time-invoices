@@ -30,7 +30,7 @@ export function generateRequestParameters({
         //ADD TOKEN ADDERSS
         value: tokenAddress || "token address",
         // ! MAKE IT REPLACEBLE
-        network: 'EDU',
+        network: 'sepolia',
       },
       
       // The expected amount as a string, in parsed units, respecting `decimals`
