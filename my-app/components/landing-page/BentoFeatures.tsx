@@ -43,7 +43,7 @@ const features = [
     name: "Manage invoices",
     description: "We securely store your invoices using Request Network",
     href: "#",
-    cta: "Learn more",
+    cta: "Coming soon",
     className: "col-span-3 lg:col-span-1",
     background: (
       <Marquee
@@ -78,18 +78,33 @@ const features = [
     name: "Notifications",
     description: "Get notified when something happens.",
     href: "#",
-    cta: "Learn more",
+    cta: "Coming soon",
     className: "col-span-3 lg:col-span-2",
     background: (
-      <WithRealTimeInvoicing className="absolute right-2 top-4 h-[300px] w-[600px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] group-hover:scale-105" />
+      <WithRealTimeInvoicing 
+  className="
+    absolute 
+    right-4 top-0
+    sm:right-2 sm:top-3
+    md:right-2 md:top-4
+    lg:right-2 lg:top-4
+    h-[250px] w-[350px]
+    sm:h-[250px] sm:w-[400px]
+    md:h-[300px] md:w-[500px]
+    lg:h-[300px] lg:w-[600px]
+    border-none transition-all duration-300 ease-out
+    [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)]
+    group-hover:scale-105
+  "
+/>
     ),
   },
   {
     Icon: Share2Icon,
     name: "Built on reliable protocols",
-    description: "We are using Request Network to handle invoicing and Sablier to integrate real time payments. Both of them are reliable, safe, battle-tested protocols.",
+    description: "We use Request Network to handle invoicing and Sablier to integrate real time payments.",
     href: "#",
-    cta: "Learn more",
+    cta: "Coming soon",
     className: "col-span-3 lg:col-span-2",
     background: (
       <AnimatedBeamMultipleOutputDemo className="absolute right-2 top-4 h-[300px] w-[600px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] group-hover:scale-105" />
@@ -98,10 +113,10 @@ const features = [
   {
     Icon: HandCoinsIcon,
     name: "Get paid, for real",
-    description: "Real time invoicing solves diverse problems encountered by freelancers in their day to day activity",
+    description: "Every second your balance increases",
     className: "col-span-3 lg:col-span-1",
     href: "#",
-    cta: "Learn more",
+    cta: "Coming soon",
     background: (
       <div className="absolute inset-0 [mask-image:linear-gradient(to_top,transparent_20%,#000_100%)]">
         <DisplayCountUp 

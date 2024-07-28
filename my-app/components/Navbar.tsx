@@ -5,13 +5,14 @@
  */
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { CircleIcon } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 
 export default function Navbar() {
   return (
     <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6 ">
       <Link href="/" className="mr-6 flex items-center" >
-        <CircleIcon className="h-6 w-6" />
+       <Image src={"/logo_cropped.png"} width={48} height={48} alt="Stream Bill logo"/>
         <span className="ml-2 font-semibold">StreamBill</span>
       </Link>
       <nav className="hidden lg:flex">
