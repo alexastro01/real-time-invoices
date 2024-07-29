@@ -20,7 +20,7 @@ let notifications = [
     color: "#00C9A7",
   },
   {
-    name: "You can transfer any time",
+    name: "Transfer Anytime",
     description: "Transfer",
     time: "10m ago",
     icon: "🚀",
@@ -48,7 +48,7 @@ const Notification = ({ name, description, icon, color, time }: Item) => {
   return (
     <figure
       className={cn(
-        "relative mx-auto min-h-fit w-full max-w-[400px] cursor-pointer overflow-hidden rounded-2xl p-4",
+        "relative mx-auto min-h-fit w-full max-w-[350px] md:max-w-[400px] cursor-pointer overflow-hidden rounded-2xl p-4",
         // animation styles
         "transition-all duration-200 ease-in-out hover:scale-[103%]",
         // light styles
@@ -89,7 +89,7 @@ export function WithRealTimeInvoicing({
   return (
     <div
       className={cn(
-        "relative flex h-[500px] w-full flex-col p-6 overflow-hidden rounded-lg  md:shadow-xl bg-opacity-10",
+        "relative flex h-[250px] md:h-[500px] w-full flex-col p-6 overflow-hidden rounded-lg  md:shadow-xl bg-opacity-10",
         className,
       )}
     >

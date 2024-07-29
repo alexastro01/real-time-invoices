@@ -1,17 +1,18 @@
 import NextAuth from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { NextApiRequest, NextApiResponse } from "next"
+import { NextRequest } from 'next/server'
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(request: NextRequest) {
     try {
-      return await NextAuth(authOptions)(req, res)
+        // NextAuth for App Router expects a Request object
+        return await NextAuth(authOptions)(request)
     } catch (error) {
-      console.error('NextAuth Error:', error)
-      res.status(500).json({
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error occurred',
-      })
+        console.error('NextAuth Error:', error)
+        return new Response(JSON.stringify({
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'Unknown error occurred',
+        }), { status: 500 })
     }
-  }
-  
-  export { handler as GET, handler as POST }
+}
+
+export { handler as GET, handler as POST }

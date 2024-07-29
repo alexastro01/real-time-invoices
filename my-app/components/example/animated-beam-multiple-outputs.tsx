@@ -55,18 +55,18 @@ export function AnimatedBeamMultipleOutputDemo({
         </div>
         <div className="flex flex-col justify-center">
           <Circle ref={div6Ref} className="size-16">
-            <Image src={'/wavein.webp'} width="100" height="100" alt="Wavein" className="rounded-full" />
+            <Image src={'/logo_cropped.png'} width="100" height="100" alt="StreamBill.xyz" className="rounded-full" />
           </Circle>
         </div>
         <div className="flex flex-col justify-center gap-2">
           <Circle ref={div1Ref} className="size-14">
-          <Image src={'/request.png'} width="200" height="200" alt="Wavein" className="rounded-full" />
+          <Image src={'/request.png'} width="200" height="200" alt="Request Network" className="rounded-full" />
           </Circle>
           <Circle ref={div2Ref} className="size-14">
-          <Image src={'/sablier.png'} width="200" height="200" alt="Wavein" className="rounded-full" />
+          <Image src={'/sablier.png'} width="200" height="200" alt="Sablier payments" className="rounded-full" />
           </Circle>
           <Circle ref={div3Ref} className="size-14">
-          <Image src={'/blockchain.png'} width="200" height="200" alt="Wavein" className="rounded-full" />
+          <Image src={'/blockchain.png'} width="200" height="200" alt="Blockchain" className="rounded-full" />
           </Circle>
      
         </div>
