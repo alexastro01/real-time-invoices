@@ -15,6 +15,7 @@ interface CustomSession extends Session {
 }
 
 export const authOptions: AuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
     useSecureCookies: process.env.NODE_ENV === "production",
     cookies: {
         csrfToken: {

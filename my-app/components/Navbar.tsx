@@ -17,7 +17,7 @@ export default function Navbar() {
       </Link>
       <nav className="hidden lg:flex">
         <ul className="flex items-center gap-4">
-        {/* <li>
+        <li>
             <Link
               href="/create-invoice"
               className="inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
@@ -25,9 +25,9 @@ export default function Navbar() {
             >
               Create Invoice
             </Link>
-          </li> */}
+          </li>
 
-          {/* <li>
+          <li>
             <Link
               href="/dashboard"
               className="inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
@@ -35,12 +35,12 @@ export default function Navbar() {
             >
               Dashboard
             </Link>
-          </li> */}
+          </li>
       
         </ul>
       </nav>
       <div className="ml-auto flex items-center gap-2">
-       {/* <ConnectButton  accountStatus="address" />  */}
+       <ConnectButton  accountStatus="address" /> 
       </div>
     </header>
   )
