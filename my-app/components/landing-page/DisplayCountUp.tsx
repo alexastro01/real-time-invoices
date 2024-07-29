@@ -42,7 +42,7 @@ const DisplayCountUp: React.FC<TokenDisplayProps> = ({ maxValue, duration, token
                     transition-all duration-300 ease-out
                     transform-gpu blur-[1px] group-hover:blur-[0.5px] group-hover:scale-100 mb-20">
       {/* Big beautiful number */}
-      <div className="text-7xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-zinc-600">
+      <div className="text-5xl md:text-6xl lg:text-5xl xl:text-7xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-zinc-600">
         {renderIntegerPart()}.
         <span className="text-4xl">{decimalPart}</span>
       </div>

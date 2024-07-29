@@ -79,12 +79,12 @@ const features = [
     description: "Get notified when something happens.",
     href: "#",
     cta: "Coming soon",
-    className: "col-span-3 lg:col-span-2",
+    className: "hidden md:flex col-span-3 lg:col-span-2",
     background: (
       <WithRealTimeInvoicing 
   className="
     absolute 
-    right-4 top-0
+    right-[-0%] top-0
     sm:right-2 sm:top-3
     md:right-2 md:top-4
     lg:right-2 lg:top-4
@@ -107,7 +107,7 @@ const features = [
     cta: "Coming soon",
     className: "col-span-3 lg:col-span-2",
     background: (
-      <AnimatedBeamMultipleOutputDemo className="absolute right-2 top-4 h-[300px] w-[600px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] group-hover:scale-105" />
+      <AnimatedBeamMultipleOutputDemo className="absolute right-[-5%] top-[-5%] md:right-2 md:top-4 h-[300px] w-[600px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] group-hover:scale-105" />
     ),
   },
   {
