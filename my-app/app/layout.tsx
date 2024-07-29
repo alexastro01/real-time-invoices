@@ -5,6 +5,8 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { Providers } from "./providers";
 import { Toaster } from "@/components/ui/toaster";
 import { SessionWrapper } from "@/components/SessionWrapper";
+import { Analytics } from '@vercel/analytics/react';
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -48,6 +50,7 @@ export default function RootLayout({
         <SessionWrapper>
       <main>
         {children}
+        <Analytics />
        </main>
        <Toaster />
        </SessionWrapper>
