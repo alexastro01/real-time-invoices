@@ -12,12 +12,13 @@ import { useRouter } from 'next/navigation';
 const Page = () => {
   const { data: session, status } = useSession();
   const [userDetails, setUserDetails] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const fetchUserDetails = async () => {
       if (session?.user?.name) {
+        setIsLoading(true);
         try {
           const response = await fetch(`/api/get-user-details?address=${session.user.name}`);
           if (response.ok) {
@@ -29,8 +30,6 @@ const Page = () => {
         } finally {
           setIsLoading(false);
         }
-      } else {
-        setIsLoading(false);
       }
     };
 
@@ -40,45 +39,46 @@ const Page = () => {
   }, [session, status]);
 
   const handleCreateProfile = () => {
-    router.push('/create-profile');
+    router.push('/profile?redirect=create-invoice');
   };
 
-  if (status === 'loading' || isLoading) {
-    return (
-      <>
-        <Navbar />
+  const renderContent = () => {
+    if (status === 'loading') {
+      return (
         <div className='flex justify-center mt-8'>
           <Spinner className='mt-2' />
         </div>
-      </>
-    );
-  }
+      );
+    }
 
-  if (status !== 'authenticated' || !session?.user?.name) {
-    return (
-      <>
-        <Navbar />
-        <NotConnected />
-      </>
-    );
-  }
+    if (status !== 'authenticated' || !session?.user?.name) {
+      return <NotConnected />;
+    }
 
-  if (!userDetails) {
-    return (
-      <>
-        <Navbar />
+    if (isLoading) {
+      return (
+        <div className='flex justify-center mt-8'>
+          <Spinner className='mt-2' />
+        </div>
+      );
+    }
+
+    if (!userDetails) {
+      return (
         <div className='flex flex-col items-center justify-center mt-8'>
           <p className='text-lg mb-4'>You need to create a profile before creating an invoice</p>
           <Button onClick={handleCreateProfile}>Create Profile</Button>
         </div>
-      </>
-    );
-  }
+      );
+    }
+
+    return <CreateInvoiceComponent />;
+  };
 
   return (
     <>
       <Navbar />
-      <CreateInvoiceComponent />
+      {renderContent()}
     </>
   );
 };

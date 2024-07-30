@@ -3,7 +3,7 @@
 import { useSession } from 'next-auth/react';
 import Navbar from '@/components/Navbar';
 import NotConnected from '@/components/NotConnected';
-import React, { useEffect } from 'react';
+import React from 'react';
 import Spinner from '@/components/helpers/Spinner';
 import Invoice from '@/components/invoice/Invoice';
 import { useParams } from 'next/navigation';
@@ -13,26 +13,29 @@ const Page = () => {
   const { data: session, status } = useSession();
   const params = useParams();
 
-  useEffect(() => {
-    console.log(session);
-  }, [session]);
-
- 
+  const renderContent = () => {
+    switch (status) {
+      case 'loading':
+        return (
+          <div className='flex justify-center mt-8'>
+            <Spinner className='mt-2' />
+          </div>
+        );
+      case 'authenticated':
+        return session?.user?.name &&
+          <Invoice requestId={params.requestId as string} />
+        
+      case 'unauthenticated':
+        return <NotConnected />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
       <Navbar />
-      {status === 'loading' ? (
-        <div className='flex justify-center mt-8'>
-          <Spinner className='mt-2' />
-        </div>
-      ) : status === 'authenticated' && session?.user?.name ? (
-        <div className=''>
-          <Profile />
-        </div>
-      ) : (
-        <NotConnected />
-      )}
+      {renderContent()}
     </>
   );
 };

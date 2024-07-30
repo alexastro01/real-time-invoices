@@ -69,3 +69,15 @@ export type SenderDetailsType = {
 
 
   export type invoiceItems = Array<{ name: string; quantity: number; price: number }>;
+
+
+export interface SenderDetails {
+    evmAddress: string;
+    name: string;
+    email: string;
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
+  }

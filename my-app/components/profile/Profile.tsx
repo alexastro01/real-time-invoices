@@ -3,7 +3,12 @@ import { CreateProfile } from './CreateProfile'
 
 const Profile = () => {
   return (
-    <div><CreateProfile /></div>
+
+    <div>
+      <div className='flex justify-center'>
+      <CreateProfile />
+      </div>
+    </div>
   )
 }
 
