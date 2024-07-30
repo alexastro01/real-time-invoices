@@ -4,7 +4,7 @@ import { getCsrfToken } from "next-auth/react"
 import { SiweMessage } from "siwe"
 import { AdapterUser } from "next-auth/adapters";
 import { JWT } from "next-auth/jwt";
-
+import { redirect } from 'next/navigation'
 import { Session, User } from "next-auth";
 
 interface CustomSession extends Session {
@@ -53,11 +53,15 @@ export const authOptions: AuthOptions = {
             domain: nextAuthUrl.host,
             nonce: await getCsrfToken({ req }),
           })
+
+          
           
           if (result.success) {
+        
             return {
               id: siwe.address,
             }
+   
           }
           return null
         } catch (e) {
@@ -70,11 +74,13 @@ export const authOptions: AuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
+    
     async session({ session, token, user }: {
         session: Session;
         token: JWT;
         user: AdapterUser;
       }): Promise<CustomSession> {
+  
         return {
           ...session,
           user: {
@@ -84,6 +90,7 @@ export const authOptions: AuthOptions = {
             // Add any other custom properties here
           },
         } as CustomSession;
+        
       },
 }
 }

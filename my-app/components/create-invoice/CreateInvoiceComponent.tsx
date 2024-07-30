@@ -10,7 +10,7 @@ import { ConfirmationComponent } from './ConfirmationComponent';
 
 const CreateInvoiceComponent = () => {
     const [step, setStep] = useState(0);
-    const [formData, setFormData] = useState<FormDataType>({
+    const [formData, setFormData] = useState<FormDataType>({        
       senderDetails: {
           name: "",
           email: "",
