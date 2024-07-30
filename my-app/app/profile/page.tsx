@@ -28,7 +28,7 @@ const Page = () => {
         </div>
       ) : status === 'authenticated' && session?.user?.name ? (
         <div className=''>
-          <Profile />
+          <Profile  />
         </div>
       ) : (
         <NotConnected />
