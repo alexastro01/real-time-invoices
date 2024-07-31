@@ -95,6 +95,7 @@ const DisplayInvoice = ({
                         totalAmount={invoiceData.paymentDetails.totalAmount}
                         requestId={requestId}
                         payeeAddress={invoiceData.paymentDetails.payeeAddress}
+                        dueDate={invoiceData.paymentDetails.dueDate}
 
                     />
                 </div>

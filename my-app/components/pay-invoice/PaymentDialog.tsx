@@ -19,12 +19,14 @@ type PaymentDialogProps = {
     totalAmount: string;
     requestId: string;
     payeeAddress: string;
+    dueDate: any;
 }
 
 const PaymentDialog = ({
     totalAmount,
     requestId,
-    payeeAddress
+    payeeAddress,
+    dueDate
 }: PaymentDialogProps) => {
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
@@ -48,7 +50,7 @@ const PaymentDialog = ({
             }
 
             {
-                step === 1 && <StartLinearStream setStep={setStep} amountToStream={totalAmount} payeeAddress={payeeAddress} />
+                step === 1 && <StartLinearStream setStep={setStep} amountToStream={totalAmount} payeeAddress={payeeAddress} dueDate={dueDate} />
             }
 
             {

@@ -74,7 +74,7 @@ export function generateRequestParameters({
     // Consider using rnf_invoice format from @requestnetwork/data-format
     contentData: {
       invoiceItems: invoiceItems,
-      dueDate: dueDate,
+      dueDate: dueDate as number * 1000,
       RequestType: 'InvoiceStreaming'
     },
     

@@ -15,14 +15,16 @@ import { abi } from '../../abi/SablierLinear'
 import { parseEther, decodeEventLog } from 'viem';
 import Spinner from '../helpers/Spinner';
 import { useToast } from '../ui/use-toast';
+import { getTimeRemainingInSeconds } from '@/utils/sablier/getTimeToStreamInSeconds';
 
 type StartLinearStreamProps = {
     setStep: React.Dispatch<React.SetStateAction<number>>;
     amountToStream: string;
     payeeAddress: string;
+    dueDate: number;
 }
 
-const StartLinearStream = ({ setStep, amountToStream, payeeAddress }: StartLinearStreamProps) => {
+const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate }: StartLinearStreamProps) => {
     const { toast } = useToast();
     const [streamId, setStreamId] = useState<string | null>(null);
 
@@ -49,11 +51,11 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress }: StartLinea
                 [
                     address,
                     payeeAddress,
-                    amountToStream,
+                    parseEther(amountToStream),
                     tUSDCAddress,
                     true,
                     false,
-                    [parseEther('0'), 3600],
+                    [parseEther('0'), getTimeRemainingInSeconds(dueDate)],
                     ['0x909957dcc1B114Fe262F4779e6aeD4d034D96B0f', 0]
                 ]
             ],
@@ -116,7 +118,7 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress }: StartLinea
     }, [error])
 
     return (
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="">
             <DialogHeader>
                 <DialogTitle>Start Stream</DialogTitle>
             </DialogHeader>
@@ -128,7 +130,7 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress }: StartLinea
                 </div>
             ) : (
                 <div className="py-4 text-center">
-                    <p className="text-lg font-semibold">Ready to start streaming</p>
+                    <p className="text-lg font-semibold">Stream {amountToStream} USDC to {payeeAddress}</p>
                 </div>
             )}
             <DialogFooter>
