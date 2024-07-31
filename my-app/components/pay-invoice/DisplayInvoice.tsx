@@ -94,6 +94,8 @@ const DisplayInvoice = ({
                     <PaymentDialog
                         totalAmount={invoiceData.paymentDetails.totalAmount}
                         requestId={requestId}
+                        payeeAddress={invoiceData.paymentDetails.payeeAddress}
+
                     />
                 </div>
 

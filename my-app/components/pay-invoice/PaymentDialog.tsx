@@ -17,12 +17,14 @@ import StreamCreatedSuccess from './StreamCreatedSuccess';
 
 type PaymentDialogProps = {
     totalAmount: string;
-    requestId: string
+    requestId: string;
+    payeeAddress: string;
 }
 
 const PaymentDialog = ({
     totalAmount,
-    requestId
+    requestId,
+    payeeAddress
 }: PaymentDialogProps) => {
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
@@ -42,11 +44,11 @@ const PaymentDialog = ({
                 </ShimmerButton>
             </DialogTrigger>
             {
-                step === 0 && <ApproveUSDCDialog setStep={setStep} />
+                step === 0 && <ApproveUSDCDialog setStep={setStep} amountToApprove={totalAmount} />
             }
 
             {
-                step === 1 && <StartLinearStream setStep={setStep} />
+                step === 1 && <StartLinearStream setStep={setStep} amountToStream={totalAmount} payeeAddress={payeeAddress} />
             }
 
             {

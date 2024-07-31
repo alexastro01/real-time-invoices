@@ -19,12 +19,14 @@ import { useToast } from '../ui/use-toast';
 
 type ApproveUSDCDialogProps = {
     setStep: React.Dispatch<React.SetStateAction<number>>;
+    amountToApprove: string;
 
 }
 
 
 const ApproveUSDCDialog = ({
-    setStep
+    setStep,
+    amountToApprove
 }:
     ApproveUSDCDialogProps
 ) => {
@@ -45,7 +47,7 @@ const ApproveUSDCDialog = ({
             address: tUSDCAddress,
             abi,
             functionName: 'approve',
-            args: [sablierLinearV2LockUpAddress, parseEther('10000')],
+            args: [sablierLinearV2LockUpAddress, parseEther(amountToApprove)],
         })
     }
 
@@ -79,7 +81,7 @@ const ApproveUSDCDialog = ({
             {isConfirming ?
                 <Spinner className='w-24 h-24' /> :
                 <div className="py-4 text-center">
-                    <p className="text-lg font-semibold">Approve 100 USDC</p>
+                    <p className="text-lg font-semibold">{amountToApprove} USDC</p>
                 </div>
 
             }
