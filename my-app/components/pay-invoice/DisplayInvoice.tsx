@@ -79,27 +79,28 @@ const DisplayInvoice = ({
     return (
         <div className='grid grid-cols-1 lg:grid-cols-1 items-center justify-items-center mt-8'>
             {invoiceData ?
-            
-                    <InvoiceContent
-                        invoiceData={invoiceData}
-                    />
-        
+
+                <InvoiceContent
+                    invoiceData={invoiceData}
+                />
+
                 :
                 <Spinner className='w-24 h-24' />
             }
 
-{invoiceData ?
-            
-            <div className='mt-2'>
-            <PaymentDialog
-                totalAmount={invoiceData.paymentDetails.totalAmount}
-            />
-        </div>
+            {invoiceData ?
 
-        :
- null
-    }
-              
+                <div className='mt-2'>
+                    <PaymentDialog
+                        totalAmount={invoiceData.paymentDetails.totalAmount}
+                        requestId={requestId}
+                    />
+                </div>
+
+                :
+                null
+            }
+
         </div>
     )
 }

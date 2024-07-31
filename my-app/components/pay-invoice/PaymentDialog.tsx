@@ -3,21 +3,26 @@
 import React, { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog"
 import ShimmerButton from '../magicui/shimmer-button'
+import ApproveUSDCDialog from './ApproveUSDCDialog';
+import StartLinearStream from './StartLinearStream';
+import StreamCreatedSuccess from './StreamCreatedSuccess';
 
 type PaymentDialogProps = {
     totalAmount: string;
+    requestId: string
 }
 
 const PaymentDialog = ({
-    totalAmount
+    totalAmount,
+    requestId
 }: PaymentDialogProps) => {
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
@@ -36,17 +41,17 @@ const PaymentDialog = ({
                     {loading ? "Loading..." : "Pay invoice"}
                 </ShimmerButton>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                    <DialogTitle>Approve USDC</DialogTitle>
-                </DialogHeader>
-                <div className="py-4 text-center">
-                    <p className="text-lg font-semibold">Approve 100 USDC</p>
-                </div>
-                <DialogFooter>
-                    <Button type="submit" className="w-full">Approve</Button>
-                </DialogFooter>
-            </DialogContent>
+            {
+                step === 0 && <ApproveUSDCDialog setStep={setStep} />
+            }
+
+            {
+                step === 1 && <StartLinearStream setStep={setStep} />
+            }
+
+            {
+                step === 2 && <StreamCreatedSuccess requestId={requestId} />
+            }
         </Dialog>
     )
 }
