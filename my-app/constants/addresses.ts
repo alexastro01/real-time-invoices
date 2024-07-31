@@ -1,0 +1,1 @@
+export const tUSDCAddress = '0x8c88F4205D24619cB3F11B3925312Df0d484F4e7'
