@@ -156,6 +156,7 @@ export interface IPaymentDetails {
   dueDate: Date | string | number,
   totalAmount: string | number,
   invoiceItems: invoiceItems,
+  stream_id?: number
 
 }
 

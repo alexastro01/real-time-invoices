@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { InvoiceContentProps } from '@/types/interfaces';
+import { IInvoiceData, InvoiceContentProps } from '@/types/interfaces';
 import InvoiceContent from './InvoiceContent';
 import ActionButtons from './ActionButtons';
 import Spinner from '../helpers/Spinner';
+import NotPaidInvoice from './NotPaidInvoice';
 
 
 type InvoiceProps = {
@@ -12,7 +13,7 @@ type InvoiceProps = {
 const Invoice = ({
   requestId
 }: InvoiceProps) => {
-  const [invoiceData, setInvoiceData] = useState();
+  const [invoiceData, setInvoiceData] =  useState<IInvoiceData | null>(null);
 
 
   async function getInvoiceData(requestId: string) {
@@ -49,10 +50,13 @@ const Invoice = ({
         /> :
         <Spinner className='w-24 h-24' />
       }
-
-
-      <ActionButtons />
-
+   {invoiceData && (
+      invoiceData.paymentDetails.stream_id ? (
+        <ActionButtons />
+      ) : (
+        <NotPaidInvoice requestId={requestId} />
+      )
+    )}
     </div>
   )
 }

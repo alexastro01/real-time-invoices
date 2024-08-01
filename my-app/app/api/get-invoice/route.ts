@@ -76,7 +76,7 @@ export async function GET(request: Request) {
             dueDate: requestData.contentData.dueDate,
             totalAmount: requestData.expectedAmount,
             invoiceItems: requestData.contentData.invoiceItems,
-
+            stream_id:data.stream_id
         }
       }
       

@@ -13,7 +13,7 @@ const ActionButtons: React.FC = () => {
       tokenSymbol="DAI"
     />
       <Button variant="default" className="w-full">
-        <CreditCard className="mr-2 h-4 w-4" /> Pay Invoice
+        <CreditCard className="mr-2 h-4 w-4" /> Withdraw
       </Button>
       <Button variant="destructive" className="w-full">
         <XCircle className="mr-2 h-4 w-4" /> Cancel Invoice
