@@ -36,7 +36,7 @@ const Page = () => {
     if (status === 'authenticated') {
       fetchUserDetails();
     }
-  }, [session, status]);
+  }, [status]);
 
   const handleCreateProfile = () => {
     router.push('/profile?redirect=create-invoice');

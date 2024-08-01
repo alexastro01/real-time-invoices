@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -7,7 +7,6 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { sablierLinearV2LockUpAddress, tUSDCAddress } from '@/constants/addresses';
@@ -22,11 +21,14 @@ type StartLinearStreamProps = {
     amountToStream: string;
     payeeAddress: string;
     dueDate: number;
+    requestId: string;
 }
 
-const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate }: StartLinearStreamProps) => {
+const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, requestId }: StartLinearStreamProps) => {
     const { toast } = useToast();
     const [streamId, setStreamId] = useState<string | null>(null);
+    const [isAddingStreamId, setIsAddingStreamId] = useState(false);
+    const [addStreamIdError, setAddStreamIdError] = useState<string | null>(null);
 
     const {
         data: hash,
@@ -35,14 +37,18 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate }: S
         writeContract
     } = useWriteContract()
 
+    
+
     const { address } = useAccount();
+
+
 
     const { isLoading: isConfirming, isSuccess: isConfirmed, data: receipt } =
         useWaitForTransactionReceipt({
             hash,
         })
 
-    async function StartStreaming() {
+    const StartStreaming = useCallback(() => {
         writeContract({
             address: sablierLinearV2LockUpAddress,
             abi,
@@ -60,53 +66,109 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate }: S
                 ]
             ],
         })
-    }
+    }, [writeContract, address, payeeAddress, amountToStream, dueDate]);
 
-    const getStreamIdFromReceipt = (receipt: any) => {
-        if (!receipt) return null;
-        
+
+
+    const getStreamIdFromReceipt = useCallback((receipt: any): string => {
+        if (!receipt || !receipt.logs) {
+            throw new Error("Invalid receipt: no logs found");
+        }
+
         const log = receipt.logs.find(
             (log: any) => log.address.toLowerCase() === sablierLinearV2LockUpAddress.toLowerCase()
         );
-    
-        if (!log) return null;
-      
-        try {
-            const event = decodeEventLog({
-                abi,
-                data: log.data,
-                topics: log.topics,
-            }) as any;
-    
-            if (event.eventName === 'MetadataUpdate') {
-                return event?.args?._tokenId.toString()
-            }
-        } catch (error) {
-            console.error('Failed to decode event log:', error)
+
+        if (!log) {
+            throw new Error("No log found for Sablier contract");
         }
-    
-        return null
-    }
+
+        const event = decodeEventLog({
+            abi,
+            data: log.data,
+            topics: log.topics,
+        }) as any;
+
+        if (event.eventName !== 'MetadataUpdate') {
+            throw new Error(`Unexpected event: ${event.eventName}`);
+        }
+
+        const streamId = event?.args?._tokenId.toString();
+        if (!streamId) {
+            throw new Error("Stream ID not found in event args");
+        }
+
+        return streamId;
+    }, []);
+
+
+    const addStreamIdToInvoice = useCallback(async (streamId: string) => {
+        setIsAddingStreamId(true);
+        setAddStreamIdError(null);
+
+        try {
+            const response = await fetch('/api/add-stream-id', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    requestId,
+                    streamId,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to add stream ID to invoice');
+            }
+
+            const result = await response.json();
+            if (!result.success) {
+                throw new Error(result.error || 'Unknown error occurred');
+            }
+
+            return true;
+        } catch (error) {
+            console.error('Error adding stream ID to invoice:', error);
+            setAddStreamIdError(error instanceof Error ? error.message : 'Unknown error occurred');
+            return false;
+        } finally {
+            setIsAddingStreamId(false);
+        }
+    }, [requestId]);
 
     useEffect(() => {
         if (isConfirmed && receipt) {
-            const parsedStreamId = getStreamIdFromReceipt(receipt);
-            if (parsedStreamId) {
-                setStreamId(parsedStreamId);
-                toast({
-                    title: "Stream Created",
-                    description: `Stream created with ID: ${parsedStreamId}`,
-                })
-                setStep(2)
-            } else {
-                toast({
-                    title: "Stream Created",
-                    description: "Stream was created, but ID couldn't be retrieved.",
-                    variant: "destructive"
-                })
-            }
+            const processReceipt = async () => {
+                const parsedStreamId = await getStreamIdFromReceipt(receipt);
+                if (parsedStreamId) {
+                    const success = await addStreamIdToInvoice(parsedStreamId);
+                    if (success) {
+                        setStreamId(parsedStreamId);
+                        toast({
+                            title: "Stream Created",
+                            description: `Stream created with ID: ${parsedStreamId}`,
+                        });
+                        setStep(2);
+                    } else {
+                        toast({
+                            title: "Error",
+                            description: addStreamIdError || "Failed to add stream ID to invoice",
+                            variant: "destructive"
+                        });
+                    }
+                } else {
+                    toast({
+                        title: "Stream Created",
+                        description: "Stream was created, but ID couldn't be retrieved.",
+                        variant: "destructive"
+                    });
+                }
+            };
+
+            processReceipt();
         }
-    }, [isConfirmed, receipt]);
+    }, [isConfirmed, receipt, getStreamIdFromReceipt, addStreamIdToInvoice, addStreamIdError, toast, setStep]);
 
     useEffect(() => {
         if (error) {
@@ -115,14 +177,14 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate }: S
                 variant: "destructive"
             })
         }
-    }, [error])
+    }, [error, toast])
 
     return (
         <DialogContent className="">
             <DialogHeader>
                 <DialogTitle>Start Stream</DialogTitle>
             </DialogHeader>
-            {isConfirming ? (
+            {isConfirming || isAddingStreamId ? (
                 <Spinner className='w-24 h-24' />
             ) : streamId ? (
                 <div className="py-4 text-center">
@@ -134,10 +196,10 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate }: S
                 </div>
             )}
             <DialogFooter>
-                <Button 
-                    className="w-full" 
-                    disabled={isPending || isConfirming} 
-                    onClick={() => StartStreaming()}
+                <Button
+                    className="w-full"
+                    disabled={isPending || isConfirming || isAddingStreamId}
+                    onClick={StartStreaming}
                 >
                     Start Streaming
                 </Button>

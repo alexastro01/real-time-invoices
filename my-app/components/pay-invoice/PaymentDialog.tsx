@@ -50,7 +50,7 @@ const PaymentDialog = ({
             }
 
             {
-                step === 1 && <StartLinearStream setStep={setStep} amountToStream={totalAmount} payeeAddress={payeeAddress} dueDate={dueDate} />
+                step === 1 && <StartLinearStream setStep={setStep} amountToStream={totalAmount} payeeAddress={payeeAddress} dueDate={dueDate} requestId={requestId} />
             }
 
             {
