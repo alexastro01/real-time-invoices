@@ -4,12 +4,21 @@ import { Progress } from "@/components/ui/progress";
 
 interface TokenDisplayProps {
   maxValue: number;
-  duration: number; // in milliseconds
+ 
   tokenSymbol: string;
+  startTime: number;
+  endTime: number;
 }
 
-const TokenDisplay: React.FC<TokenDisplayProps> = ({ maxValue, duration, tokenSymbol }) => {
-  const currentValue = useCountUp(0, maxValue, duration);
+const TokenDisplay: React.FC<TokenDisplayProps> = ({ maxValue, tokenSymbol, endTime, startTime }) => {
+  const totalDuration = endTime - startTime;
+  const elapsedTime = Math.max(Date.now() / 1000 - startTime, 0);
+  const remainingDuration = Math.max(endTime - Date.now() / 1000, 0);
+  const percentageElapsed = (elapsedTime / totalDuration) * 100;
+  const currentValue = maxValue * (percentageElapsed / 100);
+
+  // Use the hook with the calculated values
+  const displayValue = useCountUp(currentValue, maxValue, remainingDuration * 1000); // Convert to milliseconds
   
   const amountWithdrawn = maxValue * 0.3; // Mock value
 
@@ -58,7 +67,7 @@ const TokenDisplay: React.FC<TokenDisplayProps> = ({ maxValue, duration, tokenSy
           <Progress value={streamedPercentage} className="h-3 bg-yellow-100 rounded-full" 
                     indicatorClassName="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full" />
           <div className="mt-2 text-xs text-gray-500 text-right">
-            {currentValue.toFixed(4)} / {maxValue} {tokenSymbol}
+            {displayValue.toFixed(4)} / {maxValue} {tokenSymbol}
           </div>
         </div>
 

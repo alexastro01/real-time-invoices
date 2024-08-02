@@ -81,3 +81,23 @@ export interface SenderDetails {
     zip: string;
     country: string;
   }
+
+  export type StreamData = {
+    amounts: {
+      deposited: bigint;
+      refunded: bigint;
+      withdrawn: bigint;
+    };
+    asset: string;
+    cliffTime: number;
+    endTime: number;
+    isCancelable: boolean;
+    isDepleted: boolean;
+    isStream: boolean;
+    isTransferable: boolean;
+    recipient: string;
+    sender: string;
+    startTime: number;
+    wasCanceled: boolean;
+  }
+  
