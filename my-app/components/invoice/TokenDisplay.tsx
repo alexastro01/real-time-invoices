@@ -1,5 +1,7 @@
+'use client';
+
 import useCountUp from '@/hooks/useCountUp';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Progress } from "@/components/ui/progress";
 
 interface TokenDisplayProps {
@@ -17,10 +19,14 @@ const TokenDisplay: React.FC<TokenDisplayProps> = ({ maxValue, tokenSymbol, endT
   const percentageElapsed = (elapsedTime / totalDuration) * 100;
   const currentValue = maxValue * (percentageElapsed / 100);
 
+
+    // useEffect(() =>{
+    //    console.log(remainingDuration)
+    // }, [remainingDuration])
   // Use the hook with the calculated values
   const displayValue = useCountUp(currentValue, maxValue, remainingDuration * 1000); // Convert to milliseconds
   
-  const amountWithdrawn = maxValue * 0.3; // Mock value
+  const amountWithdrawn = maxValue * 0.0; // Mock value
 
   const streamedPercentage = (currentValue / maxValue) * 100;
   const withdrawnPercentage = (amountWithdrawn / maxValue) * 100;

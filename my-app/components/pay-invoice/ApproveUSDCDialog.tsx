@@ -79,7 +79,9 @@ const ApproveUSDCDialog = ({
                 <DialogTitle>Approve USDC</DialogTitle>
             </DialogHeader>
             {isConfirming ?
-                <Spinner className='w-24 h-24' /> :
+                <div className='flex justify-center'>
+                <Spinner className='w-24 h-24' />
+                </div> :
                 <div className="py-4 text-center">
                     <p className="text-lg font-semibold">{amountToApprove} USDC</p>
                 </div>

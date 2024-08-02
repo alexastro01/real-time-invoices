@@ -185,7 +185,9 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
                 <DialogTitle>Start Stream</DialogTitle>
             </DialogHeader>
             {isConfirming || isAddingStreamId ? (
+                  <div className='flex justify-center'>
                 <Spinner className='w-24 h-24' />
+                </div>
             ) : streamId ? (
                 <div className="py-4 text-center">
                     <p className="text-lg font-semibold">Stream created with ID: {streamId}</p>
