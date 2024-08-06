@@ -8,6 +8,9 @@ import { abi } from '../../abi/SablierLinear'
 import { sablierLinearV2LockUpAddress } from '@/constants/addresses';
 import { formatEther } from 'viem';
 import { StreamData } from '@/types/types';
+import CancelStream from './CancelStream';
+import DownloadPDF from './DownloadPDF';
+import ShareInvoiceComponent from './ShareInvoiceComponent';
 
 
 type ActionButtonsProps = {
@@ -42,15 +45,9 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
       <Button variant="default" className="w-full">
         <CreditCard className="mr-2 h-4 w-4" /> Withdraw
       </Button>
-      <Button variant="destructive" className="w-full">
-        <XCircle className="mr-2 h-4 w-4" /> Cancel Invoice
-      </Button>
-      <Button variant="outline" className="w-full">
-        <Download className="mr-2 h-4 w-4" /> Download PDF
-      </Button>
-      <Button variant="secondary" className="w-full">
-        <Share2 className="mr-2 h-4 w-4" /> Share Invoice
-      </Button>
+      <CancelStream />
+      <DownloadPDF />
+      <ShareInvoiceComponent />
     </div>
   );
 };
