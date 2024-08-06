@@ -4,6 +4,9 @@ import InvoiceContent from './InvoiceContent';
 import ActionButtons from './ActionButtons';
 import Spinner from '../helpers/Spinner';
 import NotPaidInvoice from './NotPaidInvoice';
+import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
+import { Button } from '../ui/button';
+import ViewInvoiceDialog from './ViewInvoiceDialog';
 
 
 type InvoiceProps = {
@@ -41,22 +44,30 @@ const Invoice = ({
   }, [requestId]);
 
   return (
-    <div className='grid grid-cols-1 lg:grid-cols-2 items-center justify-items-center mt-8'>
-      {/* Invoice */}
+    <div className='grid grid-cols-1 lg:grid-cols-1 items-center justify-items-center mt-8'>
+      {/* Invoice Summary */}
+ 
 
-      {invoiceData ?
-        <InvoiceContent
-          invoiceData={invoiceData}
-        /> :
-        <Spinner className='w-24 h-24' />
-      }
-   {invoiceData && (
-      invoiceData.paymentDetails.stream_id ? (
-        <ActionButtons streamId={invoiceData.paymentDetails.stream_id } />
+      {invoiceData && (
+        invoiceData.paymentDetails.stream_id ? (
+          <ActionButtons streamId={invoiceData.paymentDetails.stream_id} />
+        ) : (
+          <NotPaidInvoice requestId={requestId} />
+        )
+      )}
+
+{invoiceData ? (
+        <div>
+          {/* <h2>Invoice Summary</h2>
+          <p>Invoice Number: {invoiceData.paymentDetails.invoiceNumber}</p>
+          <p>Total Amount: {invoiceData.paymentDetails.totalAmount}</p>
+          <p>Due Date: {invoiceData.paymentDetails.dueDate}</p>
+           */}
+        <ViewInvoiceDialog invoiceData={invoiceData} />
+        </div>
       ) : (
-        <NotPaidInvoice requestId={requestId} />
-      )
-    )}
+        <Spinner className='w-24 h-24' />
+      )}
     </div>
   )
 }

@@ -19,7 +19,7 @@ const InvoiceContent = ({ invoiceData }: InvoiceContentProps) => {
   const { payeeAddress, payerAddress, chain, currency, streamType, dueDate, totalAmount, invoiceItems } = invoiceData.paymentDetails;
 
   return (
-    <div className="w-[80%] max-w-4xl">
+    <div className="w-[100%] max-w-4xl">
       <Card className="border-2">
         <CardHeader className="border-b">
           <CardTitle className="text-3xl font-bold text-center">Invoice</CardTitle>

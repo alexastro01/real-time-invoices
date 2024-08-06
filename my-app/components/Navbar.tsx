@@ -1,9 +1,21 @@
+
+'use client'
+
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import Image from "next/image"
 import Link from "next/link"
-import { LayoutDashboard, UserCircle, DockIcon } from "lucide-react"
+import { LayoutDashboard, UserCircle, FileText } from "lucide-react"
+import { usePathname } from 'next/navigation'
 
 export default function Navbar() {
+  const pathname = usePathname()
+
+  const navItems = [
+    { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+    { href: "/create-invoice", icon: FileText, label: "Create Invoice" },
+    { href: "/profile", icon: UserCircle, label: "Profile" },
+  ]
+
   return (
     <header className="fixed left-0 top-0 flex flex-col h-screen w-64 shrink-0 bg-background border-r border-accent p-4">
       <Link href="/" className="flex items-center mb-6">
@@ -12,33 +24,19 @@ export default function Navbar() {
       </Link>
       <nav className="flex-1">
         <ul className="flex flex-col gap-4">
-          <li>
-            <Link
-              href="/dashboard"
-              className="flex w-full items-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
-            >
-              <LayoutDashboard className="mr-2 h-4 w-4" />
-              Dashboard
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/create-invoice"
-              className="flex w-full items-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
-            >
-              <DockIcon className="mr-2 h-4 w-4" />
-              Create Invoice
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/profile"
-              className="flex w-full items-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
-            >
-              <UserCircle className="mr-2 h-4 w-4" />
-              Profile
-            </Link>
-          </li>
+          {navItems.map((item) => (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                className={`flex w-full items-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 ${
+                  pathname === item.href ? 'bg-accent text-accent-foreground' : 'bg-background'
+                }`}
+              >
+                <item.icon className="mr-2 h-4 w-4" />
+                {item.label}
+              </Link>
+            </li>
+          ))}
         </ul>
       </nav>
       <div className="mt-auto">
