@@ -73,12 +73,14 @@ export async function GET(request: Request) {
             chain: "EDU",
             currency: requestData.currencyInfo.value,
             streamType: "linear",
-            dueDate: Date.now(),
+            dueDate: requestData.contentData.dueDate,
             totalAmount: requestData.expectedAmount,
             invoiceItems: requestData.contentData.invoiceItems,
-
+            stream_id:data.stream_id
         }
       }
+      
+      console.log(requestData)
 
       return NextResponse.json(invoiceData);
 
