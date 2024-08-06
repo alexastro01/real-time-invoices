@@ -6,6 +6,7 @@ import { Providers } from "./providers";
 import { Toaster } from "@/components/ui/toaster";
 import { SessionWrapper } from "@/components/SessionWrapper";
 import { Analytics } from '@vercel/analytics/react';
+import Navbar from "@/components/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,7 +38,6 @@ export const metadata: Metadata = {
     images: ["https://www.streambill.xyz/waitlist.png"],
   },
 }
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -45,17 +45,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} mx-2`}>
-      <Providers>
-        <SessionWrapper>
-      <main>
-        {children}
-        <Analytics />
-       </main>
-       <Toaster />
-       </SessionWrapper>
-       </Providers> 
-        </body>
+      <body className={inter.className}>
+        <Providers>
+          <SessionWrapper>
+            <div className="flex">
+              <Navbar /> {/* Add the Navbar here */}
+              <main className="flex-1 ml-64 p-4">
+                {children}
+                <Analytics />
+              </main>
+            </div>
+            <Toaster />
+          </SessionWrapper>
+        </Providers>
+      </body>
     </html>
   );
 }
