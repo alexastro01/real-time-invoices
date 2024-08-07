@@ -97,6 +97,8 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
           requestId: confirmedRequestData.requestId,
           payeeDetails,
           payerDetails,
+          payerEVMAddress,
+          payeeEVMAddress
         }),
       });
 
@@ -142,14 +144,14 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
             </div>
           }
 
-          {isConfirmed === true && 
+          {isConfirmed === true &&
             <div className="flex flex-col items-center justify-center p-4">
 
               <RequestConfirmed requestId={requestId} />
 
             </div>
 
-    
+
           }
 
         </DialogContent>

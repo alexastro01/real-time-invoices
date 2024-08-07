@@ -15,7 +15,7 @@ const ViewInvoiceDialog = ({ invoiceData }: InvoiceContentProps) => {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline" className='w-[100%]'>View Invoice</Button>
+                <Button className='w-[100%]'>View Invoice</Button>
             </DialogTrigger>
             <DialogContent className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
 

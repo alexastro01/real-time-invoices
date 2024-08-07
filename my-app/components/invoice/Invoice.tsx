@@ -57,7 +57,7 @@ const Invoice = ({
       )}
 
 {invoiceData ? (
-        <div>
+        <div className='mt-4'>
           {/* <h2>Invoice Summary</h2>
           <p>Invoice Number: {invoiceData.paymentDetails.invoiceNumber}</p>
           <p>Total Amount: {invoiceData.paymentDetails.totalAmount}</p>

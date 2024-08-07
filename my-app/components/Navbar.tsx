@@ -40,7 +40,7 @@ export default function Navbar() {
         </ul>
       </nav>
       <div className="mt-auto">
-        <ConnectButton accountStatus="address" />
+        <ConnectButton accountStatus="address" chainStatus={"icon"} showBalance={false}/>
       </div>
     </header>
   )
