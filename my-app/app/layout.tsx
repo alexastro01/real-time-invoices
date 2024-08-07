@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { SessionWrapper } from "@/components/SessionWrapper";
 import { Analytics } from '@vercel/analytics/react';
 import Navbar from "@/components/Navbar";
+import OCConnectWrapper from "@/components/OCConnectWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,6 +39,11 @@ export const metadata: Metadata = {
     images: ["https://www.streambill.xyz/waitlist.png"],
   },
 }
+
+const opts = {
+  redirectUri: 'http://localhost:3000/redirect', // Adjust this URL
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -47,6 +53,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
+        <OCConnectWrapper opts={opts} sandboxMode={true}>
+
           <SessionWrapper>
             <div className="flex">
               <Navbar /> {/* Add the Navbar here */}
@@ -57,6 +65,7 @@ export default function RootLayout({
             </div>
             <Toaster />
           </SessionWrapper>
+          </OCConnectWrapper>
         </Providers>
       </body>
     </html>

@@ -6,6 +6,9 @@ import Image from "next/image"
 import Link from "next/link"
 import { LayoutDashboard, UserCircle, FileText } from "lucide-react"
 import { usePathname } from 'next/navigation'
+import LoginButton from "./LoginOCID"
+//@ts-ignore
+import { useOCAuth } from '@opencampus/ocid-connect-js';
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -15,6 +18,27 @@ export default function Navbar() {
     { href: "/create-invoice", icon: FileText, label: "Create Invoice" },
     { href: "/profile", icon: UserCircle, label: "Profile" },
   ]
+
+  'use client'
+
+
+
+function UserInfo() {
+  const { authState, ocAuth } = useOCAuth();
+
+  if (authState.error !== undefined) {
+    return <div>Error: {authState.error.message}</div>;
+  }
+
+  const authInfo = ocAuth.getAuthInfo();
+
+  return (
+    <div>
+      <h4>User Info</h4>
+      <pre>{JSON.stringify(authInfo, null, 2)}</pre>
+    </div>
+  );
+}
 
   return (
     <header className="fixed left-0 top-0 flex flex-col h-screen w-64 shrink-0 bg-background border-r border-accent p-4">
@@ -41,6 +65,7 @@ export default function Navbar() {
       </nav>
       <div className="mt-auto">
         <ConnectButton accountStatus="address" chainStatus={"icon"} showBalance={false}/>
+        <UserInfo />
       </div>
     </header>
   )
