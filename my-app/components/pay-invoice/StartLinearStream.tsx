@@ -50,9 +50,12 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
         })
 
     const StartStreaming = useCallback(() => {
+         const sablierLinearV2LockUpAddress = contracts[chainId as ValidChainId].sablierLinearV2LockUpAddress
+         const tUSDCAddress = contracts[chainId as ValidChainId].tUSDCAddress
+
         if (chainId && (chainId as ValidChainId) in contracts) {
         writeContract({
-            address: contracts[chainId as ValidChainId].sablierLinearV2LockUpAddress,
+            address: sablierLinearV2LockUpAddress,
             abi,
             functionName: 'createWithDurations',
             args: [
@@ -68,7 +71,9 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
                 ]
             ],
         })
-    } 
+    } else {
+        alert("Bad chain")
+    }
     }, [writeContract, address, payeeAddress, amountToStream, dueDate]);
 
 
@@ -180,7 +185,12 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
                 variant: "destructive"
             })
         }
+        console.log(error?.message)
+        console.log(contracts[chainId as ValidChainId].sablierLinearV2LockUpAddress)
     }, [error, toast])
+
+
+   
 
     return (
         <DialogContent className="">

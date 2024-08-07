@@ -50,7 +50,7 @@ const ApproveUSDCDialog = ({
             address: contracts[chainId as ValidChainId].tUSDCAddress,
             abi,
             functionName: 'approve',
-            args: [sablierLinearV2LockUpAddress, parseEther(amountToApprove)],
+            args: [contracts[chainId as ValidChainId].sablierLinearV2LockUpAddress, parseEther(amountToApprove)],
         })
     }
     }
