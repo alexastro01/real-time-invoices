@@ -4,6 +4,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Copy, ExternalLink, Check } from 'lucide-react';
 import { format } from 'date-fns';
+import Link from 'next/link';
 
 interface InvoiceItemProps {
   invoice: {
@@ -13,11 +14,13 @@ interface InvoiceItemProps {
     payer_evm_address: string;
     expected_amount: string;
     status: string;
+  
   };
   copiedAddress: string | null;
   onCopyAddress: (address: string) => void;
   getStatusColor: (status: string) => string;
   sliceAddress: (address: string) => string;
+  requestId: string;
 }
 
 export const InvoiceItem: React.FC<InvoiceItemProps> = ({
@@ -25,7 +28,8 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
   copiedAddress,
   onCopyAddress,
   getStatusColor,
-  sliceAddress
+  sliceAddress,
+  requestId
 }) => {
   return (
     <TableRow key={invoice.id} className="hover:bg-gray-50">
@@ -71,10 +75,12 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
         </span>
       </TableCell>
       <TableCell>
+        <Link href={`/invoice/${requestId}`} >
         <Button variant="outline" size="sm" className="flex items-center space-x-1">
           <ExternalLink className="h-4 w-4" />
           <span>View Invoice</span>
         </Button>
+        </Link>
       </TableCell>
     </TableRow>
   );

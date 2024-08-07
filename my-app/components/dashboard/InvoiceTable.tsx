@@ -91,6 +91,7 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
           onCopyAddress={copyToClipboard}
           getStatusColor={getStatusColor}
           sliceAddress={sliceAddress}
+          requestId={invoice.request_id}
         />
       ));
     };
