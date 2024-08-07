@@ -1,33 +1,9 @@
-import { AuthOptions } from "next-auth"
+import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { getCsrfToken } from "next-auth/react"
 import { SiweMessage } from "siwe"
-import { AdapterUser } from "next-auth/adapters";
-import { JWT } from "next-auth/jwt";
-import { redirect } from 'next/navigation'
-import { Session, User } from "next-auth";
 
-interface CustomSession extends Session {
-    user: User & {
-      address?: string;
-      // Add any other custom properties here
-    };
-}
-
-export const authOptions: AuthOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
-    useSecureCookies: process.env.NODE_ENV === "production",
-    cookies: {
-        csrfToken: {
-          name: "next-auth.csrf-token",
-          options: {
-            httpOnly: true,
-            sameSite: "lax",
-            path: "/",
-            secure: process.env.NODE_ENV === "production",
-          },
-        },
-    },
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Ethereum",
@@ -46,25 +22,22 @@ export const authOptions: AuthOptions = {
       async authorize(credentials, req) {
         try {
           const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"))
-          const nextAuthUrl = new URL("http://localhost:3000")
+          const nextAuthUrl = new URL(process.env.NEXTAUTH_URL || "http://localhost:3000")
           
           const result = await siwe.verify({
             signature: credentials?.signature || "",
             domain: nextAuthUrl.host,
-            nonce: await getCsrfToken({ req }),
+            nonce: await getCsrfToken({ req: { headers: req.headers } }),
           })
-
-          
           
           if (result.success) {
-        
             return {
               id: siwe.address,
             }
-   
           }
           return null
         } catch (e) {
+          console.error("Authorization error:", e)
           return null
         }
       },
@@ -73,24 +46,23 @@ export const authOptions: AuthOptions = {
   session: {
     strategy: "jwt",
   },
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    
-    async session({ session, token, user }: {
-        session: Session;
-        token: JWT;
-        user: AdapterUser;
-      }): Promise<CustomSession> {
-  
-        return {
-          ...session,
-          user: {
-            ...session.user,
-            name: token.sub ?? session?.user?.name,
-            address: token.address as string | undefined,
-            // Add any other custom properties here
-          },
-        } as CustomSession;
-        
-      },
-}
+    async session({ session, token }) {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          name: token.sub ?? session?.user?.name,
+          address: token.sub as string | undefined,
+        },
+      }
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.sub = user.id
+      }
+      return token
+    }
+  }
 }
