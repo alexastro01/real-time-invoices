@@ -29,12 +29,13 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const {address} = useAccount();
+    const {address, chainId} = useAccount();
   
     useEffect(() => {
       if (type === "invoicesSent") {
         fetchInvoices();
       }
+      console.log(chainId)
     }, [type, address]);
   
     const fetchInvoices = async () => {
@@ -85,7 +86,7 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
 
       return invoices.map((invoice) => (
         <InvoiceItem 
-          key={invoice.id}
+          key={invoice.request_id}
           invoice={invoice}
           copiedAddress={copiedAddress}
           onCopyAddress={copyToClipboard}

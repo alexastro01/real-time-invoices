@@ -15,6 +15,7 @@ import { parseEther, decodeEventLog } from 'viem';
 import Spinner from '../helpers/Spinner';
 import { useToast } from '../ui/use-toast';
 import { getTimeRemainingInSeconds } from '@/utils/sablier/getTimeToStreamInSeconds';
+import { contracts, ValidChainId } from '@/utils/contracts/contracts';
 
 type StartLinearStreamProps = {
     setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -39,7 +40,7 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
 
     
 
-    const { address } = useAccount();
+    const { address, chainId } = useAccount();
 
 
 
@@ -49,8 +50,9 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
         })
 
     const StartStreaming = useCallback(() => {
+        if (chainId && (chainId as ValidChainId) in contracts) {
         writeContract({
-            address: sablierLinearV2LockUpAddress,
+            address: contracts[chainId as ValidChainId].sablierLinearV2LockUpAddress,
             abi,
             functionName: 'createWithDurations',
             args: [
@@ -66,6 +68,7 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
                 ]
             ],
         })
+    } 
     }, [writeContract, address, payeeAddress, amountToStream, dueDate]);
 
 

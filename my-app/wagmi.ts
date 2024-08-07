@@ -5,7 +5,9 @@ import {
   } from '@rainbow-me/rainbowkit';
 import {
   arbitrum,
+  arbitrumSepolia,
   base,
+  baseSepolia,
   mainnet,
   optimism,
   polygon,
@@ -33,7 +35,8 @@ export const config = getDefaultConfig({
   projectId: 'YOUR_PROJECT_ID',
   chains: [
     opencampus,
-    base,
+    baseSepolia,
+    arbitrumSepolia
   ],
   ssr: true,
 });

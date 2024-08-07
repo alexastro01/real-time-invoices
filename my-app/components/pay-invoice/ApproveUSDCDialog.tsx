@@ -15,6 +15,7 @@ import { abi } from '../../abi/tUSDC'
 import { parseEther } from 'viem';
 import Spinner from '../helpers/Spinner';
 import { useToast } from '../ui/use-toast';
+import { contracts, ValidChainId } from '@/utils/contracts/contracts';
 
 
 type ApproveUSDCDialogProps = {
@@ -32,7 +33,7 @@ const ApproveUSDCDialog = ({
 ) => {
 
     const { toast } = useToast();
-
+    const {chainId} = useAccount();
     const {
         data: hash,
         error,
@@ -43,12 +44,15 @@ const ApproveUSDCDialog = ({
 
 
     async function Approve() {
+        if (chainId && (chainId as ValidChainId) in contracts) {
         writeContract({
-            address: tUSDCAddress,
+            
+            address: contracts[chainId as ValidChainId].tUSDCAddress,
             abi,
             functionName: 'approve',
             args: [sablierLinearV2LockUpAddress, parseEther(amountToApprove)],
         })
+    }
     }
 
     const { isLoading: isConfirming, isSuccess: isConfirmed } =

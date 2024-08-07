@@ -11,6 +11,7 @@ import { parseEther } from 'viem'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { tUSDCAddress } from '@/constants/addresses'
+import { contracts, ValidChainId } from '@/utils/contracts/contracts';
 
 export function GetTUSDC() {
     const {
@@ -20,17 +21,25 @@ export function GetTUSDC() {
         writeContract
     } = useWriteContract()
 
-    const { address } = useAccount();
+    const { address, chainId } = useAccount();
 
     async function submit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        const formData = new FormData(e.target as HTMLFormElement)
-        writeContract({
-            address: tUSDCAddress,
-            abi,
-            functionName: 'mint',
-            args: [address as string, parseEther('10000')],
-        })
+
+
+        if (chainId && (chainId as ValidChainId) in contracts) {
+            writeContract({
+                address: contracts[chainId as ValidChainId].tUSDCAddress,
+                abi,
+                functionName: 'mint',
+                args: [address as string, parseEther('10000')],
+                chainId: chainId as ValidChainId
+            });
+        } else {
+            console.error('Invalid or unsupported chain ID');
+            // Handle the error case, perhaps show a message to the user
+        }
+
     }
 
     const { isLoading: isConfirming, isSuccess: isConfirmed } =
