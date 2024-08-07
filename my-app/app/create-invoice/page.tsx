@@ -45,7 +45,7 @@ const Page = () => {
   const renderContent = () => {
     if (status === 'loading') {
       return (
-        <div className='flex justify-center mt-8'>
+        <div className='flex justify-center mt-8 h-screen'>
           <Spinner className='mt-2' />
         </div>
       );

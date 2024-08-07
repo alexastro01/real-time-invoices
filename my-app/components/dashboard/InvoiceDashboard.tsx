@@ -2,6 +2,7 @@ import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import InvoiceTable from './InvoiceTable';
 import StatsCard from './StatsCard';
+import { InvoiceChart } from './Chart';
 
 const InvoiceDashboard = () => {
   return (
@@ -15,17 +16,22 @@ const InvoiceDashboard = () => {
         <StatsCard description={'Invoices sent'} amount={'10'} />
         <StatsCard description={'Clients'} amount={'2'} />
       </div>
+
+
+      <div>
+        <InvoiceChart />
+      </div>
      
-      <Tabs defaultValue="sender">
+      <Tabs defaultValue="invoicesSent">
         <TabsList>
-          <TabsTrigger value="sender">As Sender</TabsTrigger>
-          <TabsTrigger value="receiver">As Receiver</TabsTrigger>
+          <TabsTrigger value="invoicesSent">Invoices sent</TabsTrigger>
+          <TabsTrigger value="invoicesReceived">Invoices received</TabsTrigger>
         </TabsList>
-        <TabsContent value="sender">
-          <InvoiceTable type="sender" />
+        <TabsContent value="invoicesSent">
+          <InvoiceTable type="invoicesSent" />
         </TabsContent>
-        <TabsContent value="receiver">
-          <InvoiceTable type="receiver" />
+        <TabsContent value="invoicesReceived">
+          <InvoiceTable type="invoicesReceived" />
         </TabsContent>
       </Tabs>
     </div>

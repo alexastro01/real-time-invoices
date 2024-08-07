@@ -11,7 +11,8 @@ export async function POST(request: Request) {
       payeeDetails,
       payerDetails,
       payerEVMAddress,
-      payeeEVMAddress
+      payeeEVMAddress,
+      expectedAmount
     } = body;
 
     const { data, error } = await supabaseClient
@@ -33,7 +34,8 @@ export async function POST(request: Request) {
         payer_zip: payerDetails.zip || '',
         payer_country: payerDetails.country || '',
         payer_evm_address: payerEVMAddress,
-        payee_evm_address: payeeEVMAddress
+        payee_evm_address: payeeEVMAddress,
+        expected_amount: Number(expectedAmount)
       
       });
 

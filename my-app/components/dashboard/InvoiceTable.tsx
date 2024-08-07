@@ -1,15 +1,59 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Copy, ExternalLink, Check } from 'lucide-react';
 import { format } from 'date-fns';
-import { invoices } from '@/helper/mockDataInvoice';
+import { useAccount } from 'wagmi';
+
 type InvoiceTableProps = {
     type: string;
 }
 
+type Invoice = {
+  id: string;
+  created_at: string;
+  payer_evm_address: string;
+  payee_evm_address: string;
+  expected_amount: string;
+  status: string;
+  request_id: string;
+};
+
+
 const InvoiceTable = ({ type }: InvoiceTableProps) => {
     const [copiedAddress, setCopiedAddress] = useState<string | null>(null);
+    const [invoices, setInvoices] = useState<Invoice[]>([]);
+
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const {address} = useAccount();
+  
+    useEffect(() => {
+      if (type === "invoicesSent") {
+        fetchInvoices();
+      }
+    }, [type, address]);
+  
+    const fetchInvoices = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        // Assuming you have access to the current user's payer address
+        const payeeAddress = address as string; // Replace this with the actual payer address
+        const response = await fetch(`/api/get-payee-invoices?payee_address=${payeeAddress}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch invoices');
+        }
+        const data = await response.json();
+        setInvoices(data);
+      } catch (err) {
+        setError('Error fetching invoices');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
 
     const sliceAddress = (address: string) => `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -43,58 +87,58 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.id} className="hover:bg-gray-50">
-              <TableCell>{format(new Date(invoice.createdDate), 'MMM dd, yyyy')}</TableCell>
-              <TableCell>
-                <div className="flex items-center space-x-2">
-                  <span>{sliceAddress(invoice.payee)}</span>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={() => copyToClipboard(invoice.payee)}
-                    className="h-6 w-6"
-                  >
-                    {copiedAddress === invoice.payee ? (
-                      <Check className="h-4 w-4 text-green-500" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center space-x-2">
-                  <span>{sliceAddress(invoice.payer)}</span>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={() => copyToClipboard(invoice.payer)}
-                    className="h-6 w-6"
-                  >
-                    {copiedAddress === invoice.payer ? (
-                      <Check className="h-4 w-4 text-green-500" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-              </TableCell>
-              <TableCell className="font-medium">{invoice.totalAmount}</TableCell>
-              <TableCell>
-                <span className={`font-medium ${getStatusColor(invoice.status)}`}>
-                  {invoice.status}
-                </span>
-              </TableCell>
-              <TableCell>
-                <Button variant="outline" size="sm" className="flex items-center space-x-1">
-                  <ExternalLink className="h-4 w-4" />
-                  <span>View Invoice</span>
+        {invoices.map((invoice) => (
+          <TableRow key={invoice.id} className="hover:bg-gray-50">
+            <TableCell>{format(new Date(invoice.created_at), 'MMM dd, yyyy')}</TableCell>
+            <TableCell>
+              <div className="flex items-center space-x-2">
+                <span>{sliceAddress(invoice.payee_evm_address)}</span>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => copyToClipboard(invoice.payee_evm_address)}
+                  className="h-6 w-6"
+                >
+                  {copiedAddress === invoice.payee_evm_address ? (
+                    <Check className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
                 </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+              </div>
+            </TableCell>
+            <TableCell>
+              <div className="flex items-center space-x-2">
+                <span>{sliceAddress(invoice.payer_evm_address)}</span>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => copyToClipboard(invoice.payer_evm_address)}
+                  className="h-6 w-6"
+                >
+                  {copiedAddress === invoice.payer_evm_address ? (
+                    <Check className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </TableCell>
+            <TableCell className="font-medium">{invoice.expected_amount} USD</TableCell>
+            <TableCell>
+              <span className={`font-medium ${getStatusColor('pending')}`}>
+                   Pending
+              </span>
+            </TableCell>
+            <TableCell>
+              <Button variant="outline" size="sm" className="flex items-center space-x-1">
+                <ExternalLink className="h-4 w-4" />
+                <span>View Invoice</span>
+              </Button>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
       </Table>
     );
   };
