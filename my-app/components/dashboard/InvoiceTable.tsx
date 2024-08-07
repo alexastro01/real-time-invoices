@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Copy, ExternalLink, Check } from 'lucide-react';
 import { format } from 'date-fns';
 import { useAccount } from 'wagmi';
+import { InvoiceItem } from './InvoiceItem';
+import { InvoiceItemSkeleton } from './InvoiceItemSkeleton';
 
 type InvoiceTableProps = {
     type: string;
@@ -74,6 +76,26 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
       }
     };
 
+    const renderTableContent = () => {
+      if (loading) {
+        return Array(5).fill(null).map((_, index) => (
+          <InvoiceItemSkeleton key={index} />
+        ));
+      }
+
+      return invoices.map((invoice) => (
+        <InvoiceItem 
+          key={invoice.id}
+          invoice={invoice}
+          copiedAddress={copiedAddress}
+          onCopyAddress={copyToClipboard}
+          getStatusColor={getStatusColor}
+          sliceAddress={sliceAddress}
+        />
+      ));
+    };
+
+
     return (
       <Table>
         <TableHeader>
@@ -87,58 +109,8 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.id} className="hover:bg-gray-50">
-            <TableCell>{format(new Date(invoice.created_at), 'MMM dd, yyyy')}</TableCell>
-            <TableCell>
-              <div className="flex items-center space-x-2">
-                <span>{sliceAddress(invoice.payee_evm_address)}</span>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  onClick={() => copyToClipboard(invoice.payee_evm_address)}
-                  className="h-6 w-6"
-                >
-                  {copiedAddress === invoice.payee_evm_address ? (
-                    <Check className="h-4 w-4 text-green-500" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </Button>
-              </div>
-            </TableCell>
-            <TableCell>
-              <div className="flex items-center space-x-2">
-                <span>{sliceAddress(invoice.payer_evm_address)}</span>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  onClick={() => copyToClipboard(invoice.payer_evm_address)}
-                  className="h-6 w-6"
-                >
-                  {copiedAddress === invoice.payer_evm_address ? (
-                    <Check className="h-4 w-4 text-green-500" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </Button>
-              </div>
-            </TableCell>
-            <TableCell className="font-medium">{invoice.expected_amount} USD</TableCell>
-            <TableCell>
-              <span className={`font-medium ${getStatusColor('pending')}`}>
-                   Pending
-              </span>
-            </TableCell>
-            <TableCell>
-              <Button variant="outline" size="sm" className="flex items-center space-x-1">
-                <ExternalLink className="h-4 w-4" />
-                <span>View Invoice</span>
-              </Button>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
+          {renderTableContent()}
+        </TableBody>
       </Table>
     );
   };
