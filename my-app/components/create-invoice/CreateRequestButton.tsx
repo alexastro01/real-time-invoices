@@ -104,7 +104,8 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
           payerDetails,
           payerEVMAddress,
           payeeEVMAddress,
-          expectedAmount
+          expectedAmount,
+          chain
         }),
       });
 
