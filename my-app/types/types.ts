@@ -11,7 +11,8 @@ export type generateRequestParamatersParams = {
     tokenAddress?: string,
     dueDate: string | Date | number,
     invoiceItems: invoiceItems,
-    expectedFlowRate: string
+    expectedFlowRate: string,
+    chain: string
 
 }
 

@@ -24,6 +24,9 @@ import {
 import { cn } from "@/lib/utils"
 import { CalendarIcon, XIcon } from "lucide-react"
 import Image from "next/image"
+import { getChainOptions } from "@/utils/multi-chain/MultiChainSelectOptions"
+import { SelectGroup, SelectLabel } from "@radix-ui/react-select"
+import { useAccount } from "wagmi"
 
 
 type PaymentDetailsProps = {
@@ -58,6 +61,7 @@ export function PaymentDetails({
   const grandTotal = React.useMemo(() => {
     return paymentDetails.invoiceItems.reduce((total, item) => total + (item.quantity * item.price), 0);
   }, [paymentDetails.invoiceItems]);
+
 
 
 
@@ -99,6 +103,9 @@ export function PaymentDetails({
     updatePaymentDetails({ invoiceItems: newInvoiceItems });
   };
 
+  const chainOptions = getChainOptions(); // Get the chain options
+
+
 
   return (
     <div className="w-[50%]" >
@@ -121,22 +128,31 @@ export function PaymentDetails({
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="chain">Chain</Label>
-                <Select value={paymentDetails.chain}
-                  onValueChange={(value) => updatePaymentDetails({ chain: value })}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="EDU">
+              <Label htmlFor="chain">Chain</Label>
+           
+              <Select 
+                value={paymentDetails.chain}
+                onValueChange={(value) => updatePaymentDetails({ chain: value })}
+              >
+                
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a chain"/>
+                </SelectTrigger>
+                <SelectContent>
+                      
+                  {chainOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
                       <div className="flex items-center font-semibold">
-                        <Image src="https://www.opencampus.xyz/static/media/coin-logo.39cbd6c42530e57817a5b98ac7621ca7.svg" alt="EDU Chain" className="w-6 h-6 mr-2" width={24} height={24} />
-                        EDU Chain
+                        {option.icon}
+                        {option.label}
                       </div>
                     </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+                  ))}
+              
+                </SelectContent>
+              </Select>
+            </div>
+            
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="currency">Currency</Label>
                 <Select value={paymentDetails.currency} onValueChange={(value) => updatePaymentDetails({ currency: value })}>

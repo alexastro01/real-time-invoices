@@ -22,10 +22,10 @@ const CreateInvoiceComponent = () => {
       },
       paymentDetails: {
           receiverAddress: "",
-          chain: "EDU",
+          chain: "",
           currency: "USDC",
           dueDate: new Date(),
-          invoiceItems: []
+          invoiceItems: [],
       },
       streamType: "linear"
     });

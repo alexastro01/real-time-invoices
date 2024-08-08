@@ -144,6 +144,8 @@ export interface CreateRequestButtonProps {
   expectedAmount: string;
   dueDate: number;
   invoiceItems: invoiceItems;
+  chain: string;
+
 }
 
 

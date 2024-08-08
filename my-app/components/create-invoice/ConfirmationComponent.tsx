@@ -187,8 +187,10 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
                 payerDetails={formData.senderDetails}
                 expectedAmount={totalAmount.toString()}
                 dueDate={getUnixTime(formData.paymentDetails.dueDate as number)}
+                chain={formData.paymentDetails.chain}
                 //add invoice items
                 invoiceItems={formData.paymentDetails.invoiceItems}
+             
   
               />
           : <Spinner className='h-4 w-4' />}
