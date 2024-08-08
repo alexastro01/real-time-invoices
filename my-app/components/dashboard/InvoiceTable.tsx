@@ -19,6 +19,7 @@ type Invoice = {
   expected_amount: string;
   status: string;
   request_id: string;
+  chain_id: number
 };
 
 
@@ -50,6 +51,7 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
         }
         const data = await response.json();
         setInvoices(data);
+        console.log(data)
       } catch (err) {
         setError('Error fetching invoices');
         console.error(err);
@@ -93,6 +95,7 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
           getStatusColor={getStatusColor}
           sliceAddress={sliceAddress}
           requestId={invoice.request_id}
+          chainId={invoice.chain_id}
         />
       ));
     };
@@ -105,6 +108,7 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
             <TableHead className="font-semibold">Created Date</TableHead>
             <TableHead className="font-semibold">Payee</TableHead>
             <TableHead className="font-semibold">Payer</TableHead>
+            <TableHead className="font-semibold">Chain</TableHead>
             <TableHead className="font-semibold">Total Amount</TableHead>
             <TableHead className="font-semibold">Status</TableHead>
             <TableHead className="font-semibold">Actions</TableHead>

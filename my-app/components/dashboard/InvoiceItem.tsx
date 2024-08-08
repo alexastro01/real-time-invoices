@@ -1,10 +1,12 @@
 // InvoiceItem.tsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Copy, ExternalLink, Check } from 'lucide-react';
 import { format } from 'date-fns';
 import Link from 'next/link';
+import Image from 'next/image';
+import { chainInfo, ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions';
 
 interface InvoiceItemProps {
   invoice: {
@@ -21,6 +23,7 @@ interface InvoiceItemProps {
   getStatusColor: (status: string) => string;
   sliceAddress: (address: string) => string;
   requestId: string;
+  chainId: number;
 }
 
 export const InvoiceItem: React.FC<InvoiceItemProps> = ({
@@ -29,8 +32,11 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
   onCopyAddress,
   getStatusColor,
   sliceAddress,
-  requestId
+  requestId,
+  chainId
 }) => {
+
+
   return (
     <TableRow key={invoice.id} className="hover:bg-gray-50">
       <TableCell>{format(new Date(invoice.created_at), 'MMM dd, yyyy')}</TableCell>
@@ -67,6 +73,10 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
             )}
           </Button>
         </div>
+      </TableCell>
+      <TableCell>
+        {/* {chainId} */}
+        <Image src={chainInfo[chainId as ValidChainId].logoUrl} alt="chain logo" width={24} height={24} className='flex justify-center' />
       </TableCell>
       <TableCell className="font-medium">{invoice.expected_amount} USD</TableCell>
       <TableCell>
