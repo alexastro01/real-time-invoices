@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Copy, ExternalLink, Check } from 'lucide-react';
+import { Copy, ExternalLink, Check, DollarSignIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -13,6 +13,8 @@ import { useReadContract } from 'wagmi';
 import { abi } from '../../abi/SablierLinear'
 import StreamStatusDashboard from './StreamStatusDashboard';
 import PendingStatusDashboard from './PendingStatusDashboard';
+import PulsatingButton from '../ui/pulsating-button';
+import ShinyButton from '../magicui/shiny-button';
 
 interface InvoiceItemProps {
   invoice: {
@@ -43,8 +45,11 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
   stream_id
 }) => {
 
+  const [isStreaming, setIsStreaming] = useState(false);
+  const updateStreamingStatus = (status: boolean) => {
+    setIsStreaming(status);
+  };
 
- 
 
   return (
     <TableRow key={invoice.id} className="hover:bg-gray-50">
@@ -89,15 +94,27 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
       <TableCell className="font-medium">{invoice.expected_amount} USD</TableCell>
 
       <TableCell>
-      {stream_id ? <StreamStatusDashboard stream_id={stream_id} chainId={chainId} /> : <PendingStatusDashboard />}
+        {stream_id ? <StreamStatusDashboard stream_id={stream_id} chainId={chainId} setIsStreaming={updateStreamingStatus} /> : <PendingStatusDashboard />}
       </TableCell>
       <TableCell>
-        <Link href={`/invoice/${requestId}`}>
-          <Button variant="outline" size="sm" className="flex items-center space-x-1">
-            <ExternalLink className="h-4 w-4" />
-            <span>View Invoice</span>
+        {
+          isStreaming === true ?
+          <Link href={`/invoice/${requestId}`}>
+          <Button  size="sm" className="flex items-center space-x-1">
+            <DollarSignIcon className="h-5 w-5" />
+            <span>View Stream</span>
           </Button>
         </Link>
+            :
+
+            <Link href={`/invoice/${requestId}`}>
+              <Button variant="outline" size="sm" className="flex items-center space-x-1">
+                <ExternalLink className="h-4 w-4" />
+                <span>View Invoice</span>
+              </Button>
+            </Link>
+        }
+
       </TableCell>
     </TableRow>
   );

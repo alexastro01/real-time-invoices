@@ -8,6 +8,8 @@ import { useReadContract } from 'wagmi'
 type StreamStatusDashboardProps = {
     stream_id: number,
     chainId: number,
+    setIsStreaming: (status: boolean) => void
+
 }
 
 const getStatusColor = (status: string): string => {
@@ -27,7 +29,8 @@ const getStatusColor = (status: string): string => {
 
 const StreamStatusDashboard = ({
     stream_id,
-    chainId
+    chainId,
+    setIsStreaming
 }: StreamStatusDashboardProps) => {
 
     useEffect(() => {
@@ -56,7 +59,16 @@ const StreamStatusDashboard = ({
       const statusMap = ['PENDING', 'STREAMING', 'SETTLED', 'CANCELED'];
       const statusString = status !== undefined ? statusMap[Number(status)] || 'UNKNOWN' : 'PENDING';
 
+      useEffect(() => {
+        if (statusString === 'STREAMING') {
+            setIsStreaming(true);
+        } else {
+            setIsStreaming(false);
+        }
+    }, [statusString, setIsStreaming]);
+
   return (
+    
     <div className={`font-medium ${getStatusColor(statusString)}`}>
       {statusString}
     </div>

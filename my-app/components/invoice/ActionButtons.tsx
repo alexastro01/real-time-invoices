@@ -11,25 +11,30 @@ import { StreamData } from '@/types/types';
 import CancelStream from './CancelStream';
 import DownloadPDF from './DownloadPDF';
 import ShareInvoiceComponent from './ShareInvoiceComponent';
+import { contracts, ValidChainId } from '@/utils/contracts/contracts';
 
 
 type ActionButtonsProps = {
-  streamId: number
+  streamId: number,
+  chain_id: number
 }
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({
-  streamId
+  streamId,
+  chain_id
 }) => {
 
-  const { data, isError, isLoading } = useReadContract({
-    address: sablierLinearV2LockUpAddress,
+  const { data, isError, isLoading, error } = useReadContract({
+    address: contracts[chain_id as ValidChainId].sablierLinearV2LockUpAddress,
     abi: abi,
     functionName: 'getStream',
-    args: [streamId]
+    args: [streamId],
+    chainId:chain_id
   })
 
   useEffect(() => {
     console.log(data)
+    console.log(error?.message)
   }, [data])
 
   const streamData = data as StreamData;

@@ -50,7 +50,7 @@ const Invoice = ({
 
       {invoiceData && (
         invoiceData.paymentDetails.stream_id ? (
-          <ActionButtons streamId={invoiceData.paymentDetails.stream_id} />
+          <ActionButtons streamId={invoiceData.paymentDetails.stream_id} chain_id={invoiceData.paymentDetails.chain_id} />
         ) : (
           <NotPaidInvoice requestId={requestId} />
         )

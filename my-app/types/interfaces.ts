@@ -159,6 +159,7 @@ export interface IPaymentDetails {
   totalAmount: string | number,
   invoiceItems: invoiceItems,
   stream_id?: number,
+  chain_id: number
   
 
 }

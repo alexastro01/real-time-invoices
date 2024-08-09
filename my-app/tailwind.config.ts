@@ -94,6 +94,11 @@ const config = {
             transform: "translate(calc(100cqw - 100%), 0)",
           },
         },
+        pulse: {
+          "0%, 100%": { boxShadow: "0 0 0 0 var(--pulse-color)" },
+          "50%": { boxShadow: "0 0 0 8px var(--pulse-color)" },
+        },
+        
         "border-beam": {
           "100%": {
             "offset-distance": "100%",
@@ -106,6 +111,7 @@ const config = {
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
+          pulse: "pulse var(--duration) ease-out infinite",
         "accordion-up": "accordion-up 0.2s ease-out",
         "spin-around": "spin-around calc(var(--speed) * 2) infinite linear",
         slide: "slide var(--speed) ease-in-out infinite alternate",
