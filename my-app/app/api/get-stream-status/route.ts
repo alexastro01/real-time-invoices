@@ -1,25 +1,48 @@
 import { NextResponse } from 'next/server';
 import { supabaseClient } from '@/lib/supabaseClient';
 import { contracts, ValidChainId } from '@/utils/contracts/contracts';
-import { Chain } from 'viem';
+import { Chain, createPublicClient, http, defineChain } from 'viem';
 import { arbitrumSepolia, baseSepolia } from 'viem/chains';
 
+const openCampus = defineChain({
+  id: 656476,
+  name: 'Open Campus',
+  nativeCurrency: { name: 'EDU', symbol: 'EDU', decimals: 18 },
+  rpcUrls: {
+    default: { http: ['https://rpc.open-campus-codex.gelato.digital'] },
+  },
+});
+
 const chains: Record<ValidChainId, Chain> = {
-    656476: {
-        id: 656476,
-        name: 'Open Campus',
-        nativeCurrency: { name: 'EDU', symbol: 'EDU', decimals: 18 },
-        rpcUrls: {
-            default: { http: ['https://rpc.open-campus-codex.gelato.digital'] },
-        },
-    } as const,
-    84532: baseSepolia,
-    421614: arbitrumSepolia,
+  656476: openCampus,
+  84532: baseSepolia,
+  421614: arbitrumSepolia,
 };
 
+// Add this ABI fragment for the statusOf function
+const sablierABI = [
+  {
+    "inputs": [
+        {
+            "internalType": "uint256",
+            "name": "streamId",
+            "type": "uint256"
+        }
+    ],
+    "name": "statusOf",
+    "outputs": [
+        {
+            "internalType": "enum Lockup.Status",
+            "name": "status",
+            "type": "uint8"
+        }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+},
+] as const;
+
 export async function POST(request: Request) {
-
-
   try {
     const body = await request.json();
     const { requestId, streamId } = body;
@@ -30,16 +53,12 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    console.log(requestId)
-    console.log(streamId)
-    const { data, error } = await supabaseClient
-    .from('invoices')
-    .select('stream_id, chain_id') // Select both stream_id and chain_id
-    .eq('request_id', requestId)
-    .single();
 
-        
-    const contractAddress = contracts[data?.chain_id as ValidChainId].sablierLinearV2LockUpAddress?.toLowerCase();
+    const { data, error } = await supabaseClient
+      .from('invoices')
+      .select('stream_id, chain_id')
+      .eq('request_id', requestId)
+      .single();
 
     if (error) throw error;
 
@@ -50,13 +69,48 @@ export async function POST(request: Request) {
       );
     }
 
-    
+    const chainId = data.chain_id as ValidChainId;
+    const contractAddress = contracts[chainId].sablierLinearV2LockUpAddress?.toLowerCase();
 
-    return NextResponse.json({ success: true, data: data?.stream_id }, { status: 200 });
+    if (!contractAddress) {
+      throw new Error(`No contract address found for chain ID ${chainId}`);
+    }
+
+    // Create a public client for the specific chain
+    const publicClient = createPublicClient({
+      chain: chains[chainId],
+      transport: http(),
+    });
+
+    // Call the statusOf function
+    const status = await publicClient.readContract({
+      address: contractAddress as `0x${string}`,
+      abi: sablierABI,
+      functionName: 'statusOf',
+      args: [BigInt(streamId)],
+    });
+
+    // Map the status number to a human-readable string
+    const statusMap = ['PENDING', 'STREAMING', 'SETTLED', 'CANCELED'];
+    const statusString = statusMap[Number(status)] || 'UNKNOWN';
+
+    console.log({
+      stream_id: data.stream_id,
+      status: statusString
+    })
+
+    return NextResponse.json({ 
+      success: true, 
+      data: {
+        stream_id: data.stream_id,
+        status: statusString
+      }
+    }, { status: 200 });
+
   } catch (error) {
     console.error('Detailed error:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to update invoice with stream ID' },
+      { success: false, error: 'Failed to fetch stream status' },
       { status: 500 }
     );
   }

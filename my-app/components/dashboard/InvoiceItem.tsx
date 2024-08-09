@@ -1,5 +1,4 @@
-// InvoiceItem.tsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Copy, ExternalLink, Check } from 'lucide-react';
@@ -7,6 +6,13 @@ import { format } from 'date-fns';
 import Link from 'next/link';
 import Image from 'next/image';
 import { chainInfo, ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions';
+import { createPublicClient, http, defineChain, Chain, parseEther } from 'viem';
+import { arbitrumSepolia, baseSepolia } from 'viem/chains';
+import { contracts } from '@/utils/contracts/contracts';
+import { useReadContract } from 'wagmi';
+import { abi } from '../../abi/SablierLinear'
+import StreamStatusDashboard from './StreamStatusDashboard';
+import PendingStatusDashboard from './PendingStatusDashboard';
 
 interface InvoiceItemProps {
   invoice: {
@@ -16,26 +22,29 @@ interface InvoiceItemProps {
     payer_evm_address: string;
     expected_amount: string;
     status: string;
-  
   };
   copiedAddress: string | null;
   onCopyAddress: (address: string) => void;
-  getStatusColor: (status: string) => string;
+
   sliceAddress: (address: string) => string;
   requestId: string;
-  chainId: number;
+  chainId: ValidChainId;
+  stream_id?: number;
 }
 
 export const InvoiceItem: React.FC<InvoiceItemProps> = ({
   invoice,
   copiedAddress,
   onCopyAddress,
-  getStatusColor,
+
   sliceAddress,
   requestId,
-  chainId
+  chainId,
+  stream_id
 }) => {
 
+
+ 
 
   return (
     <TableRow key={invoice.id} className="hover:bg-gray-50">
@@ -43,9 +52,9 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
       <TableCell>
         <div className="flex items-center space-x-2">
           <span>{sliceAddress(invoice.payee_evm_address)}</span>
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => onCopyAddress(invoice.payee_evm_address)}
             className="h-6 w-6"
           >
@@ -60,9 +69,9 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
       <TableCell>
         <div className="flex items-center space-x-2">
           <span>{sliceAddress(invoice.payer_evm_address)}</span>
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => onCopyAddress(invoice.payer_evm_address)}
             className="h-6 w-6"
           >
@@ -75,21 +84,19 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
         </div>
       </TableCell>
       <TableCell>
-        {/* {chainId} */}
-        <Image src={chainInfo[chainId as ValidChainId].logoUrl} alt="chain logo" width={24} height={24} className='flex justify-center' />
+        <Image src={chainInfo[chainId].logoUrl} alt="chain logo" width={24} height={24} className='flex justify-center' />
       </TableCell>
       <TableCell className="font-medium">{invoice.expected_amount} USD</TableCell>
+
       <TableCell>
-        <span className={`font-medium ${getStatusColor('pending')}`}>
-          Pending
-        </span>
+      {stream_id ? <StreamStatusDashboard stream_id={stream_id} chainId={chainId} /> : <PendingStatusDashboard />}
       </TableCell>
       <TableCell>
-        <Link href={`/invoice/${requestId}`} >
-        <Button variant="outline" size="sm" className="flex items-center space-x-1">
-          <ExternalLink className="h-4 w-4" />
-          <span>View Invoice</span>
-        </Button>
+        <Link href={`/invoice/${requestId}`}>
+          <Button variant="outline" size="sm" className="flex items-center space-x-1">
+            <ExternalLink className="h-4 w-4" />
+            <span>View Invoice</span>
+          </Button>
         </Link>
       </TableCell>
     </TableRow>

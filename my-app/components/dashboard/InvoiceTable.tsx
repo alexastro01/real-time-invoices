@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { useAccount } from 'wagmi';
 import { InvoiceItem } from './InvoiceItem';
 import { InvoiceItemSkeleton } from './InvoiceItemSkeleton';
+import { ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions';
 
 type InvoiceTableProps = {
     type: string;
@@ -19,7 +20,8 @@ type Invoice = {
   expected_amount: string;
   status: string;
   request_id: string;
-  chain_id: number
+  chain_id: number;
+  stream_id: number | string;
 };
 
 
@@ -70,14 +72,7 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
       // You might want to add a toast notification here
     }, []);
 
-    const getStatusColor = (status: string) => {
-      switch (status.toLowerCase()) {
-        case 'pending': return 'text-yellow-500';
-        case 'paid': return 'text-green-500';
-        case 'overdue': return 'text-red-500';
-        default: return 'text-gray-500';
-      }
-    };
+
 
     const renderTableContent = () => {
       if (loading) {
@@ -88,15 +83,16 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
 
       return invoices.map((invoice) => (
         <InvoiceItem 
-          key={invoice.request_id}
-          invoice={invoice}
-          copiedAddress={copiedAddress}
-          onCopyAddress={copyToClipboard}
-          getStatusColor={getStatusColor}
-          sliceAddress={sliceAddress}
-          requestId={invoice.request_id}
-          chainId={invoice.chain_id}
-        />
+        key={invoice.request_id}
+        invoice={invoice}
+        copiedAddress={copiedAddress}
+        onCopyAddress={copyToClipboard}
+     
+        sliceAddress={sliceAddress}
+        stream_id={invoice.stream_id as number}
+        requestId={invoice.request_id}
+        chainId={invoice.chain_id as ValidChainId}
+      />
       ));
     };
 

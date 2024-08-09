@@ -7,7 +7,8 @@ interface Invoice {
   payee_evm_address: string;
   expected_amount: number;
   request_id: string;
-  chain_id: number
+  chain_id: number;
+  stream_id: number
 }
 
 interface FormattedInvoice {
@@ -16,7 +17,8 @@ interface FormattedInvoice {
   payee_evm_address: string;
   expected_amount: string;
   request_id: string;
-  chain_id: number
+  chain_id: number;
+  stream_id: number
 
 }
 
@@ -33,7 +35,7 @@ export async function GET(request: Request) {
 
     const { data, error } = await supabaseClient
       .from('invoices')
-      .select('created_at, payer_evm_address, payee_evm_address, expected_amount, request_id, chain_id')
+      .select('created_at, payer_evm_address, payee_evm_address, expected_amount, request_id, chain_id, stream_id')
       .eq('payee_evm_address', payee_address)
       .order('created_at', { ascending: false });
 
@@ -51,8 +53,11 @@ export async function GET(request: Request) {
       payee_evm_address: invoice.payee_evm_address,
       expected_amount: `${invoice.expected_amount}`,
       request_id: invoice.request_id,
-      chain_id: invoice.chain_id
+      chain_id: invoice.chain_id,
+      stream_id: invoice.stream_id
     }));
+
+    console.log(formattedData)
 
     return NextResponse.json(formattedData);
   } catch (error) {
