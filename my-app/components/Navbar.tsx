@@ -4,7 +4,7 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import Image from "next/image"
 import Link from "next/link"
-import { LayoutDashboard, UserCircle, FileText } from "lucide-react"
+import { LayoutDashboard, UserCircle, FileText, DollarSignIcon } from "lucide-react"
 import { usePathname } from 'next/navigation'
 
 export default function Navbar() {
@@ -14,6 +14,7 @@ export default function Navbar() {
     { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { href: "/create-invoice", icon: FileText, label: "Create Invoice" },
     { href: "/profile", icon: UserCircle, label: "Profile" },
+    { href: "/mint-tusdc", icon: DollarSignIcon, label: "Get test usdc"}
   ]
 
   return (

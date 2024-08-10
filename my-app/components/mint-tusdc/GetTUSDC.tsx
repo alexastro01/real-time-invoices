@@ -8,12 +8,13 @@ import {
 } from 'wagmi'
 import { abi } from '../../abi/tUSDC'
 import { parseEther } from 'viem'
-import { Input } from '../ui/input'
 import { Button } from '../ui/button'
-import { tUSDCAddress } from '@/constants/addresses'
 import { contracts, ValidChainId } from '@/utils/contracts/contracts';
+import { useToast } from "@/components/ui/use-toast"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 
 export function GetTUSDC() {
+    const { toast } = useToast()
     const {
         data: hash,
         error,
@@ -26,7 +27,6 @@ export function GetTUSDC() {
     async function submit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
 
-
         if (chainId && (chainId as ValidChainId) in contracts) {
             writeContract({
                 address: contracts[chainId as ValidChainId].tUSDCAddress,
@@ -37,9 +37,12 @@ export function GetTUSDC() {
             });
         } else {
             console.error('Invalid or unsupported chain ID');
-            // Handle the error case, perhaps show a message to the user
+            toast({
+                title: "Error",
+                description: "Invalid or unsupported chain ID",
+                variant: "destructive"
+            });
         }
-
     }
 
     const { isLoading: isConfirming, isSuccess: isConfirmed } =
@@ -47,22 +50,50 @@ export function GetTUSDC() {
             hash,
         })
 
+    React.useEffect(() => {
+        if (hash) {
+            toast({
+                title: "Transaction Submitted",
+        
+            });
+        }
+    }, [hash, toast]);
+
+    React.useEffect(() => {
+        if (isConfirmed) {
+            toast({
+                title: "Transaction Confirmed",
+                description: "Your tUSDC has been minted successfully.",
+            });
+        }
+    }, [isConfirmed, toast]);
+
     return (
-        <form onSubmit={submit}>
-            <p className='text-2xl font-bold'>Get 10000 tUSDC</p>
-            <Button
-                disabled={isPending}
-                type="submit"
-                className='w-auto'
-            >
-                {isPending ? 'Confirming...' : 'Mint'}
-            </Button>
-            {hash && <div>Transaction Hash: {hash}</div>}
-            {isConfirming && <div>Waiting for confirmation...</div>}
-            {isConfirmed && <div>Transaction confirmed.</div>}
-            {error && (
-                <div>Error: {(error as BaseError).shortMessage || error.message}</div>
-            )}
-        </form>
+        <div className="flex items-center justify-center min-h-screen">
+            <Card className="w-[350px]">
+                <CardHeader>
+                    <CardTitle>Get tUSDC</CardTitle>
+                    <CardDescription>Mint 10,000 tUSDC tokens for testing</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={submit}>
+                        <Button
+                            disabled={isPending || isConfirming}
+                            type="submit"
+                            className='w-full'
+                        >
+                            {isPending || isConfirming ? 'Processing...' : 'Mint 10,000 tUSDC'}
+                        </Button>
+                    </form>
+                </CardContent>
+                <CardFooter>
+                    {error && (
+                        <p className="text-sm text-red-500">
+                            Error: {(error as BaseError).shortMessage || error.message}
+                        </p>
+                    )}
+                </CardFooter>
+            </Card>
+        </div>
     )
 }
