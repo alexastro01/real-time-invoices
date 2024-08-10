@@ -4,6 +4,7 @@ import { Button } from '../ui/button'
 import InvoiceContent from './InvoiceContent'
 import { IInvoiceData } from '@/types/interfaces'
 import { EyeIcon, File } from 'lucide-react'
+import DownloadPDF from './DownloadPDF'
 
 interface InvoiceContentProps {
     invoiceData: IInvoiceData;
@@ -22,6 +23,7 @@ const ViewInvoiceDialog = ({ invoiceData, isFromActionButtons }: InvoiceContentP
             <DialogContent className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
 
                 <InvoiceContent invoiceData={invoiceData} />
+                <DownloadPDF invoiceData={invoiceData} />
             </DialogContent>
         </Dialog>)
 }

@@ -65,7 +65,7 @@ const Page = () => {
 
     if (!userDetails) {
       return (
-        <div className='flex flex-col items-center justify-center mt-8'>
+        <div className='flex flex-col justify-center items-center h-screen'>
           <p className='text-lg mb-4'>You need to create a profile before creating an invoice</p>
           <Button onClick={handleCreateProfile}>Create Profile</Button>
         </div>

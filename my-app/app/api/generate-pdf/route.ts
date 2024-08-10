@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import PDFDocument from 'pdfkit';
 import path from 'path';
+import { IInvoiceData } from '@/types/interfaces';
+import { chainInfo, ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions';
 
 export async function POST(req: NextRequest) {
-  const invoiceData = await req.json();
+  const invoiceData: IInvoiceData = await req.json();
 
   const doc = new PDFDocument({
     size: 'A4',
@@ -14,54 +16,66 @@ export async function POST(req: NextRequest) {
 
   doc.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
 
+  // Define colors
+  const primaryColor = '#000000';  // Black
+  const secondaryColor = '#333333';  // Dark Gray
+
   // Add logo and title
-  doc.image(path.resolve('./public/usdc.png'), 50, 45, { width: 50 })
-     .fontSize(25)
-     .text('Invoice', 110, 57);
+  doc.image(path.resolve('./public/logo_cropped.png'), 50, 45, { width: 50 })
+     .fontSize(28)
+     .fillColor(primaryColor)
+     .text('Invoice [testnet]', 110, 57);
 
   // Add a colored rectangle
-  // doc.rect(0, 120, 595.28, 10).fill('#2C3E50');
+  doc.rect(0, 120, 595.28, 10).fill(primaryColor);
 
-  // Add seller and client information with more space between them
+  // Add seller and client information
   doc.fontSize(10);
-  addInformation(doc, 'Seller:', invoiceData.seller, 50, 150);
-  addInformation(doc, 'Client:', invoiceData.client, 300, 150);
+  addInformation(doc, 'Seller:', invoiceData.partiesDetails.seller, invoiceData.paymentDetails.payeeAddress, 50, 150);
+  addInformation(doc, 'Client:', invoiceData.partiesDetails.client, invoiceData.paymentDetails.payerAddress, 300, 150);
 
-  // Add a separating line closer to the seller and client information
-  doc.moveTo(50, 300).lineTo(545, 300).stroke();
+  // Add a separating line
+  doc.moveTo(50, 300).lineTo(545, 300).stroke(secondaryColor);
 
-  // Add payment details with less whitespace and an underline
-  doc.fontSize(14)
+  // Format the due date
+  const formattedDueDate = formatDate(invoiceData.paymentDetails.dueDate as number);
+
+  // Add payment details
+  doc.fontSize(16)
+     .fillColor(primaryColor)
      .text('Payment Details', 50, 320);
-  doc.moveTo(50, 340).lineTo(545, 340).stroke(); // Underline
+  doc.moveTo(50, 345).lineTo(545, 345).stroke(primaryColor);
 
   doc.fontSize(10)
-     .text(`Chain: ${invoiceData.paymentDetails.chain}`, 50, 350)
-     .text(`Currency: ${invoiceData.paymentDetails.currency}`, 50, 370)
-     .text(`Stream Type: ${invoiceData.paymentDetails.streamType}`, 50, 390)
-     .text(`Due Date: ${invoiceData.paymentDetails.dueDate}`, 50, 410);
+     .fillColor(secondaryColor);
+
+  addDetailRow(doc, 'Chain:', chainInfo[invoiceData.paymentDetails.chain as ValidChainId].name, 50, 360);
+  addDetailRow(doc, 'Currency:', 'tUSDC', 50, 380);
+  addDetailRow(doc, 'Stream Type:', invoiceData.paymentDetails.streamType, 50, 400);
+  addDetailRow(doc, 'Due Date:', formattedDueDate, 50, 420);
 
   // Add invoice items
-  doc.fontSize(14)
-     .text('Invoice Items', 50, 440);
-     doc.moveTo(50, 430).lineTo(545, 430).stroke(); // Underline
+  doc.fontSize(16)
+     .fillColor(primaryColor)
+     .text('Invoice Items', 50, 460);
+  doc.moveTo(50, 485).lineTo(545, 485).stroke(primaryColor);
 
-  const tableTop = 460;
-  doc.fontSize(10);
-
-  generateTable(doc, invoiceData.invoiceItems, tableTop);
+  const tableTop = 500;
+  generateTable(doc, invoiceData.paymentDetails.invoiceItems, tableTop, secondaryColor);
 
   // Add total amount
-  const totalTop = tableTop + (invoiceData.invoiceItems.length + 1) * 30;
-  doc
-     .fontSize(14)
-     .text(`Total Amount: $${invoiceData.totalAmount.toFixed(2)}`, 400, totalTop);
+  const totalTop = tableTop + (invoiceData.paymentDetails.invoiceItems.length + 1) * 30 + 20;
+  doc.fontSize(14)
+     .fillColor(primaryColor)
+     .text(`Total Amount:`, 400, totalTop)
+     .fontSize(16)
+     .text(`$${invoiceData.paymentDetails.totalAmount}`, 400, totalTop + 20);
 
   doc.end();
 
   const pdfBuffer = await new Promise<Buffer>((resolve) => {
     doc.on('end', () => {
-      resolve(Buffer.concat(chunks));
+      resolve(Buffer.concat(chunks as any));
     });
   });
 
@@ -74,40 +88,55 @@ export async function POST(req: NextRequest) {
   });
 }
 
-function addInformation(doc: PDFKit.PDFDocument, title: string, data: any, x: number, y: number) {
-  doc.fontSize(12)
+function addInformation(doc: PDFKit.PDFDocument, title: string, data: any, evmAddress: string, x: number, y: number) {
+  doc.fontSize(14)
+     .fillColor('#000000')  // Black
      .text(title, x, y);
   doc.fontSize(10)
-     .text(data.name, x, y + 20)
-     .text(data.email, x, y + 35)
-     .text(data.address, x, y + 50)
-     .text(`${data.city}, ${data.state} ${data.zip}`, x, y + 65)
-     .text(data.country, x, y + 80);
-  
-  // Handle long EVM address
-  const evmAddress = data.evmAddress || data.receiverAddress;
-  doc.fontSize(8)
-     .text('EVM Address:', x, y + 95)
-     .text(evmAddress, x, y + 110, { width: 200, align: 'left' });
+     .fillColor('#333333')  // Dark Gray
+     .text(data.name, x, y + 25)
+     .text(data.email, x, y + 40)
+     .text(data.address || '', x, y + 55)
+     .text(`${data.city || ''}, ${data.state || ''} ${data.zip || ''}`, x, y + 70)
+     .text(data.country || '', x, y + 85)
+     .fontSize(8)
+     .text('EVM Address:', x, y + 100)
+     .text(evmAddress, x, y + 115, { width: 200, align: 'left' });
 }
 
-function generateTable(doc: PDFKit.PDFDocument, items: any[], y: number) {
+function addDetailRow(doc: PDFKit.PDFDocument, label: string, value: string, x: number, y: number) {
+  doc.fillColor('#000000')  // Black
+     .text(label, x, y)
+     .fillColor('#333333')  // Dark Gray
+     .text(value, x + 100, y);
+}
+
+function generateTable(doc: PDFKit.PDFDocument, items: any[], y: number, color: string) {
   const headers = ['Item', 'Quantity', 'Price', 'Amount'];
   
   doc.fontSize(10)
-     .text(headers[0], 50, y)
-     .text(headers[1], 200, y)
-     .text(headers[2], 280, y)
-     .text(headers[3], 360, y);
+     .fillColor(color);
 
-  doc.moveTo(50, y + 15).lineTo(545, y + 15).stroke();
+  headers.forEach((header, i) => {
+    doc.text(header, 50 + i * 125, y);
+  });
+
+  doc.moveTo(50, y + 15).lineTo(545, y + 15).stroke(color);
 
   items.forEach((item, i) => {
     const rowY = y + 25 + (i * 25);
-    doc.fontSize(10)
-       .text(item.name, 50, rowY)
-       .text(item.quantity.toString(), 200, rowY)
-       .text(`$${item.price.toFixed(2)}`, 280, rowY)
-       .text(`$${(item.quantity * item.price).toFixed(2)}`, 360, rowY);
+    doc.text(item.name, 50, rowY)
+       .text(item.quantity.toString(), 175, rowY)
+       .text(`$${item.price.toFixed(2)}`, 300, rowY)
+       .text(`$${(item.quantity * item.price).toFixed(2)}`, 425, rowY);
+  });
+}
+
+function formatDate(timestamp: number | string): string {
+  const date = new Date(Number(timestamp));
+  return date.toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
   });
 }

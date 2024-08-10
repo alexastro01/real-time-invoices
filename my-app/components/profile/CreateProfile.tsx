@@ -73,11 +73,14 @@ export function CreateProfile() {
       }
     } catch (error) {
       console.error('Error fetching user details:', error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch user details. You may enter them manually.",
-        variant: "destructive",
-      });
+      const redirect = searchParams.get('redirect');
+      if (!redirect) {
+        toast({
+          title: "Error",
+          description: "Failed to fetch user details. You may enter them manually.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsFetching(false);
     }
@@ -98,7 +101,7 @@ export function CreateProfile() {
     if (address) {
       fetchUserDetails();
     }
-    
+
     const redirect = searchParams.get('redirect');
     if (redirect) {
       setEditMode(true);
@@ -135,7 +138,7 @@ export function CreateProfile() {
 
       toast({
         title: "Success",
-        description: "Profile created successfully",
+        description: "Profile updated successfully",
       });
 
       // Check for redirect parameter
@@ -145,7 +148,7 @@ export function CreateProfile() {
       } else {
         // Default redirection or stay on the same page
         // You can modify this as needed
-        router.push('/dashboard');
+
       }
 
     } catch (error) {
@@ -164,23 +167,20 @@ export function CreateProfile() {
     <div className="w-[50%]" >
       <Card className="">
         <CardHeader>
-          <CardTitle>Your details</CardTitle>
-          <CardDescription>Please input your details, they will be used for creating invoices</CardDescription>
+          <CardTitle>Your profile</CardTitle>
+          <CardDescription>Information used to complete invoices</CardDescription>
         </CardHeader>
         <CardContent>
-          <ProfileForm 
-            senderDetails={senderDetails} 
+          <ProfileForm
+            senderDetails={senderDetails}
             handleInputChange={handleInputChange}
             editMode={editMode}
             isFetching={isFetching}
+            toggleEditMode={toggleEditMode}
+            validateAndProceed={validateAndProceed}
+            isLoading={isLoading}
           />
         </CardContent>
-        <ProfileActions 
-          editMode={editMode}
-          toggleEditMode={toggleEditMode}
-          validateAndProceed={validateAndProceed}
-          isLoading={isLoading}
-        />
       </Card>
     </div>
   )

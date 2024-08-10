@@ -63,7 +63,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
       ) : null}
       {streamData && address === invoiceData.paymentDetails.payeeAddress ? <WithdrawComponent streamId={streamId} chain_id={chain_id} /> : null}
 
-      <DownloadPDF />
+      {/* <DownloadPDF invoiceData={invoiceData} /> */}
       <ShareInvoiceComponent />
       <ViewInvoiceDialog invoiceData={invoiceData} isFromActionButtons={true} />
       {streamData && address === invoiceData.paymentDetails.payerAddress  ? <CancelStream streamId={streamId} chain_id={chain_id} wasCanceled={typedStreamData.wasCanceled} /> : null}

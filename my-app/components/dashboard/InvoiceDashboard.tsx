@@ -37,6 +37,8 @@ const InvoiceDashboard = () => {
     fetchInvoiceStats();
   }, [address]);
 
+  
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Invoice Dashboard</h1>
@@ -52,7 +54,7 @@ const InvoiceDashboard = () => {
           description={'Invoices sent'} 
           amount={loading ? 'Loading...' : invoiceStats.totalInvoices.toString()} 
         />
-        <StatsCard description={'Clients'} amount={'1'} />
+        <StatsCard description={'Invoices Received'} amount={'1'} />
       </div>
 
       <div>
