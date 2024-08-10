@@ -25,9 +25,10 @@ type StartLinearStreamProps = {
     dueDate: number;
     requestId: string;
     chain_id: number;
+    payerAddress: string;
 }
 
-const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, requestId, chain_id }: StartLinearStreamProps) => {
+const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, requestId, chain_id, payerAddress }: StartLinearStreamProps) => {
     const { toast } = useToast();
     const [streamId, setStreamId] = useState<string | null>(null);
     const [isAddingStreamId, setIsAddingStreamId] = useState(false);
@@ -54,6 +55,7 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
 
       
         if (chainId === chain_id) {
+             if(address === payerAddress) {
             writeContract({
                 address: sablierLinearV2LockUpAddress,
                 abi,
@@ -72,6 +74,12 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
                 ],
                 chainId:chain_id
             })
+            } else {
+                toast({
+                    title: `You are not the payer of this invoice`,
+                    variant: "destructive"
+                })
+            }
         } else {
             toast({
                 title: `You are on the wrong chain, switch to ${chainInfo[chain_id as ValidChainId].name}`,

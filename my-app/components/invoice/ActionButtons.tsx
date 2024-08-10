@@ -52,7 +52,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           endTime={typedStreamData.endTime}
           wasCanceled={typedStreamData.wasCanceled}
           refundedAmount={typedStreamData.amounts.refunded}
-          withdrawnAmount={Number(formatEther(withdrawnAmount as bigint))}
+          withdrawnAmount={withdrawnAmount ? Number(formatEther(withdrawnAmount as bigint)) : 0}
         />
       ) : null}
       {streamData ? <WithdrawComponent streamId={streamId} chain_id={chain_id} /> : null}
