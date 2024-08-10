@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
+import ViewInvoiceDialog from './ViewInvoiceDialog';
+import { IInvoiceData } from '@/types/interfaces';
 
 interface NotPaidInvoiceProps {
   requestId: string;
+  invoiceData: IInvoiceData
 }
 
-const NotPaidInvoice: React.FC<NotPaidInvoiceProps> = ({ requestId }) => {
+const NotPaidInvoice: React.FC<NotPaidInvoiceProps> = ({ requestId, invoiceData }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleShareInvoice = () => {
@@ -30,22 +33,25 @@ const NotPaidInvoice: React.FC<NotPaidInvoiceProps> = ({ requestId }) => {
   };
 
   return (
-    <Card className="w-[350px]">
-      <CardContent className="pt-6">
-        <p className="text-center text-lg font-semibold">
-          The invoice has not been paid yet
-        </p>
-      </CardContent>
-      <CardFooter className="flex justify-center">
-        <Button 
-          variant="outline" 
-          onClick={handleShareInvoice}
-          disabled={isCopied}
-        >
-          {isCopied ? "Link Copied!" : "Share invoice to payer"}
-        </Button>
-      </CardFooter>
-    </Card>
+    <div className="flex items-center justify-center min-h-screen">
+      <Card className="w-full max-w-md">
+        <CardContent className="pt-6">
+          <p className="text-center text-lg font-semibold">
+            The invoice has not been paid yet
+          </p>
+        </CardContent>
+        <CardFooter className="grid grid-cols-1 space-y-4 justify-center">
+          <Button 
+            variant="outline" 
+            onClick={handleShareInvoice}
+            disabled={isCopied}
+          >
+            {isCopied ? "Link Copied!" : "Share invoice to payer"}
+          </Button>
+          <ViewInvoiceDialog invoiceData={invoiceData} />
+        </CardFooter>
+      </Card>
+    </div>
   );
 };
 

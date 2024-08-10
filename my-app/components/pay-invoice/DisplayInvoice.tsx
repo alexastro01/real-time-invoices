@@ -93,7 +93,7 @@ const DisplayInvoice = ({
 
             {invoiceData && invoiceData.paymentDetails.payerAddress === address ?
 
-                <div className='mt-2'>
+                <div className='mt-4'>
                     <PaymentDialog
                         totalAmount={invoiceData.paymentDetails.totalAmount}
                         requestId={requestId}

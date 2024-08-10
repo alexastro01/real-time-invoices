@@ -17,8 +17,8 @@ const Page = () => {
     switch (status) {
       case 'loading':
         return (
-          <div className='flex justify-center mt-8'>
-            <Spinner className='mt-2' />
+          <div className='flex justify-center items-center h-screen'>
+            <Spinner className='' />
           </div>
         );
       case 'authenticated':

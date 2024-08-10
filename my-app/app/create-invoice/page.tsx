@@ -45,7 +45,7 @@ const Page = () => {
   const renderContent = () => {
     if (status === 'loading') {
       return (
-        <div className='flex justify-center mt-8 h-screen'>
+        <div className='flex justify-center items-center  h-screen'>
           <Spinner className='mt-2' />
         </div>
       );
@@ -57,8 +57,8 @@ const Page = () => {
 
     if (isLoading) {
       return (
-        <div className='flex justify-center mt-8'>
-          <Spinner className='mt-2' />
+        <div className='flex justify-center items-center h-screen'>
+          <Spinner className='' />
         </div>
       );
     }

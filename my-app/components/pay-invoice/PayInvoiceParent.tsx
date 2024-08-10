@@ -10,7 +10,8 @@ const PayInvoiceParent = ({
     requestId
 }: PayInvoiceParentType) => {
   return (
-    <div>
+    <div className='h-screen grid grid-cols-1 justify-items-center items-center'>
+
             <DisplayInvoice requestId={requestId as string} />
          
     </div>

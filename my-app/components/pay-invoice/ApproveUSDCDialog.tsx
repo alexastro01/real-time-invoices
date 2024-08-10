@@ -36,7 +36,7 @@ const ApproveUSDCDialog = ({
 ) => {
 
     const { toast } = useToast();
-    const {chainId} = useAccount();
+    const { chainId } = useAccount();
     const {
         data: hash,
         error,
@@ -52,17 +52,17 @@ const ApproveUSDCDialog = ({
                 title: `You are on the wrong chain, switch to ${chainInfo[chain_id as ValidChainId].name}`,
                 variant: "destructive"
             })
-        } else{
-        if (chainId && (chainId as ValidChainId) in contracts) {
-        writeContract({
-            
-            address: contracts[chainId as ValidChainId].tUSDCAddress,
-            abi,
-            functionName: 'approve',
-            args: [contracts[chainId as ValidChainId].sablierLinearV2LockUpAddress, parseEther(amountToApprove)],
-        })
-    }
-}
+        } else {
+            if (chainId && (chainId as ValidChainId) in contracts) {
+                writeContract({
+
+                    address: contracts[chainId as ValidChainId].tUSDCAddress,
+                    abi,
+                    functionName: 'approve',
+                    args: [contracts[chainId as ValidChainId].sablierLinearV2LockUpAddress, parseEther(amountToApprove)],
+                })
+            }
+        }
     }
 
     const { isLoading: isConfirming, isSuccess: isConfirmed } =
@@ -94,7 +94,7 @@ const ApproveUSDCDialog = ({
             </DialogHeader>
             {isConfirming ?
                 <div className='flex justify-center'>
-                <Spinner className='w-24 h-24' />
+                    <Spinner className='w-24 h-24' />
                 </div> :
                 <div className="py-4 text-center">
                     <p className="text-lg font-semibold">{amountToApprove} USDC</p>
@@ -103,7 +103,7 @@ const ApproveUSDCDialog = ({
             }
 
             <DialogFooter>
-                <Button className="w-full" disabled={isPending} onClick={() => Approve()}>Approve</Button>
+                <Button className="w-full" disabled={isPending || isConfirming} onClick={() => Approve()}>Approve</Button>
             </DialogFooter>
         </DialogContent>
     )

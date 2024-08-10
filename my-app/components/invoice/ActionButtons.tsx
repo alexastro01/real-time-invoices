@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import TokenDisplay from './TokenDisplay';
-import { useReadContract } from 'wagmi';
+import { useAccount, useReadContract } from 'wagmi';
 import { abi } from '../../abi/SablierLinear'
 import { formatEther } from 'viem';
 import { StreamData } from '@/types/types';
@@ -9,15 +9,19 @@ import DownloadPDF from './DownloadPDF';
 import ShareInvoiceComponent from './ShareInvoiceComponent';
 import WithdrawComponent from './WithdrawComponent';
 import { contracts, ValidChainId } from '@/utils/contracts/contracts';
+import { IInvoiceData } from '@/types/interfaces';
+import ViewInvoiceDialog from './ViewInvoiceDialog';
 
 type ActionButtonsProps = {
   streamId: number,
-  chain_id: number
+  chain_id: number,
+  invoiceData: IInvoiceData
 }
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({
   streamId,
-  chain_id
+  chain_id,
+  invoiceData
 }) => {
   const { data: streamData, isError, isLoading, error } = useReadContract({
     address: contracts[chain_id as ValidChainId].sablierLinearV2LockUpAddress,
@@ -26,6 +30,8 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
     args: [streamId],
     chainId: chain_id
   })
+
+  const {address} = useAccount();
 
   const { data: withdrawnAmount } = useReadContract({
     address: contracts[chain_id as ValidChainId].sablierLinearV2LockUpAddress,
@@ -55,10 +61,12 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           withdrawnAmount={withdrawnAmount ? Number(formatEther(withdrawnAmount as bigint)) : 0}
         />
       ) : null}
-      {streamData ? <WithdrawComponent streamId={streamId} chain_id={chain_id} /> : null}
-      {streamData ? <CancelStream streamId={streamId} chain_id={chain_id} wasCanceled={typedStreamData.wasCanceled} /> : null}
+      {streamData && address === invoiceData.paymentDetails.payeeAddress ? <WithdrawComponent streamId={streamId} chain_id={chain_id} /> : null}
+
       <DownloadPDF />
       <ShareInvoiceComponent />
+      <ViewInvoiceDialog invoiceData={invoiceData} isFromActionButtons={true} />
+      {streamData && address === invoiceData.paymentDetails.payerAddress  ? <CancelStream streamId={streamId} chain_id={chain_id} wasCanceled={typedStreamData.wasCanceled} /> : null}
     </div>
   );
 };
