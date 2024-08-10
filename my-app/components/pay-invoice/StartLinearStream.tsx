@@ -17,6 +17,8 @@ import { useToast } from '../ui/use-toast';
 import { getTimeRemainingInSeconds } from '@/utils/sablier/getTimeToStreamInSeconds';
 import { contracts, ValidChainId } from '@/utils/contracts/contracts';
 import { chainInfo } from '@/utils/multi-chain/MultiChainSelectOptions';
+import PingAnimation from '../helpers/PingAnimation';
+import Image from 'next/image';
 
 type StartLinearStreamProps = {
     setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -179,10 +181,25 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
         }
     }, [error, toast])
 
+    function formatTimeRemaining(seconds: number) {
+        const days = Math.floor(seconds / (3600 * 24));
+        seconds %= 3600 * 24;
+        const hours = Math.floor(seconds / 3600);
+        seconds %= 3600;
+        const minutes = Math.floor(seconds / 60);
+      
+        const parts = [];
+        if (days > 0) parts.push(`${days} day${days !== 1 ? 's' : ''}`);
+        if (hours > 0) parts.push(`${hours} hour${hours !== 1 ? 's' : ''}`);
+        if (minutes > 0) parts.push(`${minutes} minute${minutes !== 1 ? 's' : ''}`);
+      
+        return parts.join(', ');
+      }
+
     return (
         <DialogContent className="">
             <DialogHeader>
-                <DialogTitle>Start Stream</DialogTitle>
+                <DialogTitle>Start Stream <PingAnimation color="green" size="small" /></DialogTitle>
             </DialogHeader>
             {isConfirming || isWaitingForStreamId ? (
                 <div className='flex justify-center'>
@@ -193,9 +210,20 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
                     <p className="text-lg font-semibold">Stream created with ID: {streamId}</p>
                 </div>
             ) : (
-                <div className="py-4 text-center">
-                    <p className="text-lg font-semibold">Stream {amountToStream} USDC to {payeeAddress}</p>
+                <div>
+                <div className="py-2 flex justify-center">
+                <p className="text-2xl font-semibold">{amountToStream}</p>
+                <Image src={'/usdc.png'} width={32} height={32} alt={'USDC LOGO'} className='ml-1'/>
                 </div>
+                <p className='text-sm font-medium mr-1 text-center mb-0'>to {" "}</p>     
+                 <div className='flex justify-center py-2'>
+            
+                    <p className='text-md font-semibold'>{payeeAddress}</p>
+                 </div>
+                 <p className='text-sm font-medium mr-1 text-center mb-0'>over {" "}</p>  
+                 <p className='text-md font-semibold mr-1 text-center  py-2'>  {formatTimeRemaining(getTimeRemainingInSeconds(dueDate))}</p>  
+               
+            </div>
             )}
             <DialogFooter>
                 <Button

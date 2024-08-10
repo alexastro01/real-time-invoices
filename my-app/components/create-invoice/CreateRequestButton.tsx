@@ -11,6 +11,7 @@ import Spinner from "../helpers/Spinner";
 import ShimmerButton from "../magicui/shimmer-button";
 import RequestConfirmed from "./RequestConfirmed";
 import { CreateRequestButtonProps, UserDetailsFromSupabase } from "@/types/interfaces";
+import PingAnimation from "../helpers/PingAnimation";
 
 
 
@@ -147,7 +148,8 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{isConfirmed ? "Request created" : "Creating Request"}</DialogTitle>
+            <DialogTitle>{isConfirmed ? "Request created" : "Creating Request"}    <PingAnimation color="blue" size="small" /></DialogTitle>
+        
           </DialogHeader>
           {loading === true && isConfirmed === false &&
             <div className="flex flex-col items-center justify-center p-4">

@@ -9,6 +9,7 @@ import { formatEther, parseEther } from 'viem';
 import { useToast } from '../ui/use-toast';
 import { CreditCard, Loader2 } from 'lucide-react';
 import { chainInfo } from '@/utils/multi-chain/MultiChainSelectOptions';
+import PingAnimation from '../helpers/PingAnimation';
 
 type WithdrawComponentProps = {
     streamId: number;
@@ -114,7 +115,7 @@ const WithdrawComponent: React.FC<WithdrawComponentProps> = ({ streamId, chain_i
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Withdraw Funds</DialogTitle>
+                    <DialogTitle>Withdraw Funds <PingAnimation color="green" size="small" /></DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                     <div>

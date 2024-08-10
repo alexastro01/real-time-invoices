@@ -17,6 +17,8 @@ import Spinner from '../helpers/Spinner';
 import { useToast } from '../ui/use-toast';
 import { contracts, ValidChainId } from '@/utils/contracts/contracts';
 import { chainInfo } from '@/utils/multi-chain/MultiChainSelectOptions';
+import PingAnimation from '../helpers/PingAnimation';
+import Image from 'next/image';
 
 
 type ApproveUSDCDialogProps = {
@@ -90,14 +92,15 @@ const ApproveUSDCDialog = ({
     return (
         <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-                <DialogTitle>Approve USDC</DialogTitle>
+                <DialogTitle>Approve USDC <PingAnimation color="green" size="small" /></DialogTitle>
             </DialogHeader>
             {isConfirming ?
                 <div className='flex justify-center'>
                     <Spinner className='w-24 h-24' />
                 </div> :
-                <div className="py-4 text-center">
-                    <p className="text-lg font-semibold">{amountToApprove} USDC</p>
+                <div className="py-4 flex justify-center">
+                    <p className="text-2xl font-semibold">{amountToApprove}</p>
+                    <Image src={'/usdc.png'} width={32} height={32} alt={'USDC LOGO'} className='ml-1'/>
                 </div>
 
             }
