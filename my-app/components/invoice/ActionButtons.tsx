@@ -15,13 +15,15 @@ import ViewInvoiceDialog from './ViewInvoiceDialog';
 type ActionButtonsProps = {
   streamId: number,
   chain_id: number,
-  invoiceData: IInvoiceData
+  invoiceData: IInvoiceData,
+  requestId: string
 }
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({
   streamId,
   chain_id,
-  invoiceData
+  invoiceData,
+  requestId
 }) => {
   const { data: streamData, isError, isLoading, error } = useReadContract({
     address: contracts[chain_id as ValidChainId].sablierLinearV2LockUpAddress,
@@ -64,7 +66,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
       {streamData && address === invoiceData.paymentDetails.payeeAddress ? <WithdrawComponent streamId={streamId} chain_id={chain_id} /> : null}
 
       {/* <DownloadPDF invoiceData={invoiceData} /> */}
-      <ShareInvoiceComponent />
+      <ShareInvoiceComponent requestId={requestId} />
       <ViewInvoiceDialog invoiceData={invoiceData} isFromActionButtons={true} />
       {streamData && address === invoiceData.paymentDetails.payerAddress  ? <CancelStream streamId={streamId} chain_id={chain_id} wasCanceled={typedStreamData.wasCanceled} /> : null}
     </div>

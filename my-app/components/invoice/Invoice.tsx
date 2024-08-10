@@ -58,7 +58,7 @@ const Invoice = ({
         ) : invoiceData ? (
           <div className='grid grid-cols-1 lg:grid-cols-1 items-center justify-items-center w-full'>
             {invoiceData.paymentDetails.stream_id ? (
-              <ActionButtons streamId={invoiceData.paymentDetails.stream_id} chain_id={invoiceData.paymentDetails.chain_id} invoiceData={invoiceData} />
+              <ActionButtons requestId={requestId} streamId={invoiceData.paymentDetails.stream_id} chain_id={invoiceData.paymentDetails.chain_id} invoiceData={invoiceData} />
             ) : (
               <div className='w-full'>
                 <NotPaidInvoice requestId={requestId} invoiceData={invoiceData} />
