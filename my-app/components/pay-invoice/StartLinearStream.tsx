@@ -16,6 +16,7 @@ import Spinner from '../helpers/Spinner';
 import { useToast } from '../ui/use-toast';
 import { getTimeRemainingInSeconds } from '@/utils/sablier/getTimeToStreamInSeconds';
 import { contracts, ValidChainId } from '@/utils/contracts/contracts';
+import { chainInfo } from '@/utils/multi-chain/MultiChainSelectOptions';
 
 type StartLinearStreamProps = {
     setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -48,10 +49,11 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
         })
 
     const StartStreaming = useCallback(() => {
-        const sablierLinearV2LockUpAddress = contracts[chainId as ValidChainId]?.sablierLinearV2LockUpAddress
-        const tUSDCAddress = contracts[chainId as ValidChainId]?.tUSDCAddress
+        const sablierLinearV2LockUpAddress = contracts[chain_id as ValidChainId]?.sablierLinearV2LockUpAddress
+        const tUSDCAddress = contracts[chain_id as ValidChainId]?.tUSDCAddress
 
-        if (chainId && (chainId as ValidChainId) in contracts) {
+      
+        if (chainId === chain_id) {
             writeContract({
                 address: sablierLinearV2LockUpAddress,
                 abi,
@@ -72,10 +74,9 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
             })
         } else {
             toast({
-                title: "Error",
-                description: "Unsupported chain",
+                title: `You are on the wrong chain, switch to ${chainInfo[chain_id as ValidChainId].name}`,
                 variant: "destructive"
-            });
+            })
         }
     }, [writeContract, address, payeeAddress, amountToStream, dueDate, chainId, toast]);
 

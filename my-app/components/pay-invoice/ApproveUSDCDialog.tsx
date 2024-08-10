@@ -16,18 +16,21 @@ import { parseEther } from 'viem';
 import Spinner from '../helpers/Spinner';
 import { useToast } from '../ui/use-toast';
 import { contracts, ValidChainId } from '@/utils/contracts/contracts';
+import { chainInfo } from '@/utils/multi-chain/MultiChainSelectOptions';
 
 
 type ApproveUSDCDialogProps = {
     setStep: React.Dispatch<React.SetStateAction<number>>;
     amountToApprove: string;
+    chain_id: number
 
 }
 
 
 const ApproveUSDCDialog = ({
     setStep,
-    amountToApprove
+    amountToApprove,
+    chain_id
 }:
     ApproveUSDCDialogProps
 ) => {
@@ -44,6 +47,12 @@ const ApproveUSDCDialog = ({
 
 
     async function Approve() {
+        if (chainId !== chain_id) {
+            toast({
+                title: `You are on the wrong chain, switch to ${chainInfo[chain_id as ValidChainId].name}`,
+                variant: "destructive"
+            })
+        } else{
         if (chainId && (chainId as ValidChainId) in contracts) {
         writeContract({
             
@@ -53,6 +62,7 @@ const ApproveUSDCDialog = ({
             args: [contracts[chainId as ValidChainId].sablierLinearV2LockUpAddress, parseEther(amountToApprove)],
         })
     }
+}
     }
 
     const { isLoading: isConfirming, isSuccess: isConfirmed } =

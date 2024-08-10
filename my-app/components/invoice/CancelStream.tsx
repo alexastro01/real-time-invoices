@@ -6,6 +6,7 @@ import { contracts, ValidChainId } from '@/utils/contracts/contracts'
 import { abi } from '../../abi/SablierLinear'
 import { useToast } from '../ui/use-toast'
 import { useRouter } from 'next/navigation'
+import { chainInfo } from '@/utils/multi-chain/MultiChainSelectOptions'
 
 type CancelStreamProps = {
   streamId: number,
@@ -35,8 +36,13 @@ const CancelStream = ({
     })
 
   function cancelStream() {
-    const sablierLinearV2LockUpAddress = contracts[chainId as ValidChainId]?.sablierLinearV2LockUpAddress
-
+    const sablierLinearV2LockUpAddress = contracts[chain_id as ValidChainId]?.sablierLinearV2LockUpAddress
+     if(chainId !== chain_id) {
+      toast({
+        title: `You are on the wrong chain, switch to ${chainInfo[chain_id as ValidChainId].name}`,
+        variant: "destructive"
+      })
+     } else {
     writeContract({
       address: sablierLinearV2LockUpAddress,
       abi,
@@ -46,6 +52,7 @@ const CancelStream = ({
       ],
       chainId: chain_id
     })
+  }
   }
 
   useEffect(() => {

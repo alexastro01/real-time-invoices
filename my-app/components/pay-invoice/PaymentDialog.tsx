@@ -48,7 +48,7 @@ const PaymentDialog = ({
                 </ShimmerButton>
             </DialogTrigger>
             {
-                step === 0 && <ApproveUSDCDialog setStep={setStep} amountToApprove={totalAmount} />
+                step === 0 && <ApproveUSDCDialog setStep={setStep} amountToApprove={totalAmount} chain_id={chain_id} />
             }
 
             {
