@@ -40,6 +40,7 @@ type InvoiceData = {
             quantity: number;
             price: number;
         }>;
+        chain_id: number;
     };
 };
 
@@ -96,6 +97,7 @@ const DisplayInvoice = ({
                         requestId={requestId}
                         payeeAddress={invoiceData.paymentDetails.payeeAddress}
                         dueDate={invoiceData.paymentDetails.dueDate}
+                        chain_id={invoiceData.paymentDetails.chain_id}
 
                     />
                 </div>

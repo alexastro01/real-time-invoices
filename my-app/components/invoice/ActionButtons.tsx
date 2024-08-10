@@ -1,18 +1,14 @@
 import React, { useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { Download, CreditCard, XCircle, Share2 } from 'lucide-react';
-import CountUp from './CountUp';
 import TokenDisplay from './TokenDisplay';
 import { useReadContract } from 'wagmi';
 import { abi } from '../../abi/SablierLinear'
-import { sablierLinearV2LockUpAddress } from '@/constants/addresses';
 import { formatEther } from 'viem';
 import { StreamData } from '@/types/types';
 import CancelStream from './CancelStream';
 import DownloadPDF from './DownloadPDF';
 import ShareInvoiceComponent from './ShareInvoiceComponent';
+import WithdrawComponent from './WithdrawComponent';
 import { contracts, ValidChainId } from '@/utils/contracts/contracts';
-
 
 type ActionButtonsProps = {
   streamId: number,
@@ -23,34 +19,44 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   streamId,
   chain_id
 }) => {
-
-  const { data, isError, isLoading, error } = useReadContract({
+  const { data: streamData, isError, isLoading, error } = useReadContract({
     address: contracts[chain_id as ValidChainId].sablierLinearV2LockUpAddress,
     abi: abi,
     functionName: 'getStream',
     args: [streamId],
-    chainId:chain_id
+    chainId: chain_id
+  })
+
+  const { data: withdrawnAmount } = useReadContract({
+    address: contracts[chain_id as ValidChainId].sablierLinearV2LockUpAddress,
+    abi: abi,
+    functionName: 'getWithdrawnAmount',
+    args: [streamId],
+    chainId: chain_id
   })
 
   useEffect(() => {
-    console.log(data)
+    console.log(streamData)
     console.log(error?.message)
-  }, [data])
+  }, [streamData, error])
 
-  const streamData = data as StreamData;
+  const typedStreamData = streamData as StreamData;
 
   return (
     <div className="flex flex-col space-y-4 w-full max-w-md">
-      {data ? <TokenDisplay
-        maxValue={Number(formatEther(streamData.amounts.deposited))}
-        tokenSymbol="DAI"
-        startTime={streamData.startTime}
-        endTime={streamData.endTime}
-      /> : null}
-      <Button variant="default" className="w-full">
-        <CreditCard className="mr-2 h-4 w-4" /> Withdraw
-      </Button>
-      <CancelStream />
+      {streamData  ? (
+        <TokenDisplay
+          maxValue={Number(formatEther(typedStreamData.amounts.deposited))}
+          tokenSymbol="DAI"
+          startTime={typedStreamData.startTime}
+          endTime={typedStreamData.endTime}
+          wasCanceled={typedStreamData.wasCanceled}
+          refundedAmount={typedStreamData.amounts.refunded}
+          withdrawnAmount={Number(formatEther(withdrawnAmount as bigint))}
+        />
+      ) : null}
+      {streamData ? <WithdrawComponent streamId={streamId} chain_id={chain_id} /> : null}
+      {streamData ? <CancelStream streamId={streamId} chain_id={chain_id} wasCanceled={typedStreamData.wasCanceled} /> : null}
       <DownloadPDF />
       <ShareInvoiceComponent />
     </div>

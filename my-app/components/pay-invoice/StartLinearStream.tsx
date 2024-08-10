@@ -23,9 +23,10 @@ type StartLinearStreamProps = {
     payeeAddress: string;
     dueDate: number;
     requestId: string;
+    chain_id: number;
 }
 
-const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, requestId }: StartLinearStreamProps) => {
+const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, requestId, chain_id }: StartLinearStreamProps) => {
     const { toast } = useToast();
     const [streamId, setStreamId] = useState<string | null>(null);
     const [isAddingStreamId, setIsAddingStreamId] = useState(false);
@@ -67,6 +68,7 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
                         ['0x909957dcc1B114Fe262F4779e6aeD4d034D96B0f', 0]
                     ]
                 ],
+                chainId:chain_id
             })
         } else {
             toast({

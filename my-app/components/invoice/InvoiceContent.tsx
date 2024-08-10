@@ -20,7 +20,7 @@ interface InvoiceContentProps {
 const InvoiceContent = ({ invoiceData }: InvoiceContentProps) => {
 
   const { seller, client } = invoiceData.partiesDetails;
-  const { payeeAddress, payerAddress, chain, currency, streamType, dueDate, totalAmount, invoiceItems } = invoiceData.paymentDetails;
+  const { payeeAddress, payerAddress, currency, streamType, dueDate, totalAmount, invoiceItems, chain_id } = invoiceData.paymentDetails;
 
   return (
     <div className="w-[100%] max-w-4xl">
@@ -56,10 +56,10 @@ const InvoiceContent = ({ invoiceData }: InvoiceContentProps) => {
             <h3 className="font-semibold text-lg mb-2">Payment Details:</h3>
             <div className='flex'>
               <p>Chain:</p>
-            <Image src={chainInfo[chain as ValidChainId].logoUrl} alt="chain logo" width={24} height={24} className='ml-1' />
+            <Image src={chainInfo[chain_id as ValidChainId].logoUrl} alt="chain logo" width={24} height={24} className='ml-1' />
             </div>
 
-            <p>Currency: {contracts[chain as ValidChainId].tUSDCAddress}</p>
+            <p>Currency: {contracts[chain_id as ValidChainId].tUSDCAddress}</p>
             <p>Stream Type: {streamType}</p>
             <p>Due Date: {dueDate ? format(dueDate, 'PP') : 'Not set'}</p>
           </div>
