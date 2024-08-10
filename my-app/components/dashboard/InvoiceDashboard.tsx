@@ -4,10 +4,22 @@ import InvoiceTable from './InvoiceTable';
 import StatsCard from './StatsCard';
 import { InvoiceChart } from './Chart';
 import { useAccount } from 'wagmi';
+import { useWithdrawableAmounts } from '@/hooks/useWithdrawableAmounts';
+import { formatUnits } from 'viem';
 
 interface InvoiceStats {
   totalExpectedAmount: string;
   totalInvoices: number;
+}
+
+interface InvoiceStats {
+  totalExpectedAmount: string;
+  totalInvoices: number;
+}
+
+interface Stream {
+  stream_id: number;
+  chain_id: number;
 }
 
 const InvoiceDashboard = () => {
@@ -15,8 +27,11 @@ const InvoiceDashboard = () => {
     totalExpectedAmount: '0',
     totalInvoices: 0
   });
+  const [streams, setStreams] = useState<Stream[]>([]);
   const [loading, setLoading] = useState(true);
   const { address } = useAccount();
+
+  const { withdrawableAmounts, isLoading: isLoadingWithdrawable } = useWithdrawableAmounts(streams);
 
   useEffect(() => {
     const fetchInvoiceStats = async () => {
@@ -29,27 +44,60 @@ const InvoiceDashboard = () => {
         setInvoiceStats(data);
       } catch (error) {
         console.error('Error fetching invoice stats:', error);
+      }
+    };
+
+    const fetchStreams = async () => {
+      if (!address) return;
+
+      try {
+        const response = await fetch(`/api/get-total-withdrawable-amount?address=${address}`);
+        if (!response.ok) throw new Error('Failed to fetch streams');
+        const data = await response.json();
+        setStreams(data);
+      } catch (error) {
+        console.error('Error fetching streams:', error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchInvoiceStats();
+    fetchStreams();
   }, [address]);
 
-  
+
+  const totalWithdrawableAmount = withdrawableAmounts?.reduce((total, { amount }) => 
+    total + (amount ?? 0), 0
+  ) ?? 0;
+
+  // Function to format the amount to 2 decimal places
+  const formatAmount = (amount: number) => {
+    return amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
+
+  useEffect(() => {
+    console.log(withdrawableAmounts)
+   console.log(totalWithdrawableAmount)
+
+  }, [totalWithdrawableAmount])
+
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Invoice Dashboard</h1>
       
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatsCard 
           description={'Total expected amount'} 
-          amount={loading ? 'Loading...' : `$${invoiceStats.totalExpectedAmount}`} 
+          amount={loading ? 'Loading...' : `$${formatAmount(Number(invoiceStats.totalExpectedAmount))}`} 
         />
-        <StatsCard description={'Available to withdraw from streams'} amount={'$0'} />
+        <StatsCard 
+          description={'Available to withdraw from streams'} 
+          amount={loading || isLoadingWithdrawable ? 'Loading...' : `$${formatAmount(totalWithdrawableAmount)}`} 
+        />
         <StatsCard 
           description={'Invoices sent'} 
           amount={loading ? 'Loading...' : invoiceStats.totalInvoices.toString()} 

@@ -86,7 +86,7 @@ export function InvoiceChart() {
           </CardDescription>
         </div>
         <div className="flex">
-          {["expectedAmount", "invoicesSent"].map((key) => {
+          {["expectedAmount"].map((key) => {
             const chart = key as keyof typeof chartConfig
             return (
               <button
@@ -99,7 +99,7 @@ export function InvoiceChart() {
                   {chartConfig[chart].label}
                 </span>
                 <span className="text-lg font-bold leading-none sm:text-3xl">
-                  {total[key as keyof typeof total].toLocaleString()} 
+                  ${total[key as keyof typeof total].toLocaleString()} 
                 </span>
               </button>
             )

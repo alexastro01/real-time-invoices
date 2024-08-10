@@ -53,7 +53,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
       {streamData  ? (
         <TokenDisplay
           maxValue={Number(formatEther(typedStreamData.amounts.deposited))}
-          tokenSymbol="DAI"
+          tokenSymbol="tUSDC"
           startTime={typedStreamData.startTime}
           endTime={typedStreamData.endTime}
           wasCanceled={typedStreamData.wasCanceled}
