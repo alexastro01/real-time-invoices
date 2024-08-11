@@ -10,6 +10,10 @@ export async function POST(request: Request) {
       requestId,
       payeeDetails,
       payerDetails,
+      payerEVMAddress,
+      payeeEVMAddress,
+      expectedAmount,
+      chain
     } = body;
 
     const { data, error } = await supabaseClient
@@ -30,6 +34,11 @@ export async function POST(request: Request) {
         payer_state: payerDetails.state || '',
         payer_zip: payerDetails.zip || '',
         payer_country: payerDetails.country || '',
+        payer_evm_address: payerEVMAddress,
+        payee_evm_address: payeeEVMAddress,
+        expected_amount: Number(expectedAmount),
+        chain_id: Number(chain)
+      
       });
 
     if (error) throw error;

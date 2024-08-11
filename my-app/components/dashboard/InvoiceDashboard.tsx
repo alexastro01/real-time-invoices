@@ -1,22 +1,124 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import InvoiceTable from './InvoiceTable';
+import StatsCard from './StatsCard';
+import { InvoiceChart } from './Chart';
+import { useAccount } from 'wagmi';
+import { useWithdrawableAmounts } from '@/hooks/useWithdrawableAmounts';
+import { formatUnits } from 'viem';
+
+interface InvoiceStats {
+  totalExpectedAmount: string;
+  totalInvoices: number;
+}
+
+interface InvoiceStats {
+  totalExpectedAmount: string;
+  totalInvoices: number;
+}
+
+interface Stream {
+  stream_id: number;
+  chain_id: number;
+}
 
 const InvoiceDashboard = () => {
+  const [invoiceStats, setInvoiceStats] = useState<InvoiceStats>({
+    totalExpectedAmount: '0',
+    totalInvoices: 0
+  });
+  const [streams, setStreams] = useState<Stream[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { address } = useAccount();
+
+  const { withdrawableAmounts, isLoading: isLoadingWithdrawable } = useWithdrawableAmounts(streams);
+
+  useEffect(() => {
+    const fetchInvoiceStats = async () => {
+      if (!address) return;
+
+      try {
+        const response = await fetch(`/api/user-invoice-stats?user_address=${address}`);
+        if (!response.ok) throw new Error('Failed to fetch invoice stats');
+        const data = await response.json();
+        setInvoiceStats(data);
+      } catch (error) {
+        console.error('Error fetching invoice stats:', error);
+      }
+    };
+
+    const fetchStreams = async () => {
+      if (!address) return;
+
+      try {
+        const response = await fetch(`/api/get-total-withdrawable-amount?address=${address}`);
+        if (!response.ok) throw new Error('Failed to fetch streams');
+        const data = await response.json();
+        setStreams(data);
+      } catch (error) {
+        console.error('Error fetching streams:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInvoiceStats();
+    fetchStreams();
+  }, [address]);
+
+
+  const totalWithdrawableAmount = withdrawableAmounts?.reduce((total, { amount }) => 
+    total + (amount ?? 0), 0
+  ) ?? 0;
+
+  // Function to format the amount to 2 decimal places
+  const formatAmount = (amount: number) => {
+    return amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
+
+  useEffect(() => {
+    console.log(withdrawableAmounts)
+   console.log(totalWithdrawableAmount)
+
+  }, [totalWithdrawableAmount])
+
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Invoice Dashboard</h1>
-      <Tabs defaultValue="sender">
+      
+      {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <StatsCard 
+          description={'Total expected amount'} 
+          amount={loading ? 'Loading...' : `$${formatAmount(Number(invoiceStats.totalExpectedAmount))}`} 
+        />
+        <StatsCard 
+          description={'Available to withdraw from streams'} 
+          amount={loading || isLoadingWithdrawable ? 'Loading...' : `$${formatAmount(totalWithdrawableAmount)}`} 
+        />
+        <StatsCard 
+          description={'Invoices sent'} 
+          amount={loading ? 'Loading...' : invoiceStats.totalInvoices.toString()} 
+        />
+        <StatsCard description={'Invoices Received'} amount={'1'} />
+      </div>
+
+      <div>
+        <InvoiceChart />
+      </div>
+     
+      <Tabs defaultValue="invoicesSent">
         <TabsList>
-          <TabsTrigger value="sender">As Sender</TabsTrigger>
-          <TabsTrigger value="receiver">As Receiver</TabsTrigger>
+          <TabsTrigger value="invoicesSent">Invoices sent</TabsTrigger>
+          <TabsTrigger value="invoicesReceived">Invoices received</TabsTrigger>
         </TabsList>
-        <TabsContent value="sender">
-          <InvoiceTable type="sender" />
+        <TabsContent value="invoicesSent">
+          <InvoiceTable type="invoicesSent" />
         </TabsContent>
-        <TabsContent value="receiver">
-          <InvoiceTable type="receiver" />
+        <TabsContent value="invoicesReceived">
+          <InvoiceTable type="invoicesReceived" />
         </TabsContent>
       </Tabs>
     </div>

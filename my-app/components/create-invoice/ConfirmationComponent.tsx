@@ -10,6 +10,8 @@ import { useAccount } from 'wagmi';
 import { UserDetailsFromSupabase } from '@/types/interfaces';
 import SellerDataFromSupabase from './SellerDataFromSupabase';
 import Spinner from '../helpers/Spinner';
+import Image from 'next/image';
+import { chainInfo, ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions';
 
 
 interface ConfirmationComponentProps {
@@ -144,7 +146,7 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
 
           <div className="mb-8">
             <h3 className="font-semibold text-lg mb-2">Payment Details:</h3>
-            <p>Chain: {formData.paymentDetails.chain}</p>
+             <div className='flex'> <p className='mr-1'>Chain:</p> <Image src={chainInfo[Number(formData.paymentDetails.chain) as ValidChainId].logoUrl} height={24} width={24} alt="chain logo" /> </div>
             <p>Currency: {formData.paymentDetails.currency}</p>
             <p>Stream Type: {formData.streamType}</p>
             <p>Due Date: {formData.paymentDetails.dueDate ? format(formData.paymentDetails.dueDate, 'PP') : 'Not set'}</p>
@@ -187,8 +189,10 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
                 payerDetails={formData.senderDetails}
                 expectedAmount={totalAmount.toString()}
                 dueDate={getUnixTime(formData.paymentDetails.dueDate as number)}
+                chain={formData.paymentDetails.chain}
                 //add invoice items
                 invoiceItems={formData.paymentDetails.invoiceItems}
+             
   
               />
           : <Spinner className='h-4 w-4' />}

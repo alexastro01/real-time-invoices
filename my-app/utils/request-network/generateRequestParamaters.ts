@@ -20,6 +20,7 @@ export function generateRequestParameters({
   dueDate,
   invoiceItems,
   expectedFlowRate,
+  chain
 }: generateRequestParamatersParams): ICreateRequestParameters  {
   const requestCreateParameters: ICreateRequestParameters = {
     requestInfo: {
@@ -75,7 +76,8 @@ export function generateRequestParameters({
     contentData: {
       invoiceItems: invoiceItems,
       dueDate: dueDate as number * 1000,
-      RequestType: 'InvoiceStreaming'
+      RequestType: 'InvoiceStreaming',
+      chain: chain
     },
     
     // The identity that signs the request, either payee or payer identity.

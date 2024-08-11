@@ -4,6 +4,7 @@ import ActionButtons from '../invoice/ActionButtons';
 import Spinner from '../helpers/Spinner';
 import InvoiceContent from '../invoice/InvoiceContent';
 import PaymentDialog from './PaymentDialog';
+import { useAccount } from 'wagmi';
 
 // New type definition
 type InvoiceData = {
@@ -40,6 +41,7 @@ type InvoiceData = {
             quantity: number;
             price: number;
         }>;
+        chain_id: number;
     };
 };
 
@@ -51,6 +53,7 @@ const DisplayInvoice = ({
     requestId
 }: InvoiceProps) => {
     const [invoiceData, setInvoiceData] = useState<InvoiceData | undefined>();
+    const {address} = useAccount();
 
     async function getInvoiceData(requestId: string): Promise<InvoiceData> {
         const res = await fetch(`/api/get-invoice?request_id=${requestId}`, { cache: 'no-store' });
@@ -88,20 +91,26 @@ const DisplayInvoice = ({
                 <Spinner className='w-24 h-24' />
             }
 
-            {invoiceData ?
+            {invoiceData && invoiceData.paymentDetails.payerAddress === address ?
 
-                <div className='mt-2'>
+                <div className='mt-4'>
                     <PaymentDialog
                         totalAmount={invoiceData.paymentDetails.totalAmount}
                         requestId={requestId}
                         payeeAddress={invoiceData.paymentDetails.payeeAddress}
                         dueDate={invoiceData.paymentDetails.dueDate}
+                        chain_id={invoiceData.paymentDetails.chain_id}
+                        payerAddress={invoiceData.paymentDetails.payerAddress}
 
                     />
                 </div>
 
                 :
-                null
+       null
+            }
+
+            {
+               invoiceData && invoiceData.paymentDetails.payerAddress !== address && <p>You are not the payer of this invoice</p>
             }
 
         </div>

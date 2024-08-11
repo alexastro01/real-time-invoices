@@ -5,7 +5,9 @@ import {
   } from '@rainbow-me/rainbowkit';
 import {
   arbitrum,
+  arbitrumSepolia,
   base,
+  baseSepolia,
   mainnet,
   optimism,
   polygon,
@@ -28,12 +30,29 @@ const opencampus = {
 
   } as const satisfies Chain;
 
+  const morphholesky = {
+    id: 2810,
+    name: 'Morph Holesky',
+    iconUrl: '/morph-logo.png',
+    iconBackground: '#fff',
+    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    rpcUrls: {
+      default: { http: ['https://rpc-quicknode-holesky.morphl2.io'] },
+    },
+    blockExplorers: {
+      default: { name: 'BlockScout', url: 'https://explorer-holesky.morphl2.io/' },
+    },
+
+  } as const satisfies Chain;
+
 export const config = getDefaultConfig({
   appName: 'RainbowKit demo',
   projectId: 'YOUR_PROJECT_ID',
   chains: [
     opencampus,
-    base,
+    baseSepolia,
+    arbitrumSepolia,
+    morphholesky
   ],
   ssr: true,
 });

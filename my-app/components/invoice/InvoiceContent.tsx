@@ -7,6 +7,10 @@ import {
   IInvoiceData
 
 } from '@/types/interfaces';
+import Image from 'next/image';
+import { chainInfo, ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions';
+import { contracts } from '@/utils/contracts/contracts';
+
 
 interface InvoiceContentProps {
   invoiceData: IInvoiceData;
@@ -16,10 +20,10 @@ interface InvoiceContentProps {
 const InvoiceContent = ({ invoiceData }: InvoiceContentProps) => {
 
   const { seller, client } = invoiceData.partiesDetails;
-  const { payeeAddress, payerAddress, chain, currency, streamType, dueDate, totalAmount, invoiceItems } = invoiceData.paymentDetails;
+  const { payeeAddress, payerAddress, currency, streamType, dueDate, totalAmount, invoiceItems, chain_id } = invoiceData.paymentDetails;
 
   return (
-    <div className="w-[80%] max-w-4xl">
+    <div className="w-[100%] max-w-4xl">
       <Card className="border-2">
         <CardHeader className="border-b">
           <CardTitle className="text-3xl font-bold text-center">Invoice</CardTitle>
@@ -50,8 +54,12 @@ const InvoiceContent = ({ invoiceData }: InvoiceContentProps) => {
 
           <div className="mb-8">
             <h3 className="font-semibold text-lg mb-2">Payment Details:</h3>
-            <p>Chain: {chain}</p>
-            <p>Currency: {currency}</p>
+            <div className='flex'>
+              <p>Chain:</p>
+            <Image src={chainInfo[chain_id as ValidChainId].logoUrl} alt="chain logo" width={24} height={24} className='ml-1' />
+            </div>
+
+            <p>Currency: {contracts[chain_id as ValidChainId].tUSDCAddress}</p>
             <p>Stream Type: {streamType}</p>
             <p>Due Date: {dueDate ? format(dueDate, 'PP') : 'Not set'}</p>
           </div>

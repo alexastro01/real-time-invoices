@@ -11,6 +11,7 @@ import Spinner from "../helpers/Spinner";
 import ShimmerButton from "../magicui/shimmer-button";
 import RequestConfirmed from "./RequestConfirmed";
 import { CreateRequestButtonProps, UserDetailsFromSupabase } from "@/types/interfaces";
+import PingAnimation from "../helpers/PingAnimation";
 
 
 
@@ -22,6 +23,9 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
   expectedAmount,
   dueDate,
   invoiceItems,
+  chain
+
+
 }) => {
   const { data: walletClient } = useWalletClient();
   const [loading, setLoading] = useState(false);
@@ -40,7 +44,8 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
       payerDetails,
       expectedAmount,
       dueDate,
-      invoiceItems
+      invoiceItems,
+      chain
     });
     if (!payerEVMAddress || !expectedAmount || !dueDate || invoiceItems.length < 1) {
 
@@ -71,7 +76,8 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
         dueDate,
         invoiceItems,
         tokenAddress: "0xc75ab970D9492f6b04d66153CcCED146e60A7D5B",
-        expectedFlowRate: "15"
+        expectedFlowRate: "15",
+        chain
       });
 
       console.log("Request Parameters:", requestParameters);
@@ -97,6 +103,10 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
           requestId: confirmedRequestData.requestId,
           payeeDetails,
           payerDetails,
+          payerEVMAddress,
+          payeeEVMAddress,
+          expectedAmount,
+          chain
         }),
       });
 
@@ -121,8 +131,14 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
   };
 
   useEffect(() => {
-    console.log(dueDate);
-  }, [dueDate]);
+    console.log(chain);
+  }, [chain]);
+
+
+  useEffect(() => {
+    console.log('Chain prop in CreateRequestButton:', chain);
+  }, [chain]);
+
 
   return (
     <>
@@ -132,7 +148,8 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{isConfirmed ? "Request created" : "Creating Request"}</DialogTitle>
+            <DialogTitle>{isConfirmed ? "Request created" : "Creating Request"}    <PingAnimation color="blue" size="small" /></DialogTitle>
+        
           </DialogHeader>
           {loading === true && isConfirmed === false &&
             <div className="flex flex-col items-center justify-center p-4">
@@ -142,14 +159,14 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
             </div>
           }
 
-          {isConfirmed === true && 
+          {isConfirmed === true &&
             <div className="flex flex-col items-center justify-center p-4">
 
               <RequestConfirmed requestId={requestId} />
 
             </div>
 
-    
+
           }
 
         </DialogContent>

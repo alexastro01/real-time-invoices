@@ -144,19 +144,23 @@ export interface CreateRequestButtonProps {
   expectedAmount: string;
   dueDate: number;
   invoiceItems: invoiceItems;
+  chain: string;
+
 }
 
 
 export interface IPaymentDetails {
   payeeAddress: string,
   payerAddress: string,
-  chain: string,
+  chain: string | number,
   currency: string,
   streamType: string,
   dueDate: Date | string | number,
   totalAmount: string | number,
   invoiceItems: invoiceItems,
-  stream_id?: number
+  stream_id?: number,
+  chain_id: number
+  
 
 }
 

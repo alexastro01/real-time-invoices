@@ -45,7 +45,7 @@ const Page = () => {
   const renderContent = () => {
     if (status === 'loading') {
       return (
-        <div className='flex justify-center mt-8'>
+        <div className='flex justify-center items-center  h-screen'>
           <Spinner className='mt-2' />
         </div>
       );
@@ -57,15 +57,15 @@ const Page = () => {
 
     if (isLoading) {
       return (
-        <div className='flex justify-center mt-8'>
-          <Spinner className='mt-2' />
+        <div className='flex justify-center items-center h-screen'>
+          <Spinner className='' />
         </div>
       );
     }
 
     if (!userDetails) {
       return (
-        <div className='flex flex-col items-center justify-center mt-8'>
+        <div className='flex flex-col justify-center items-center h-screen'>
           <p className='text-lg mb-4'>You need to create a profile before creating an invoice</p>
           <Button onClick={handleCreateProfile}>Create Profile</Button>
         </div>

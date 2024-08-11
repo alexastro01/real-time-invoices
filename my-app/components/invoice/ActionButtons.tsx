@@ -1,53 +1,74 @@
 import React, { useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { Download, CreditCard, XCircle, Share2 } from 'lucide-react';
-import CountUp from './CountUp';
 import TokenDisplay from './TokenDisplay';
-import { useReadContract } from 'wagmi';
+import { useAccount, useReadContract } from 'wagmi';
 import { abi } from '../../abi/SablierLinear'
-import { sablierLinearV2LockUpAddress } from '@/constants/addresses';
 import { formatEther } from 'viem';
 import { StreamData } from '@/types/types';
 import CancelStream from './CancelStream';
 import DownloadPDF from './DownloadPDF';
 import ShareInvoiceComponent from './ShareInvoiceComponent';
-
+import WithdrawComponent from './WithdrawComponent';
+import { contracts, ValidChainId } from '@/utils/contracts/contracts';
+import { IInvoiceData } from '@/types/interfaces';
+import ViewInvoiceDialog from './ViewInvoiceDialog';
 
 type ActionButtonsProps = {
-  streamId: number
+  streamId: number,
+  chain_id: number,
+  invoiceData: IInvoiceData,
+  requestId: string
 }
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({
-  streamId
+  streamId,
+  chain_id,
+  invoiceData,
+  requestId
 }) => {
-
-  const { data, isError, isLoading } = useReadContract({
-    address: sablierLinearV2LockUpAddress,
+  const { data: streamData, isError, isLoading, error } = useReadContract({
+    address: contracts[chain_id as ValidChainId].sablierLinearV2LockUpAddress,
     abi: abi,
     functionName: 'getStream',
-    args: [streamId]
+    args: [streamId],
+    chainId: chain_id
+  })
+
+  const {address} = useAccount();
+
+  const { data: withdrawnAmount } = useReadContract({
+    address: contracts[chain_id as ValidChainId].sablierLinearV2LockUpAddress,
+    abi: abi,
+    functionName: 'getWithdrawnAmount',
+    args: [streamId],
+    chainId: chain_id
   })
 
   useEffect(() => {
-    console.log(data)
-  }, [data])
+    console.log(streamData)
+    console.log(error?.message)
+  }, [streamData, error])
 
-  const streamData = data as StreamData;
+  const typedStreamData = streamData as StreamData;
 
   return (
     <div className="flex flex-col space-y-4 w-full max-w-md">
-      {data ? <TokenDisplay
-        maxValue={Number(formatEther(streamData.amounts.deposited))}
-        tokenSymbol="DAI"
-        startTime={streamData.startTime}
-        endTime={streamData.endTime}
-      /> : null}
-      <Button variant="default" className="w-full">
-        <CreditCard className="mr-2 h-4 w-4" /> Withdraw
-      </Button>
-      <CancelStream />
-      <DownloadPDF />
-      <ShareInvoiceComponent />
+      {streamData  ? (
+        <TokenDisplay
+          maxValue={Number(formatEther(typedStreamData.amounts.deposited))}
+          tokenSymbol="tUSDC"
+          startTime={typedStreamData.startTime}
+          endTime={typedStreamData.endTime}
+          wasCanceled={typedStreamData.wasCanceled}
+          refundedAmount={typedStreamData.amounts.refunded}
+          withdrawnAmount={withdrawnAmount ? Number(formatEther(withdrawnAmount as bigint)) : 0}
+        />
+      ) : null}
+      {streamData && address === invoiceData.paymentDetails.payeeAddress ? <WithdrawComponent streamId={streamId} chain_id={chain_id} /> : null}
+
+      {/* <DownloadPDF invoiceData={invoiceData} /> */}
+      <ShareInvoiceComponent requestId={requestId} />
+      <ViewInvoiceDialog invoiceData={invoiceData} isFromActionButtons={true} />
+      {streamData && address === invoiceData.paymentDetails.payerAddress  ? <CancelStream streamId={streamId} chain_id={chain_id} wasCanceled={typedStreamData.wasCanceled} /> : null}
     </div>
   );
 };

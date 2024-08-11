@@ -1,38 +1,58 @@
-'use client';
-
+import React, { useEffect, useState } from 'react';
 import useCountUp from '@/hooks/useCountUp';
-import React, { useEffect } from 'react';
 import { Progress } from "@/components/ui/progress";
+import { formatEther } from 'viem';
 
 interface TokenDisplayProps {
   maxValue: number;
- 
   tokenSymbol: string;
   startTime: number;
   endTime: number;
+  wasCanceled: boolean;
+  refundedAmount: bigint;
+  withdrawnAmount: number;
 }
 
-const TokenDisplay: React.FC<TokenDisplayProps> = ({ maxValue, tokenSymbol, endTime, startTime }) => {
+const TokenDisplay: React.FC<TokenDisplayProps> = ({ 
+  maxValue, 
+  tokenSymbol, 
+  endTime, 
+  startTime, 
+  wasCanceled,
+  refundedAmount,
+  withdrawnAmount
+}) => {
   const totalDuration = endTime - startTime;
-  const elapsedTime = Math.max(Date.now() / 1000 - startTime, 0);
-  const remainingDuration = Math.max(endTime - Date.now() / 1000, 0);
-  const percentageElapsed = (elapsedTime / totalDuration) * 100;
-  const currentValue = maxValue * (percentageElapsed / 100);
+  const [currentValue, setCurrentValue] = useState(0);
 
+  useEffect(() => {
+    if (wasCanceled) {
+      // If canceled, calculate the final streamed amount using the refunded amount
+      const refundedEther = Number(formatEther(refundedAmount));
+      const finalStreamedAmount = maxValue - refundedEther;
+      setCurrentValue(finalStreamedAmount);
+    } else {
+      // If not canceled, update currentValue periodically
+      const interval = setInterval(() => {
+        const elapsedTime = Math.max(Date.now() / 1000 - startTime, 0);
+        const percentageElapsed = Math.min((elapsedTime / totalDuration) * 100, 100);
+        setCurrentValue(maxValue * (percentageElapsed / 100));
+      }, 1000); // Update every second
 
-    // useEffect(() =>{
-    //    console.log(remainingDuration)
-    // }, [remainingDuration])
-  // Use the hook with the calculated values
-  const displayValue = useCountUp(currentValue, maxValue, remainingDuration * 1000); // Convert to milliseconds
+      return () => clearInterval(interval);
+    }
+  }, [wasCanceled, startTime, endTime, totalDuration, maxValue, refundedAmount]);
+
+  const remainingDuration = wasCanceled ? 0 : Math.max(endTime - Date.now() / 1000, 0);
   
-  const amountWithdrawn = maxValue * 0.0; // Mock value
+  // Use the hook with the calculated values
+  const displayValue = wasCanceled ? currentValue : useCountUp(currentValue, maxValue, remainingDuration * 1000);
 
   const streamedPercentage = (currentValue / maxValue) * 100;
-  const withdrawnPercentage = (amountWithdrawn / maxValue) * 100;
+  const withdrawnPercentage = (withdrawnAmount / maxValue) * 100;
 
   // Format the number with exactly 8 decimal places
-  const formattedNumber = currentValue.toFixed(8);
+  const formattedNumber = displayValue.toFixed(8);
 
   // Split the number into integer and decimal parts
   const [integerPart, decimalPart] = formattedNumber.split('.');
@@ -86,7 +106,7 @@ const TokenDisplay: React.FC<TokenDisplayProps> = ({ maxValue, tokenSymbol, endT
           <Progress value={withdrawnPercentage} className="h-3 bg-green-100 rounded-full" 
                     indicatorClassName="bg-gradient-to-r from-green-400 to-green-600 rounded-full" />
           <div className="mt-2 text-xs text-gray-500 text-right">
-            {amountWithdrawn.toFixed(4)} / {maxValue} {tokenSymbol}
+            {withdrawnAmount.toFixed(4)} / {maxValue} {tokenSymbol}
           </div>
         </div>
       </div>
@@ -94,6 +114,14 @@ const TokenDisplay: React.FC<TokenDisplayProps> = ({ maxValue, tokenSymbol, endT
       {/* Label */}
       <div className="text-center text-gray-600 font-medium">
         Out of {tokenSymbol} {maxValue}
+        {wasCanceled && (
+          <div className="text-red-500 mt-2">
+            Stream Canceled
+            <div className="text-sm">
+              Refunded: {Number(formatEther(refundedAmount)).toFixed(4)} {tokenSymbol}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

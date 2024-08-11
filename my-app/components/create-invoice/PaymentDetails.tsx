@@ -15,7 +15,7 @@ import { useToast } from "../ui/use-toast"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Calendar } from "../ui/calendar"
-import { format } from "date-fns"
+import { format, isBefore, startOfTomorrow, addDays } from "date-fns"
 import {
   Popover,
   PopoverContent,
@@ -24,6 +24,10 @@ import {
 import { cn } from "@/lib/utils"
 import { CalendarIcon, XIcon } from "lucide-react"
 import Image from "next/image"
+import { getChainOptions } from "@/utils/multi-chain/MultiChainSelectOptions"
+
+
+
 
 
 type PaymentDetailsProps = {
@@ -59,7 +63,16 @@ export function PaymentDetails({
     return paymentDetails.invoiceItems.reduce((total, item) => total + (item.quantity * item.price), 0);
   }, [paymentDetails.invoiceItems]);
 
+  const disablePastDates = (date: Date) => {
+    return isBefore(date, startOfTomorrow());
+  };
 
+  React.useEffect(() => {
+    const tomorrow = startOfTomorrow();
+    if (!paymentDetails.dueDate || isBefore(paymentDetails.dueDate, tomorrow)) {
+      updatePaymentDetails({ dueDate: tomorrow });
+    }
+  }, []);
 
   function validateAndProceed() {
     if (paymentDetails.receiverAddress.trim() === "") {
@@ -99,6 +112,9 @@ export function PaymentDetails({
     updatePaymentDetails({ invoiceItems: newInvoiceItems });
   };
 
+  const chainOptions = getChainOptions(); // Get the chain options
+
+
 
   return (
     <div className="w-[50%]" >
@@ -122,21 +138,30 @@ export function PaymentDetails({
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="chain">Chain</Label>
-                <Select value={paymentDetails.chain}
-                  onValueChange={(value) => updatePaymentDetails({ chain: value })}>
+
+                <Select
+                  value={paymentDetails.chain}
+                  onValueChange={(value) => updatePaymentDetails({ chain: value })}
+                >
+
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select a chain" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="EDU">
-                      <div className="flex items-center font-semibold">
-                        <Image src="https://www.opencampus.xyz/static/media/coin-logo.39cbd6c42530e57817a5b98ac7621ca7.svg" alt="EDU Chain" className="w-6 h-6 mr-2" width={24} height={24} />
-                        EDU Chain
-                      </div>
-                    </SelectItem>
+
+                    {chainOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        <div className="flex items-center font-semibold">
+                          {option.icon}
+                          {option.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+
                   </SelectContent>
                 </Select>
               </div>
+
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="currency">Currency</Label>
                 <Select value={paymentDetails.currency} onValueChange={(value) => updatePaymentDetails({ currency: value })}>
@@ -177,6 +202,7 @@ export function PaymentDetails({
                       mode="single"
                       selected={paymentDetails.dueDate as Date | undefined}
                       onSelect={(date) => updatePaymentDetails({ dueDate: date })}
+                      disabled={disablePastDates}
                       initialFocus
                     />
                   </PopoverContent>
@@ -209,40 +235,40 @@ export function PaymentDetails({
                 <Button onClick={addInvoiceItem}>Add</Button>
               </div>
               <Table className="mt-4">
-  <TableHeader>
-    <TableRow>
-      <TableHead className="w-1/3">Item Name</TableHead>
-      <TableHead className="text-right w-1/6">Quantity</TableHead>
-      <TableHead className="text-right w-1/6">Price</TableHead>
-      <TableHead className="text-right w-1/6">Total</TableHead>
-      <TableHead className="w-1/12"></TableHead>
-    </TableRow>
-  </TableHeader>
-  <TableBody>
-    {paymentDetails.invoiceItems.map((item, index) => (
-      <TableRow key={index}>
-        <TableCell>{item.name}</TableCell>
-        <TableCell className="text-right">{item.quantity}</TableCell>
-        <TableCell className="text-right">{item.price.toFixed(2)}</TableCell>
-        <TableCell className="text-right">{(item.quantity * item.price).toFixed(2)}</TableCell>
-        <TableCell className="text-center">
-          <XIcon
-            className="cursor-pointer text-gray-400 hover:text-red-500 transition-colors mx-auto"
-            size={18}
-            onClick={() => removeInvoiceItem(index)}
-          />
-        </TableCell>
-      </TableRow>
-    ))}
-  </TableBody>
-  <TableFooter>
-    <TableRow>
-      <TableCell colSpan={3} className="font-semibold">Grand Total</TableCell>
-      <TableCell className="text-right font-semibold">{grandTotal.toFixed(2)}</TableCell>
-      <TableCell></TableCell>
-    </TableRow>
-  </TableFooter>
-</Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-1/3">Item Name</TableHead>
+                    <TableHead className="text-right w-1/6">Quantity</TableHead>
+                    <TableHead className="text-right w-1/6">Price</TableHead>
+                    <TableHead className="text-right w-1/6">Total</TableHead>
+                    <TableHead className="w-1/12"></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {paymentDetails.invoiceItems.map((item, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{item.name}</TableCell>
+                      <TableCell className="text-right">{item.quantity}</TableCell>
+                      <TableCell className="text-right">{item.price.toFixed(2)}</TableCell>
+                      <TableCell className="text-right">{(item.quantity * item.price).toFixed(2)}</TableCell>
+                      <TableCell className="text-center">
+                        <XIcon
+                          className="cursor-pointer text-gray-400 hover:text-red-500 transition-colors mx-auto"
+                          size={18}
+                          onClick={() => removeInvoiceItem(index)}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableCell colSpan={3} className="font-semibold">Grand Total</TableCell>
+                    <TableCell className="text-right font-semibold">{grandTotal.toFixed(2)}</TableCell>
+                    <TableCell></TableCell>
+                  </TableRow>
+                </TableFooter>
+              </Table>
             </div>
 
           </form>

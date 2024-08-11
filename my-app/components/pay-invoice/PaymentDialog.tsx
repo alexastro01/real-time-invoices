@@ -20,13 +20,17 @@ type PaymentDialogProps = {
     requestId: string;
     payeeAddress: string;
     dueDate: any;
+    chain_id: number;
+    payerAddress:string;
 }
 
 const PaymentDialog = ({
     totalAmount,
     requestId,
     payeeAddress,
-    dueDate
+    dueDate,
+    chain_id,
+    payerAddress
 }: PaymentDialogProps) => {
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
@@ -46,11 +50,11 @@ const PaymentDialog = ({
                 </ShimmerButton>
             </DialogTrigger>
             {
-                step === 0 && <ApproveUSDCDialog setStep={setStep} amountToApprove={totalAmount} />
+                step === 0 && <ApproveUSDCDialog setStep={setStep} amountToApprove={totalAmount} chain_id={chain_id} />
             }
 
             {
-                step === 1 && <StartLinearStream setStep={setStep} amountToStream={totalAmount} payeeAddress={payeeAddress} dueDate={dueDate} requestId={requestId} />
+                step === 1 && <StartLinearStream setStep={setStep} amountToStream={totalAmount} payeeAddress={payeeAddress} dueDate={dueDate} requestId={requestId} chain_id={chain_id} payerAddress={payerAddress} />
             }
 
             {

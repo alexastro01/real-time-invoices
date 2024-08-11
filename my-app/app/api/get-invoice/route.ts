@@ -44,6 +44,8 @@ export async function GET(request: Request) {
         const requestNetworkTimeTaken = requestNetworkEndTime - requestStartTime;
 
         console.log(`Request ipfs query took ${requestNetworkTimeTaken.toFixed(2)} milliseconds`);
+
+
  
       const invoiceData: IInvoiceData = {
         partiesDetails : {
@@ -70,17 +72,18 @@ export async function GET(request: Request) {
             payeeAddress: requestData.payee?.value as string,
             payerAddress: requestData.payer?.value as string,
             // ! REPLACE THIS WITH ACTUAL CHAIN
-            chain: "EDU",
+            chain: data.chain_id,
             currency: requestData.currencyInfo.value,
             streamType: "linear",
             dueDate: requestData.contentData.dueDate,
             totalAmount: requestData.expectedAmount,
             invoiceItems: requestData.contentData.invoiceItems,
-            stream_id:data.stream_id
+            stream_id:data.stream_id,
+            chain_id:data.chain_id
         }
       }
       
-      console.log(requestData)
+      console.log(invoiceData)
 
       return NextResponse.json(invoiceData);
 
