@@ -4,9 +4,10 @@
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
 import { ConnectButton } from "@rainbow-me/rainbowkit"
-import { CircleIcon } from "lucide-react"
+import { ArrowRight, CircleIcon } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { Button } from "./ui/button"
 
 export default function Navbar() {
   return (
@@ -40,7 +41,7 @@ export default function Navbar() {
         </ul>
       </nav>
       <div className="ml-auto flex items-center gap-2">
-       {/* <ConnectButton  accountStatus="address" />  */}
+       <Link href={'https://app.streambill.xyz'}><Button>Go to app<ArrowRight className="ml-1 h-4 w-4"/></Button></Link>
       </div>
     </header>
   )
