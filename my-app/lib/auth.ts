@@ -22,7 +22,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials, req) {
         try {
           const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"))
-          const nextAuthUrl = new URL(process.env.ENVIRONMENT === 'prod' ? 'https://app.streambill.xyz' : 'http://localhost:3000' )
+          const nextAuthUrl = new URL(process.env.ENVIRONMENT === 'prod' ? 'https://app.streambill.xyz/' : 'http://localhost:3000' )          
           const result = await siwe.verify({
             signature: credentials?.signature || "",
             domain: nextAuthUrl.host,
