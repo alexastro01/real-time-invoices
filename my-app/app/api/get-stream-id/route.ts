@@ -35,8 +35,12 @@ function logObject(label: string, obj: any) {
     console.log(`${label}:`, JSON.stringify(obj, (_, v) => typeof v === 'bigint' ? v.toString() : v, 2));
 }
 
+
+
 async function addStreamIdToInvoice(requestId: string, streamId: string) {
-    const response = await fetch(`${process.env.API_BASE_URL}/api/add-stream-id`, {
+    const baseUrl = process.env.ENVIRONMENT === 'prod' ? 'https://app.streambill.xyz/api/add-stream-id' : 'http://localhost:3000/api/add-stream-id'
+   
+    const response = await fetch(`${baseUrl}/api/add-stream-id`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ requestId, streamId }),
