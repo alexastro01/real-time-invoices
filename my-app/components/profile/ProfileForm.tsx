@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MapPin, Mail, Building, Globe } from 'lucide-react';
+import { MapPin, Mail, Building, Globe, Info } from 'lucide-react';
 
 interface ProfileFormProps {
   senderDetails: SenderDetails;
@@ -28,7 +28,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
   isLoading
 }) => {
   const fields = [
-    { id: 'email', label: 'Email', icon: <Mail className="h-4 w-4" /> },
+    { id: 'email', label: 'Email', icon: <Mail className="h-4 w-4" />, required: true },
     { id: 'address', label: 'Address', icon: <MapPin className="h-4 w-4" /> },
     { id: 'city', label: 'City', icon: <Building className="h-4 w-4" /> },
     { id: 'state', label: 'State/Province', icon: <Building className="h-4 w-4" /> },
@@ -52,14 +52,19 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
           {isFetching ? (
             <Skeleton className="h-8 w-48" />
           ) : editMode ? (
-            <Input
-              id="name"
-              value={senderDetails.name}
-              onChange={handleInputChange}
-              className="text-2xl font-bold text-center"
-            />
+            <div className="w-full max-w-xs">
+              <Label htmlFor="name" className="sr-only">Name</Label>
+              <Input
+                id="name"
+                value={senderDetails.name}
+                onChange={handleInputChange}
+                className="text-2xl font-bold text-center"
+                required
+              />
+              <p className="text-xs text-red-500 text-center mt-1">* Required</p>
+            </div>
           ) : (
-            <h2 className="text-2xl font-bold">{senderDetails.name}</h2>
+            <h2 className="text-2xl font-bold">{senderDetails.name} <span className='text-red-500 text-xs'>*</span></h2>
           )}
           <p className="text-sm text-muted-foreground mt-1">{senderDetails.evmAddress}</p>
         </div>
@@ -78,16 +83,21 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
                     value={senderDetails[field.id as keyof SenderDetails]}
                     onChange={handleInputChange}
                     placeholder={field.label}
+                    required={field.required}
                   />
+                  {field.required && <p className="text-xs text-red-500 mt-1">* Required</p>}
                 </div>
               ) : (
-                <p className="flex-grow">{senderDetails[field.id as keyof SenderDetails] || `No ${field.label.toLowerCase()} provided`}</p>
+                <p className="flex-grow">
+                  {senderDetails[field.id as keyof SenderDetails] || `No ${field.label.toLowerCase()} provided`}
+                  {field.required && <span className='text-red-500 text-xs ml-1'>*</span>}
+                </p>
               )}
             </div>
           ))}
         </div>
 
-        <div className="mt-6 flex justify-center">
+        <div className="mt-6 flex flex-col items-center">
           {editMode ? (
             <Button onClick={handleSave} disabled={isLoading}>
               {isLoading ? 'Saving...' : 'Save Profile'}
@@ -97,6 +107,10 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
               Edit Profile
             </Button>
           )}
+          <div className="flex items-center text-sm text-muted-foreground mt-4">
+            <Info className="h-4 w-4 mr-2" />
+            <p>Fields marked with <span className="text-red-500">*</span> are required.</p>
+          </div>
         </div>
       </CardContent>
     </Card>

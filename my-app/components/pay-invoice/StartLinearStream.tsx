@@ -19,6 +19,9 @@ import { contracts, ValidChainId } from '@/utils/contracts/contracts';
 import { chainInfo } from '@/utils/multi-chain/MultiChainSelectOptions';
 import PingAnimation from '../helpers/PingAnimation';
 import Image from 'next/image';
+import { Card, CardContent } from '../ui/card';
+import { Separator } from '../ui/separator';
+import { ArrowRight } from 'lucide-react';
 
 type StartLinearStreamProps = {
     setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -196,6 +199,37 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
         return parts.join(', ');
       }
 
+      const BeautifulPaymentSummary = () => (
+        <Card className="w-full max-w-md mx-auto shadow-lg">
+            <CardContent className="p-6">
+                <div className="space-y-4">
+                    <div className="flex items-center justify-center space-x-2">
+                        <span className="text-3xl font-bold">{amountToStream}</span>
+                        <Image src='/usdc.png' width={36} height={36} alt='USDC LOGO' className='inline-block' />
+                    </div>
+                    
+                    <Separator className="my-2" />
+                    
+                    <div className="text-center">
+                        <p className="text-sm text-gray-500 mb-1">to</p>
+                        <p className="text-lg font-medium break-all">{payeeAddress}</p>
+                    </div>
+                    
+                    <Separator className="my-2" />
+                    
+                    <div className="text-center">
+                        <p className="text-sm text-gray-500 mb-1">over</p>
+                        <p className="text-lg font-semibold">
+                            {formatTimeRemaining(getTimeRemainingInSeconds(dueDate))}
+                        </p>
+                    </div>
+                    
+                 
+                </div>
+            </CardContent>
+        </Card>
+    );
+
     return (
         <DialogContent className="">
             <DialogHeader>
@@ -210,20 +244,7 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
                     <p className="text-lg font-semibold">Stream created with ID: {streamId}</p>
                 </div>
             ) : (
-                <div>
-                <div className="py-2 flex justify-center">
-                <p className="text-2xl font-semibold">{amountToStream}</p>
-                <Image src={'/usdc.png'} width={32} height={32} alt={'USDC LOGO'} className='ml-1'/>
-                </div>
-                <p className='text-sm font-medium mr-1 text-center mb-0'>to {" "}</p>     
-                 <div className='flex justify-center py-2'>
-            
-                    <p className='text-md font-semibold'>{payeeAddress}</p>
-                 </div>
-                 <p className='text-sm font-medium mr-1 text-center mb-0'>over {" "}</p>  
-                 <p className='text-md font-semibold mr-1 text-center  py-2'>  {formatTimeRemaining(getTimeRemainingInSeconds(dueDate))}</p>  
-               
-            </div>
+              <BeautifulPaymentSummary />
             )}
             <DialogFooter>
                 <Button

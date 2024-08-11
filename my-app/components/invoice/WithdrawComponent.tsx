@@ -7,10 +7,12 @@ import { contracts, ValidChainId } from '@/utils/contracts/contracts';
 import { abi } from '../../abi/SablierLinear';
 import { formatEther, parseEther } from 'viem';
 import { useToast } from '../ui/use-toast';
-import { CreditCard, Loader2 } from 'lucide-react';
+import { ArrowDownToLine, CreditCard, Loader2 } from 'lucide-react';
 import { chainInfo } from '@/utils/multi-chain/MultiChainSelectOptions';
 import PingAnimation from '../helpers/PingAnimation';
 import Image from 'next/image';
+import { Card, CardContent } from '../ui/card';
+import { Separator } from '../ui/separator';
 
 type WithdrawComponentProps = {
     streamId: number;
@@ -97,14 +99,18 @@ const WithdrawComponent: React.FC<WithdrawComponentProps> = ({ streamId, chain_i
                 variant: "destructive"
             })
         } else {
-        writeContract({
-            address: contracts[chain_id as ValidChainId].sablierLinearV2LockUpAddress,
-            abi: abi,
-            functionName: 'withdraw',
-            args: [streamId, address, amount],
-            chainId: chain_id
-        });
-    }
+            writeContract({
+                address: contracts[chain_id as ValidChainId].sablierLinearV2LockUpAddress,
+                abi: abi,
+                functionName: 'withdraw',
+                args: [streamId, address, amount],
+                chainId: chain_id
+            });
+        }
+    };
+
+    const handleMaxClick = () => {
+        setAmountToWithdraw(availableToWithdraw);
     };
 
     return (
@@ -114,40 +120,73 @@ const WithdrawComponent: React.FC<WithdrawComponentProps> = ({ streamId, chain_i
                     <CreditCard className="mr-2 h-4 w-4" /> Withdraw
                 </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Withdraw Funds <PingAnimation color="green" size="small" /></DialogTitle>
+                    <DialogTitle className="text-2xl font-bold text-center">
+                        Withdraw Funds <PingAnimation color="green" size="small" />
+                    </DialogTitle>
                 </DialogHeader>
-                <div className="space-y-4">
-                    <div>
-                        <label className="text-sm font-medium text-">Available</label>
-                        <div className="text-lg font-bold flex justify-center my-4"><p className='text-2xl mr-1'>{parseFloat(availableToWithdraw).toFixed(4)}</p> <Image src={"/usdc.png"} height={32} width={32} alt="usdc logo" /> </div>
-                    </div>
-                    <div>
-                        <label htmlFor="withdrawAmount" className="text-sm font-medium">Amount to withdraw:</label>
-                        <Input
-                            id="withdrawAmount"
-                            type="number"
-                            value={amountToWithdraw}
-                            onChange={(e) => setAmountToWithdraw(e.target.value)}
-                            max={availableToWithdraw}
-                            step="0.0001"
-                        />
-                    </div>
-                    <Button
-                        onClick={handleWithdraw}
-                        disabled={isPending || isConfirming || parseFloat(amountToWithdraw) > parseFloat(availableToWithdraw) || parseFloat(amountToWithdraw) <= 0}
-                        className="w-full"
-                    >
-                        {isPending || isConfirming ? (
-                            <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Confirming...
-                            </>
-                        ) : (
-                            'Withdraw'
-                        )}
-                    </Button>
-                </div>
+                <Card className="mt-4">
+                    <CardContent className="pt-6">
+                        <div className="space-y-6">
+                            <div className="text-center">
+                                <label className="text-sm font-medium text-gray-500">Available Balance</label>
+                                <div className="text-3xl font-bold flex items-center justify-center mt-2 space-x-2">
+                                    <span>{parseFloat(availableToWithdraw).toFixed(4)}</span>
+                                    <Image src="/usdc.png" height={36} width={36} alt="USDC logo" />
+                                </div>
+                            </div>
+
+                            <Separator />
+
+                            <div>
+                                <label htmlFor="withdrawAmount" className="block text-sm font-medium text-gray-700 mb-2">
+                                    Amount to withdraw:
+                                </label>
+                                <div className="relative flex items-center">
+                                    <Input
+                                        id="withdrawAmount"
+                                        type=""
+                                        value={amountToWithdraw}
+                                        onChange={(e) => setAmountToWithdraw(e.target.value)}
+                                        max={availableToWithdraw}
+                                        // step="0.0001"
+                                        className="pr-24" // Increased right padding to accommodate the Max button
+                                    />
+                                    <Button
+                                        type="button"
+                                        onClick={handleMaxClick}
+                                        className="absolute right-0 top-0 bottom-0 px-2 text-sm"
+                                        variant="outline"
+                                    >
+                                        Max
+                                    </Button>
+                                    <div className="absolute inset-y-0 right-[12.5%] flex items-center pr-3 pointer-events-none">
+                                        <Image src="/usdc.png" height={24} width={24} alt="USDC" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="pt-4">
+                                <Button
+                                    onClick={handleWithdraw}
+                                    disabled={isPending || isConfirming || parseFloat(amountToWithdraw) > parseFloat(availableToWithdraw) || parseFloat(amountToWithdraw) <= 0}
+                                    className="w-full h-12 text-lg font-semibold"
+                                >
+                                    {isPending || isConfirming ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Confirming...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <ArrowDownToLine className="mr-2 h-5 w-5" /> Withdraw
+                                        </>
+                                    )}
+                                </Button>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
             </DialogContent>
         </Dialog>
     );
