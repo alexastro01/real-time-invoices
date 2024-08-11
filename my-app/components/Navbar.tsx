@@ -41,7 +41,7 @@ export default function Navbar() {
         </ul>
       </nav>
       <div className="ml-auto flex items-center gap-2">
-       <Link href={'https://app.streambill.xyz'}><Button>Go to app<ArrowRight className="ml-1 h-4 w-4"/></Button></Link>
+       {/* <Link href={'https://app.streambill.xyz'}><Button>Go to app<ArrowRight className="ml-1 h-4 w-4"/></Button></Link> */}
       </div>
     </header>
   )
