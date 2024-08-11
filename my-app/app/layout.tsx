@@ -6,6 +6,7 @@ import { Providers } from "./providers";
 import { Toaster } from "@/components/ui/toaster";
 import { SessionWrapper } from "@/components/SessionWrapper";
 import { Analytics } from '@vercel/analytics/react';
+import PlausibleProvider from 'next-plausible'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -47,6 +48,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} mx-2`}>
       <Providers>
+      <PlausibleProvider domain="streambill.xyz">
         <SessionWrapper>
       <main>
         {children}
@@ -54,6 +56,7 @@ export default function RootLayout({
        </main>
        <Toaster />
        </SessionWrapper>
+       </PlausibleProvider>
        </Providers> 
         </body>
     </html>
