@@ -30,9 +30,9 @@ const opencampus = {
 
   } as const satisfies Chain;
 
-  const morphHolensky = {
+  const morphholesky = {
     id: 2810,
-    name: 'Morph Holensky',
+    name: 'Morph Holesky',
     iconUrl: '/morph-logo.png',
     iconBackground: '#fff',
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
@@ -52,7 +52,7 @@ export const config = getDefaultConfig({
     opencampus,
     baseSepolia,
     arbitrumSepolia,
-    morphHolensky
+    morphholesky
   ],
   ssr: true,
 });

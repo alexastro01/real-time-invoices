@@ -19,7 +19,7 @@ export const chainInfo: Record<ValidChainId, {
         logoUrl: "https://www.opencampus.xyz/static/media/coin-logo.39cbd6c42530e57817a5b98ac7621ca7.svg"
     },
     2810: {
-        name: "Morph Holensky",
+        name: "Morph holesky",
         logoUrl: "/morph-logo.png"
     }
 

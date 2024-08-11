@@ -19,7 +19,7 @@ export const contracts: Record<ValidChainId, {
         tUSDCAddress: "0x37ff5b5f37038db083957c415d5b105ee2e27e4f",
         sablierLinearV2LockUpAddress: "0x9D1C257d9bc09E6E6B8E7e7c2496C12000f55457"
     },
-    //MORPH HOLENSKY
+    //MORPH holesky
     2810: {
         tUSDCAddress: "0x06e6eAd6899F44441a187d4bA907D1f527C7536c",
         sablierLinearV2LockUpAddress: "0x29B056690e7273a896Ed5a007c6acc4f64fE31d3"

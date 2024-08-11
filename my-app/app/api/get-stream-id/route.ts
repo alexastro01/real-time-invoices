@@ -23,7 +23,7 @@ const chains: Record<ValidChainId, Chain> = {
     421614: arbitrumSepolia,
     2810: {
         id: 2810,
-        name: 'Morph Holensky',
+        name: 'Morph Holesky',
         nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
         rpcUrls: {
             default: { http: ['https://rpc-quicknode-holesky.morphl2.io'] },
