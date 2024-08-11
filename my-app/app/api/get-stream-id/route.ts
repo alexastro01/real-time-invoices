@@ -21,6 +21,14 @@ const chains: Record<ValidChainId, Chain> = {
     } as const,
     84532: baseSepolia,
     421614: arbitrumSepolia,
+    2810: {
+        id: 2810,
+        name: 'Morph Holensky',
+        nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+        rpcUrls: {
+            default: { http: ['https://rpc-quicknode-holesky.morphl2.io'] },
+        },
+    } as const,
 };
 
 function logObject(label: string, obj: any) {

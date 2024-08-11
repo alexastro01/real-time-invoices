@@ -13,10 +13,22 @@ const openCampus = defineChain({
   },
 });
 
+const morphHolensky = defineChain({
+  id: 2810,
+  name: 'Morph Holensky',
+  nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: { http: ['https://rpc-quicknode-holesky.morphl2.io'] },
+  },
+});
+
+
+
 const chains: Record<ValidChainId, Chain> = {
   656476: openCampus,
   84532: baseSepolia,
   421614: arbitrumSepolia,
+  2810: morphHolensky
 };
 
 // Add this ABI fragment for the statusOf function

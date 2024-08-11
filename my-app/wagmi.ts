@@ -30,13 +30,29 @@ const opencampus = {
 
   } as const satisfies Chain;
 
+  const morphHolensky = {
+    id: 2810,
+    name: 'Morph Holensky',
+    iconUrl: '/morph-logo.png',
+    iconBackground: '#fff',
+    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    rpcUrls: {
+      default: { http: ['https://rpc-quicknode-holesky.morphl2.io'] },
+    },
+    blockExplorers: {
+      default: { name: 'BlockScout', url: 'https://explorer-holesky.morphl2.io/' },
+    },
+
+  } as const satisfies Chain;
+
 export const config = getDefaultConfig({
   appName: 'RainbowKit demo',
   projectId: 'YOUR_PROJECT_ID',
   chains: [
     opencampus,
     baseSepolia,
-    arbitrumSepolia
+    arbitrumSepolia,
+    morphHolensky
   ],
   ssr: true,
 });

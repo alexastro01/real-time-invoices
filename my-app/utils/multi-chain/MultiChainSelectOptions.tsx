@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-export type ValidChainId = 656476 | 84532 | 421614;
+export type ValidChainId = 656476 | 84532 | 421614 | 2810;
 
 export const chainInfo: Record<ValidChainId, {
     name: string;
@@ -18,6 +18,10 @@ export const chainInfo: Record<ValidChainId, {
         name: "EDU Chain",
         logoUrl: "https://www.opencampus.xyz/static/media/coin-logo.39cbd6c42530e57817a5b98ac7621ca7.svg"
     },
+    2810: {
+        name: "Morph Holensky",
+        logoUrl: "/morph-logo.png"
+    }
 
 };
 
