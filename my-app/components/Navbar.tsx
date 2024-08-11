@@ -6,6 +6,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { LayoutDashboard, UserCircle, FileText, DollarSignIcon } from "lucide-react"
 import { usePathname } from 'next/navigation'
+import { Badge } from "./ui/badge"
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -21,7 +22,7 @@ export default function Navbar() {
     <header className="fixed left-0 top-0 flex flex-col h-screen w-64 shrink-0 bg-background border-r border-accent p-4">
       <Link href="/" className="flex items-center mb-6">
         <Image src="/logo_cropped.png" width={48} height={48} alt="Stream Bill logo"/>
-        <span className="ml-2 font-semibold">StreamBill</span>
+        <span className="ml-2 font-semibold">StreamBill<span className="text-gray-400 text-xs ml-1">testnet</span></span>
       </Link>
       <nav className="flex-1">
         <ul className="flex flex-col gap-4">
