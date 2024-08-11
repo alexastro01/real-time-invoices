@@ -27,7 +27,7 @@ interface InvoiceItemProps {
   };
   copiedAddress: string | null;
   onCopyAddress: (address: string) => void;
-
+  type: 'invoicesSent' | 'invoicesReceived';
   sliceAddress: (address: string) => string;
   requestId: string;
   chainId: ValidChainId;
@@ -38,7 +38,7 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
   invoice,
   copiedAddress,
   onCopyAddress,
-
+  type,
   sliceAddress,
   requestId,
   chainId,
@@ -107,7 +107,7 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
         </Link>
             :
 
-            <Link href={`/invoice/${requestId}`}>
+            <Link href={type === 'invoicesReceived' ? `/pay-invoice/${requestId}` : `/invoice/${requestId}`}>
               <Button variant="outline" size="sm" className="flex items-center space-x-1">
                 <ExternalLink className="h-4 w-4" />
                 <span>View Invoice</span>

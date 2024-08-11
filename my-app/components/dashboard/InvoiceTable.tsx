@@ -110,6 +110,7 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
           stream_id={invoice.stream_id as number}
           requestId={invoice.request_id}
           chainId={invoice.chain_id as ValidChainId}
+          type={type as 'invoicesSent' | 'invoicesReceived'}
         />
       ));
     };
