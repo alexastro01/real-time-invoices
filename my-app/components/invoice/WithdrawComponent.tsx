@@ -10,6 +10,7 @@ import { useToast } from '../ui/use-toast';
 import { CreditCard, Loader2 } from 'lucide-react';
 import { chainInfo } from '@/utils/multi-chain/MultiChainSelectOptions';
 import PingAnimation from '../helpers/PingAnimation';
+import Image from 'next/image';
 
 type WithdrawComponentProps = {
     streamId: number;
@@ -119,8 +120,8 @@ const WithdrawComponent: React.FC<WithdrawComponentProps> = ({ streamId, chain_i
                 </DialogHeader>
                 <div className="space-y-4">
                     <div>
-                        <label className="text-sm font-medium">Available to withdraw:</label>
-                        <p className="text-lg font-bold">{parseFloat(availableToWithdraw).toFixed(4)} tokens</p>
+                        <label className="text-sm font-medium text-">Available</label>
+                        <div className="text-lg font-bold flex justify-center my-4"><p className='text-2xl mr-1'>{parseFloat(availableToWithdraw).toFixed(4)}</p> <Image src={"/usdc.png"} height={32} width={32} alt="usdc logo" /> </div>
                     </div>
                     <div>
                         <label htmlFor="withdrawAmount" className="text-sm font-medium">Amount to withdraw:</label>
