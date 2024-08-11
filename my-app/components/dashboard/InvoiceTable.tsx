@@ -24,11 +24,9 @@ type Invoice = {
   stream_id: number | string;
 };
 
-
 const InvoiceTable = ({ type }: InvoiceTableProps) => {
     const [copiedAddress, setCopiedAddress] = useState<string | null>(null);
     const [invoices, setInvoices] = useState<Invoice[]>([]);
-
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -36,18 +34,43 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
   
     useEffect(() => {
       if (type === "invoicesSent") {
-        fetchInvoices();
+        fetchInvoicesSent();
+      } else if (type === "invoicesReceived") {
+        fetchInvoicesReceived();
       }
       console.log(chainId)
     }, [type, address]);
   
-    const fetchInvoices = async () => {
+    const fetchInvoicesSent = async () => {
       setLoading(true);
       setError(null);
       try {
-        // Assuming you have access to the current user's payer address
-        const payeeAddress = address as string; // Replace this with the actual payer address
-        const response = await fetch(`/api/get-payee-invoices?payee_address=${payeeAddress}`);
+        const payeeAddress = address as string;
+        const response = await fetch(`/api/get-payee-invoices?payee_address=${payeeAddress}`, {
+          next: { revalidate: 300 } // Cache for 5 minutes (300 seconds)
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch invoices');
+        }
+        const data = await response.json();
+        setInvoices(data);
+        console.log(data)
+      } catch (err) {
+        setError('Error fetching invoices');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+      
+    const fetchInvoicesReceived = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const payerAddress = address as string;
+        const response = await fetch(`/api/get-payer-invoices?payer_address=${payerAddress}`, {
+          next: { revalidate: 300 } // Cache for 5 minutes (300 seconds)
+        });
         if (!response.ok) {
           throw new Error('Failed to fetch invoices');
         }
@@ -62,17 +85,13 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
       }
     };
 
-
     const sliceAddress = (address: string) => `${address.slice(0, 6)}...${address.slice(-4)}`;
 
     const copyToClipboard = useCallback((text: string) => {
       navigator.clipboard.writeText(text);
       setCopiedAddress(text);
-      setTimeout(() => setCopiedAddress(null), 2000); // Reset after 2 seconds
-      // You might want to add a toast notification here
+      setTimeout(() => setCopiedAddress(null), 2000);
     }, []);
-
-
 
     const renderTableContent = () => {
       if (loading) {
@@ -83,19 +102,17 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
 
       return invoices.map((invoice) => (
         <InvoiceItem 
-        key={invoice.request_id}
-        invoice={invoice}
-        copiedAddress={copiedAddress}
-        onCopyAddress={copyToClipboard}
-     
-        sliceAddress={sliceAddress}
-        stream_id={invoice.stream_id as number}
-        requestId={invoice.request_id}
-        chainId={invoice.chain_id as ValidChainId}
-      />
+          key={invoice.request_id}
+          invoice={invoice}
+          copiedAddress={copiedAddress}
+          onCopyAddress={copyToClipboard}
+          sliceAddress={sliceAddress}
+          stream_id={invoice.stream_id as number}
+          requestId={invoice.request_id}
+          chainId={invoice.chain_id as ValidChainId}
+        />
       ));
     };
-
 
     return (
       <Table>
