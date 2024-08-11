@@ -172,7 +172,7 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
 
     useEffect(() => {
         if (error) {
-            console.error('Contract write error:', error);
+            console.error('Contract write error:', error.message);
             toast({
                 title: "Error",
                 description: `${error.message}`,
