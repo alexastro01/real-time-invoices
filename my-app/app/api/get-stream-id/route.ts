@@ -40,7 +40,7 @@ function logObject(label: string, obj: any) {
 async function addStreamIdToInvoice(requestId: string, streamId: string) {
     const baseUrl = process.env.ENVIRONMENT === 'prod' ? 'https://app.streambill.xyz/api/add-stream-id' : 'http://localhost:3000/api/add-stream-id'
    
-    const response = await fetch(`${baseUrl}/api/add-stream-id`, {
+    const response = await fetch(`${baseUrl}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ requestId, streamId }),
