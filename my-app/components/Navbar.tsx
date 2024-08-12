@@ -1,4 +1,3 @@
-
 'use client'
 
 import { ConnectButton } from "@rainbow-me/rainbowkit"
@@ -7,17 +6,55 @@ import Link from "next/link"
 import { LayoutDashboard, UserCircle, FileText, DollarSignIcon } from "lucide-react"
 import { usePathname } from 'next/navigation'
 import { Badge } from "./ui/badge"
+import { useEffect } from 'react';
+import LoginButton from "./edu-connect/LoginButton"
+//@ts-ignore
+import { useOCAuth } from '@opencampus/ocid-connect-js';
+import { useAccount } from 'wagmi'
+import UserProfileCard from "./edu-connect/UserProfileEdu"
+
 
 export default function Navbar() {
   const pathname = usePathname()
+  const { authState: eduConnectAuthState, ocAuth } = useOCAuth();
+  const { chain } = useAccount()
 
   const navItems = [
     { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { href: "/create-invoice", icon: FileText, label: "Create Invoice" },
     { href: "/profile", icon: UserCircle, label: "Profile" },
     { href: "/mint-tusdc", icon: DollarSignIcon, label: "Get test usdc"}
-    
   ]
+
+  useEffect(() => {
+    console.log(eduConnectAuthState);
+  }, [eduConnectAuthState]);
+
+  const renderOCAuth = () => {
+    if (chain?.id !== 656476) {
+      return null; // Don't render anything if not on the correct chain
+    }
+
+    if (eduConnectAuthState.error) {
+      return <div>Error: {eduConnectAuthState.error.message}</div>;
+    }
+    
+    if (eduConnectAuthState.isLoading) {
+      return <div>Loading...</div>;
+    }
+
+    if (eduConnectAuthState.isAuthenticated) {
+      const authInfo = ocAuth.getAuthInfo();
+      return (
+        <UserProfileCard 
+          eduUsername={authInfo.edu_username}
+          ethAddress={authInfo.eth_address}
+        />
+      );
+    } else {
+      return <LoginButton />;
+    }
+  };
 
   return (
     <header className="fixed left-0 top-0 flex flex-col h-screen w-64 shrink-0 bg-background border-r border-accent p-4">
@@ -42,7 +79,8 @@ export default function Navbar() {
           ))}
         </ul>
       </nav>
-      <div className="mt-auto">
+      <div className="mt-auto space-y-4">
+        {renderOCAuth()}
         <ConnectButton accountStatus="address" chainStatus={"icon"} showBalance={false}/>
       </div>
     </header>
