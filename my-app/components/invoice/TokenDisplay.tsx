@@ -46,13 +46,21 @@ const TokenDisplay: React.FC<TokenDisplayProps> = ({
   const remainingDuration = wasCanceled ? 0 : Math.max(endTime - Date.now() / 1000, 0);
   
   // Use the hook with the calculated values
-  const displayValue = wasCanceled ? currentValue : useCountUp(currentValue, maxValue, remainingDuration * 1000);
+  // Correct usage: Always call the hook
+  const countUpValue = useCountUp(currentValue, maxValue, remainingDuration * 1000);
+  
+  // Then use the result conditionally
+  const displayValue = wasCanceled ? currentValue : countUpValue;
+  const displayValueCanceled = currentValue;
 
+  
   const streamedPercentage = (currentValue / maxValue) * 100;
   const withdrawnPercentage = (withdrawnAmount / maxValue) * 100;
 
+
   // Format the number with exactly 8 decimal places
-  const formattedNumber = displayValue.toFixed(8);
+  const formattedNumber = (wasCanceled ? displayValueCanceled : displayValue).toFixed(8);
+
 
   // Split the number into integer and decimal parts
   const [integerPart, decimalPart] = formattedNumber.split('.');
@@ -92,9 +100,9 @@ const TokenDisplay: React.FC<TokenDisplayProps> = ({
           </div>
           <Progress value={streamedPercentage} className="h-3 bg-yellow-100 rounded-full" 
                     indicatorClassName="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full" />
-          <div className="mt-2 text-xs text-gray-500 text-right">
-            {displayValue.toFixed(4)} / {maxValue} {tokenSymbol}
-          </div>
+      <div className="mt-2 text-xs text-gray-500 text-right">
+  {wasCanceled ? displayValueCanceled.toFixed(4) : displayValue.toFixed(4)} / {maxValue} {tokenSymbol}
+</div>
         </div>
 
         {/* Amount Withdrawn Progress Bar */}
