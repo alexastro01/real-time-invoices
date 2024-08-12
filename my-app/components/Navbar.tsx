@@ -16,6 +16,7 @@ export default function Navbar() {
     { href: "/create-invoice", icon: FileText, label: "Create Invoice" },
     { href: "/profile", icon: UserCircle, label: "Profile" },
     { href: "/mint-tusdc", icon: DollarSignIcon, label: "Get test usdc"}
+    
   ]
 
   return (
