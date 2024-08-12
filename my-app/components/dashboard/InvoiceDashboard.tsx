@@ -23,10 +23,16 @@ interface Stream {
 }
 
 const InvoiceDashboard = () => {
-  const [invoiceStats, setInvoiceStats] = useState<InvoiceStats>({
+  const [invoiceStatsAsPayee, setInvoiceStatsAsPayee] = useState<InvoiceStats>({
     totalExpectedAmount: '0',
     totalInvoices: 0
   });
+
+  const [invoiceStatsAsPayer, setInvoiceStatsAsPayer] = useState<InvoiceStats>({
+    totalExpectedAmount: '0',
+    totalInvoices: 0
+  });
+
   const [streams, setStreams] = useState<Stream[]>([]);
   const [loading, setLoading] = useState(true);
   const { address } = useAccount();
@@ -34,14 +40,27 @@ const InvoiceDashboard = () => {
   const { withdrawableAmounts, isLoading: isLoadingWithdrawable } = useWithdrawableAmounts(streams);
 
   useEffect(() => {
-    const fetchInvoiceStats = async () => {
+    const fetchInvoiceStatsAsPayee = async () => {
       if (!address) return;
 
       try {
-        const response = await fetch(`/api/user-invoice-stats?user_address=${address}`);
+        const response = await fetch(`/api/user-invoice-stats-as-payee?user_address=${address}`);
         if (!response.ok) throw new Error('Failed to fetch invoice stats');
         const data = await response.json();
-        setInvoiceStats(data);
+        setInvoiceStatsAsPayee(data);
+      } catch (error) {
+        console.error('Error fetching invoice stats:', error);
+      }
+    };
+
+    const fetchInvoiceStatsAsPayer = async () => {
+      if (!address) return;
+
+      try {
+        const response = await fetch(`/api/user-invoice-stats-as-payer?user_address=${address}`);
+        if (!response.ok) throw new Error('Failed to fetch invoice stats');
+        const data = await response.json();
+        setInvoiceStatsAsPayer(data);
       } catch (error) {
         console.error('Error fetching invoice stats:', error);
       }
@@ -61,8 +80,9 @@ const InvoiceDashboard = () => {
         setLoading(false);
       }
     };
-
-    fetchInvoiceStats();
+    
+    fetchInvoiceStatsAsPayee();
+    fetchInvoiceStatsAsPayer();
     fetchStreams();
   }, [address]);
 
@@ -92,7 +112,7 @@ const InvoiceDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatsCard 
           description={'Total expected amount'} 
-          amount={loading ? 'Loading...' : `$${formatAmount(Number(invoiceStats.totalExpectedAmount))}`} 
+          amount={loading ? 'Loading...' : `$${formatAmount(Number(invoiceStatsAsPayee.totalExpectedAmount))}`} 
         />
         <StatsCard 
           description={'Available to withdraw from streams'} 
@@ -100,9 +120,9 @@ const InvoiceDashboard = () => {
         />
         <StatsCard 
           description={'Invoices sent'} 
-          amount={loading ? 'Loading...' : invoiceStats.totalInvoices.toString()} 
+          amount={loading ? 'Loading...' : invoiceStatsAsPayee.totalInvoices.toString()} 
         />
-        <StatsCard description={'Invoices Received'} amount={'1'} />
+        <StatsCard description={'Invoices Received'} amount={loading ? 'Loading...' : invoiceStatsAsPayer.totalInvoices.toString()} />
       </div>
 
       <div>
