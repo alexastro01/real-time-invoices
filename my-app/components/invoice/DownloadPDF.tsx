@@ -23,6 +23,7 @@ const DownloadPDF = ({ invoiceData }: DownloadPdfProps) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(invoiceData),
+        
       });
 
       if (response.ok) {
