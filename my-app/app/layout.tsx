@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { SessionWrapper } from "@/components/SessionWrapper";
 import { Analytics } from '@vercel/analytics/react';
 import Navbar from "@/components/Navbar";
+import OCConnectWrapper from "@/components/OCConnectWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,6 +39,12 @@ export const metadata: Metadata = {
     images: ["https://www.streambill.xyz/waitlist.png"],
   },
 }
+
+
+const opts = {
+  redirectUri: process.env.ENVIRONMENT === 'prod' ? 'https://app.streambill.xyz/edu-redirect' : 'http://localhost:3000/edu-redirect', // Adjust this URL
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -48,6 +55,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           <SessionWrapper>
+          <OCConnectWrapper opts={opts} sandboxMode={true}>
             <div className="flex">
               <Navbar /> {/* Add the Navbar here */}
               <main className="flex-1 ml-64 p-4">
@@ -55,6 +63,7 @@ export default function RootLayout({
                 <Analytics />
               </main>
             </div>
+            </OCConnectWrapper>
             <Toaster />
           </SessionWrapper>
         </Providers>
