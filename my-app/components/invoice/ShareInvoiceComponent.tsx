@@ -15,7 +15,7 @@ const ShareInvoiceComponent = ({
   const {toast} = useToast();
 
   const handleShareInvoice = () => {
-    const link = `http://localhost:3000/pay-invoice/${requestId}`;
+    const link = process.env.ENVIRONMENT === 'prod' ? `https://app.streambill.xyz/pay-invoice/${requestId}` :  `http://localhost:3000/pay-invoice/${requestId}`;
     navigator.clipboard.writeText(link).then(() => {
       setIsCopied(true);
       toast({
