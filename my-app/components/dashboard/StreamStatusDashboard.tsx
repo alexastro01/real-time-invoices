@@ -22,6 +22,8 @@ const getStatusColor = (status: string): string => {
       return 'text-blue-500';
     case 'CANCELED':
       return 'text-red-500';
+      case 'FINISHED':
+        return 'text-sky-500';
     default:
       return 'text-gray-500';
   }
@@ -51,12 +53,19 @@ const StreamStatusDashboard = ({
     
     
       useEffect(() => {
+        console.log('status of the stream')
         console.log(status)
         console.log(isError)
         console.log(error?.message)
       }, [status, isError])
-    
-      const statusMap = ['PENDING', 'STREAMING', 'SETTLED', 'CANCELED'];
+
+
+      // 0 - pending
+      // 1 - streaming
+      // 2 - settled
+      // 3 - canceled
+      // 4 - canceled but fully withdrawn
+      const statusMap = ['PENDING', 'STREAMING', 'SETTLED', 'CANCELED', 'FINISHED'];
       const statusString = status !== undefined ? statusMap[Number(status)] || 'UNKNOWN' : 'PENDING';
 
       useEffect(() => {
