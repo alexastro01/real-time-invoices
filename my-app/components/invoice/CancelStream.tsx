@@ -73,7 +73,7 @@ const CancelStream = ({
 
         variant: "default"
       })
-      router.push('/dashboard')
+    
     }
 
   }, [isConfirmed])
