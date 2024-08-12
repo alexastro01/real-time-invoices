@@ -107,7 +107,7 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
         </Link>
             :
 
-            <Link href={type === 'invoicesReceived' ? `/pay-invoice/${requestId}` : `/invoice/${requestId}`}>
+            <Link href={type === 'invoicesReceived' && !stream_id ? `/pay-invoice/${requestId}` : `/invoice/${requestId}`}>
               <Button variant="outline" size="sm" className="flex items-center space-x-1">
                 <ExternalLink className="h-4 w-4" />
                 <span>View Invoice</span>
