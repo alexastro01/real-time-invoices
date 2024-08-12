@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import useCountUp from '@/hooks/useCountUp';
 import { Progress } from "@/components/ui/progress";
 import { formatEther } from 'viem';
@@ -24,40 +24,47 @@ const TokenDisplay: React.FC<TokenDisplayProps> = ({
 }) => {
   const totalDuration = endTime - startTime;
   const [currentValue, setCurrentValue] = useState(0);
+  const [finalStreamedAmount, setFinalStreamedAmount] = useState(0);
 
   useEffect(() => {
     if (wasCanceled) {
-      // If canceled, calculate the final streamed amount using the refunded amount
       const refundedEther = Number(formatEther(refundedAmount));
-      const finalStreamedAmount = maxValue - refundedEther;
-      setCurrentValue(finalStreamedAmount);
+      const streamedAmount = maxValue - refundedEther;
+      setFinalStreamedAmount(streamedAmount);
+      setCurrentValue(streamedAmount);
     } else {
-      // If not canceled, update currentValue periodically
-      const interval = setInterval(() => {
-        const elapsedTime = Math.max(Date.now() / 1000 - startTime, 0);
+      const updateValue = () => {
+        const now = Date.now() / 1000;
+        const elapsedTime = Math.max(now - startTime, 0);
         const percentageElapsed = Math.min((elapsedTime / totalDuration) * 100, 100);
-        setCurrentValue(maxValue * (percentageElapsed / 100));
-      }, 1000); // Update every second
+        const newValue = maxValue * (percentageElapsed / 100);
+        setCurrentValue(newValue);
+      };
+
+      updateValue(); // Initial update
+      const interval = setInterval(updateValue, 1000);
 
       return () => clearInterval(interval);
     }
   }, [wasCanceled, startTime, endTime, totalDuration, maxValue, refundedAmount]);
 
-  const remainingDuration = wasCanceled ? 0 : Math.max(endTime - Date.now() / 1000, 0);
-  
-  // Use the hook with the calculated values
-  const displayValue = wasCanceled ? currentValue : useCountUp(currentValue, maxValue, remainingDuration * 1000);
+  const remainingDuration = useMemo(() => {
+    return wasCanceled ? 0 : Math.max(endTime - Date.now() / 1000, 0);
+  }, [wasCanceled, endTime]);
 
-  const streamedPercentage = (currentValue / maxValue) * 100;
+  const countUpValue = useCountUp(
+    wasCanceled ? finalStreamedAmount : currentValue,
+    wasCanceled ? finalStreamedAmount : maxValue,
+    wasCanceled ? 0 : remainingDuration * 1000
+  );
+
+  const displayValue = wasCanceled ? finalStreamedAmount : countUpValue;
+  const streamedPercentage = (displayValue / maxValue) * 100;
   const withdrawnPercentage = (withdrawnAmount / maxValue) * 100;
 
-  // Format the number with exactly 8 decimal places
   const formattedNumber = displayValue.toFixed(8);
-
-  // Split the number into integer and decimal parts
   const [integerPart, decimalPart] = formattedNumber.split('.');
 
-  // Function to render the integer part with grayed out leading zeros
   const renderIntegerPart = () => {
     const paddedInteger = integerPart.padStart(3, '0');
     return paddedInteger.split('').map((digit, index) => (
@@ -127,4 +134,4 @@ const TokenDisplay: React.FC<TokenDisplayProps> = ({
   );
 };
 
-export default TokenDisplay;
+export default React.memo(TokenDisplay);
