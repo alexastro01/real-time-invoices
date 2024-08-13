@@ -58,7 +58,59 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
 
 
 
+  // ! SEPARATE COMPONENT FOR PDF GENERATION
+  // const compileInvoiceData = () => {
+  //   return {
+  //     seller: sellerDetailsSupabase,
+  //     client:
+  //     {
+  //       ...formData.senderDetails,
+  //       evmAddress: formData.paymentDetails.receiverAddress
+  //     },
+  //     paymentDetails: {
+  //       chain: formData.paymentDetails.chain,
+  //       currency: formData.paymentDetails.currency,
+  //       receiverAddress: formData.paymentDetails.receiverAddress,
+  //       dueDate: formData.paymentDetails.dueDate,
+  //       streamType: formData.streamType
+  //     },
+  //     invoiceItems: formData.paymentDetails.invoiceItems,
+  //     totalAmount: totalAmount
+  //   };
+  // };
 
+
+  // const generatePDF = async () => {
+  //   setIsGeneratingPDF(true);
+  //   const invoiceData = compileInvoiceData();
+  //   try {
+  //     const response = await fetch('/api/generate-pdf', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(invoiceData),
+  //     });
+
+  //     if (response.ok) {
+  //       const blob = await response.blob();
+  //       const url = window.URL.createObjectURL(blob);
+  //       const a = document.createElement('a');
+  //       a.style.display = 'none';
+  //       a.href = url;
+  //       a.download = 'invoice.pdf';
+  //       document.body.appendChild(a);
+  //       a.click();
+  //       window.URL.revokeObjectURL(url);
+  //     } else {
+  //       console.error('Failed to generate PDF');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //   } finally {
+  //     setIsGeneratingPDF(false);
+  //   }
+  // };
 
   return (
     <div className="w-[80%] max-w-4xl">

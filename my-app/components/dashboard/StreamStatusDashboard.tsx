@@ -35,13 +35,13 @@ const StreamStatusDashboard = ({
     setIsStreaming
 }: StreamStatusDashboardProps) => {
 
-    // useEffect(() => {
-    //     console.log({
-    //       contract: contracts[chainId as ValidChainId].sablierLinearV2LockUpAddress as `0x${string}`,
-    //       args: stream_id,
-    //       chainId: chainId
-    //     })
-    //   }, [])
+    useEffect(() => {
+        console.log({
+          contract: contracts[chainId as ValidChainId].sablierLinearV2LockUpAddress as `0x${string}`,
+          args: stream_id,
+          chainId: chainId
+        })
+      }, [])
     
       const { data: status, isError, isPending, error } = useReadContract({
         address: contracts[chainId as ValidChainId].sablierLinearV2LockUpAddress as `0x${string}`,

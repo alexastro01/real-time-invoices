@@ -13,9 +13,9 @@ const Page = () => {
   const { data: session, status } = useSession();
   const params = useParams();
 
-  // useEffect(() => {
-  //   console.log(session);
-  // }, [session]);
+  useEffect(() => {
+    console.log(session);
+  }, [session]);
 
  
 

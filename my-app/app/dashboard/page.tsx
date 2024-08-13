@@ -11,9 +11,9 @@ import InvoiceDashboard from '@/components/dashboard/InvoiceDashboard';
 const Page = () => {
   const { data: session, status } = useSession();
 
-  // useEffect(() => {
-  //   console.log(session)
-  // }, [session])
+  useEffect(() => {
+    console.log(session)
+  }, [session])
 
   return (
     <>
