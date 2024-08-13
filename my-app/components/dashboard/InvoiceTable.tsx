@@ -54,7 +54,7 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
         }
         const data = await response.json();
         setInvoices(data);
-        console.log(data)
+        // console.log(data)
       } catch (err) {
         setError('Error fetching invoices');
         console.error(err);
@@ -76,7 +76,7 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
         }
         const data = await response.json();
         setInvoices(data);
-        console.log(data)
+        // console.log(data)
       } catch (err) {
         setError('Error fetching invoices');
         console.error(err);

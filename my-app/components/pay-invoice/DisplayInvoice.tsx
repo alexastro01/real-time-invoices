@@ -68,7 +68,7 @@ const DisplayInvoice = ({
             if (requestId) {
                 try {
                     const data = await getInvoiceData(requestId as string);
-                    setInvoiceData(data)
+                    // setInvoiceData(data)
                     console.log('Invoice Data:', data);
                 } catch (error) {
                     console.error('Error fetching invoice data:', error);

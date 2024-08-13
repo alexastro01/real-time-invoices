@@ -134,7 +134,7 @@ export function CreateProfile() {
       }
 
       const result = await response.json();
-      console.log('Details saved successfully:', result);
+      // console.log('Details saved successfully:', result);
 
       toast({
         title: "Success",

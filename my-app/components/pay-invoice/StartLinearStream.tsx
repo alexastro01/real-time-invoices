@@ -96,13 +96,13 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
     const getStreamIdAndAddToInvoice = useCallback(async (transactionHash: string) => {
         setIsWaitingForStreamId(true);
         try {
-            console.log('Preparing to call API...');
-            console.log('Transaction Hash:', transactionHash);
-            console.log('Chain ID:', chainId);
-            console.log('Request ID:', requestId);
+            // console.log('Preparing to call API...');
+            // console.log('Transaction Hash:', transactionHash);
+            // console.log('Chain ID:', chainId);
+            // console.log('Request ID:', requestId);
 
             const apiUrl = '/api/get-stream-id';
-            console.log('API URL:', apiUrl);
+            // console.log('API URL:', apiUrl);
 
             const response = await fetch(apiUrl, {
                 method: 'POST',
@@ -118,7 +118,7 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
 
             console.log('API response status:', response.status);
             const responseText = await response.text();
-            console.log('API response text:', responseText);
+            // console.log('API response text:', responseText);
 
             if (!response.ok) {
                 throw new Error(`Failed to get stream ID and add to invoice: ${responseText}`);

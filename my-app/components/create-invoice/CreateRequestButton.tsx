@@ -37,16 +37,16 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
   const [linkState, setLinkState] = useState("");
 
   const handleClick = async () => {
-    console.log({
-      payeeEVMAddress,
-      payerEVMAddress,
-      payeeDetails,
-      payerDetails,
-      expectedAmount,
-      dueDate,
-      invoiceItems,
-      chain
-    });
+    // console.log({
+    //   payeeEVMAddress,
+    //   payerEVMAddress,
+    //   payeeDetails,
+    //   payerDetails,
+    //   expectedAmount,
+    //   dueDate,
+    //   invoiceItems,
+    //   chain
+    // });
     if (!payerEVMAddress || !expectedAmount || !dueDate || invoiceItems.length < 1) {
 
       alert("Please fill in all the fields");
@@ -80,7 +80,7 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
         chain
       });
 
-      console.log("Request Parameters:", requestParameters);
+      // console.log("Request Parameters:", requestParameters);
 
       const request = await requestClient.createRequest(requestParameters);
       setDialogMessage("Request Created Successfully! Confirming Request...");
@@ -89,7 +89,7 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
       const confirmedRequestData = await request.waitForConfirmation();
       setDialogMessage("Request Confirmed");
 
-      console.log(confirmedRequestData.requestId);
+      // console.log(confirmedRequestData.requestId);
 
       setLinkState(`https://wavein.vercel.app/confirm-wavein/${confirmedRequestData.requestId}`);
 
@@ -135,9 +135,9 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
   }, [chain]);
 
 
-  useEffect(() => {
-    console.log('Chain prop in CreateRequestButton:', chain);
-  }, [chain]);
+  // useEffect(() => {
+  //   console.log('Chain prop in CreateRequestButton:', chain);
+  // }, [chain]);
 
 
   return (

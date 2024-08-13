@@ -44,9 +44,9 @@ const CreateInvoiceComponent = () => {
     };
 
 
-    useEffect(() => {
-     console.log(formData)
-    }, [formData])
+    // useEffect(() => {
+    //  console.log(formData)
+    // }, [formData])
       
     return (
         <div className='flex justify-center mt-8'>

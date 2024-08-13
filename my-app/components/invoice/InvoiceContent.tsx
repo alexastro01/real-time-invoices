@@ -85,8 +85,6 @@ const InvoiceContent = ({ invoiceData }: InvoiceContentProps) => {
           </Table>
 
           <div className="mt-4 text-right">
-            {/* // ! REPLACE USDC WITH 
-            ACTUAL CURRENCY VALUE */}
             <p className="font-semibold">Total Amount: {parseInt(totalAmount as string).toFixed(2)} USDC</p>
           </div>
         </CardContent>

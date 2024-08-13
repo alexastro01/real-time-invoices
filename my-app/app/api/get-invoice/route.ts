@@ -71,7 +71,7 @@ export async function GET(request: Request) {
         paymentDetails: {
             payeeAddress: requestData.payee?.value as string,
             payerAddress: requestData.payer?.value as string,
-            // ! REPLACE THIS WITH ACTUAL CHAIN
+        
             chain: data.chain_id,
             currency: requestData.currencyInfo.value,
             streamType: "linear",
