@@ -14,7 +14,7 @@ const NotPaidInvoice: React.FC<NotPaidInvoiceProps> = ({ requestId, invoiceData 
   const [isCopied, setIsCopied] = useState(false);
 
   const handleShareInvoice = () => {
-    const link = process.env.ENVIRONMENT === 'prod' ? `https://app.streambill.xyz/pay-invoice/${requestId}` : `http://localhost:3000/pay-invoice/${requestId}`;
+    const link = process.env.NEXT_PUBLIC_ENVIRONMENT === 'prod' ? `https://app.streambill.xyz/pay-invoice/${requestId}` : `http://localhost:3000/pay-invoice/${requestId}`;
     navigator.clipboard.writeText(link).then(() => {
       setIsCopied(true);
       toast({
