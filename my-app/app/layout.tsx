@@ -12,17 +12,17 @@ import OCConnectWrapper from "@/components/OCConnectWrapper";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://streambill.xyz'),
+  metadataBase: new URL('https://app.streambill.xyz'),
   title: "StreamBill.xyz",
   description: "StreamBill.xyz - Streaming invoices onchain.",
   openGraph: {
-    title: "Join StreamBill.xyz Waitlist",
+    title: "Streambill app",
     description: "StreamBill.xyz - Streaming invoices onchain.",
-    url: "https://streambill.xyz",
+    url: "https://app.streambill.xyz",
     siteName: "StreamBill.xyz",
     images: [
       {
-        url: "https://www.streambill.xyz/waitlist.png",
+        url: "https://app.streambill.xyz/streambill-banner.png",
         width: 1200,
         height: 630,
       }
@@ -32,11 +32,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Join StreamBill.xyz Waitlist",
-    description: "StreamBill.xyz - Revolutionizing payments for teachers using blockchain technology.",
+    title: "Streambill app",
+    description: "Streambill app - Real time payments and invoicing",
     site: "@_alexastro",
     creator: "@_alexastro",
-    images: ["https://www.streambill.xyz/waitlist.png"],
+    images: ["https://app.streambill.xyz/streambill-banner.png"],
   },
 }
 
