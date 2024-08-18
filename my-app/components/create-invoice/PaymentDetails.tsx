@@ -117,7 +117,7 @@ export function PaymentDetails({
 
 
   return (
-    <div className="w-[50%]" >
+    <div className="w-[90%] lg:w-[85%] xl:w-[50%]" >
       <Progress value={66} className="my-8" />
       <Card className="">
         <CardHeader>
@@ -214,7 +214,7 @@ export function PaymentDetails({
             {/* Invoice Items section */}
             <div className="mt-6">
               <h3 className="text-lg font-semibold">Invoice Items</h3>
-              <div className="flex space-x-2 mt-2">
+              <div className="grid grid-cols-1 lg:flex space-y-2 lg:space-y-0 lg:space-x-2 mt-2">
                 <Input
                   placeholder="Item name"
                   value={newItem.name}

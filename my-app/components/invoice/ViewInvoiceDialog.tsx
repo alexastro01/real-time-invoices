@@ -20,7 +20,7 @@ const ViewInvoiceDialog = ({ invoiceData, isFromActionButtons }: InvoiceContentP
             <DialogTrigger asChild>
                 <Button className='w-[100%]' variant={isFromActionButtons ? 'outline' : 'default'}><File className="mr-2 h-4 w-4" /> View Invoice</Button>
             </DialogTrigger>
-            <DialogContent className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="w-[100%] lg:w-full lg:max-w-4xl max-h-[90vh] overflow-y-auto">
 
                 <InvoiceContent invoiceData={invoiceData} />
                 <DownloadPDF invoiceData={invoiceData} />

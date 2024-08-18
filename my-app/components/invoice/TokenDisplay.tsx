@@ -86,9 +86,9 @@ const TokenDisplay: React.FC<TokenDisplayProps> = ({
                     transition-all duration-300 ease-in-out
                     hover:shadow-xl hover:scale-105">
       {/* Big beautiful number */}
-      <div className="text-7xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-zinc-600">
+      <div className="text-5xl lg:text-7xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-zinc-600">
         {renderIntegerPart()}.
-        <span className="text-4xl">{decimalPart}</span>
+        <span className="text-2xl lg:text-4xl">{decimalPart}</span>
       </div>
       
       <div className="w-full max-w-md space-y-6">
