@@ -58,7 +58,7 @@ export function SenderDetails({
   };
 
   return (
-    <div className="w-[50%]" >
+    <div className="w-[90%] lg:w-[85%] xl:w-[50%]" >
       <Progress value={33} className="my-8" />
       <Card className="">
         <CardHeader>

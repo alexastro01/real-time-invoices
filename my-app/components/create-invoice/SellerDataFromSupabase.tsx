@@ -26,7 +26,7 @@ country
     <p>{city} {state} {zip}</p>
     <p>{country}</p>
     <p className="mt-2">EVM Address:</p>
-    <p className="font-mono">{evmAddress}</p>
+    <p className="font-mono text-xs lg:text-base">{evmAddress}</p>
   </div>
   )
 }

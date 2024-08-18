@@ -56,9 +56,9 @@ export default function RootLayout({
         <Providers>
           <SessionWrapper>
           <OCConnectWrapper opts={opts} sandboxMode={true}>
-            <div className="flex">
+            <div className="block lg:flex">
               <Navbar /> {/* Add the Navbar here */}
-              <main className="flex-1 ml-64 p-4">
+              <main className="lg:flex-1 lg:ml-64 p-4 mt-4 ">
                 {children}
                 <Analytics />
               </main>

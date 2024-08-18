@@ -164,7 +164,7 @@ export function CreateProfile() {
   };
 
   return (
-    <div className="w-[50%]" >
+    <div className="w-[90%] lg:w-[85%] xl:w-[50%]" >
       <Card className="">
         <CardHeader>
           <CardTitle>Your profile</CardTitle>
