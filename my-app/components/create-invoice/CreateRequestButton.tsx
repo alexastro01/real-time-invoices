@@ -12,6 +12,7 @@ import ShimmerButton from "../magicui/shimmer-button";
 import RequestConfirmed from "./RequestConfirmed";
 import { CreateRequestButtonProps, UserDetailsFromSupabase } from "@/types/interfaces";
 import PingAnimation from "../helpers/PingAnimation";
+import { format } from "date-fns";
 
 
 
@@ -93,6 +94,8 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
 
       setLinkState(`https://wavein.vercel.app/confirm-wavein/${confirmedRequestData.requestId}`);
 
+   
+
       // Create invoice in Supabase
       const response = await fetch('/api/post-invoice', {
         method: 'POST',
@@ -106,11 +109,14 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
           payerEVMAddress,
           payeeEVMAddress,
           expectedAmount,
+          dueDate,
           chain
         }),
       });
 
-      setRequestId(confirmedRequestData.requestId)
+      setRequestId(confirmedRequestData.requestId);
+
+      
 
       if (!response.ok) {
         throw new Error('Failed to create invoice');
