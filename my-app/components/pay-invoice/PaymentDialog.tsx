@@ -1,13 +1,8 @@
 "use client";
 
-import React, { useState } from 'react'
-import { Button } from "@/components/ui/button"
+import React, { useEffect, useState } from 'react'
 import {
     Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
 import ShimmerButton from '../magicui/shimmer-button'
@@ -21,7 +16,11 @@ type PaymentDialogProps = {
     payeeAddress: string;
     dueDate: any;
     chain_id: number;
-    payerAddress:string;
+    payerAddress: string;
+    payerName: string;
+    payeeName: string;
+    receiverEmail: string;
+    link:string
 }
 
 const PaymentDialog = ({
@@ -30,7 +29,11 @@ const PaymentDialog = ({
     payeeAddress,
     dueDate,
     chain_id,
-    payerAddress
+    payerAddress,
+    payerName,
+    payeeName,
+    receiverEmail,
+    link
 }: PaymentDialogProps) => {
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
@@ -40,6 +43,41 @@ const PaymentDialog = ({
     //different component for approval
     //step 0 = approve
     //step 1 = create stream, with desired parameters ( different component )
+
+
+    useEffect(() => {
+        if (step === 2) {
+            sendStreamCreatedEmail();
+        }
+    }, [step]);
+
+    const sendStreamCreatedEmail = async () => {
+        try {
+            const response = await fetch('/api/send-stream-started-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    payerName,
+                    payeeName,
+                    totalAmount,
+                    dueDate,
+                    receiverEmail,
+                    link
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to send stream created email');
+            }
+
+            console.log('Stream created email sent successfully');
+        } catch (error) {
+            console.error('Error sending stream created email:', error);
+         
+        }
+    };
 
 
     return (
