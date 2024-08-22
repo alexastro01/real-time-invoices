@@ -3,13 +3,13 @@ import React from 'react';
 type InvoiceCreatedEmailParams ={
   payeeName:string;
   payerName:string;
-  amount:string;
+  totalAmount:string;
   formattedDueDate:string;
   receiverEmail?:string;
   link: string;
 }
 
-const StreamStartedEmail = ({ payeeName, payerName, amount, formattedDueDate, link }: InvoiceCreatedEmailParams) => (
+const StreamStartedEmail = ({ payeeName, payerName, totalAmount, formattedDueDate, link }: InvoiceCreatedEmailParams) => (
   <div style={{
     fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
     lineHeight: 1.5,
@@ -35,7 +35,7 @@ const StreamStartedEmail = ({ payeeName, payerName, amount, formattedDueDate, li
       <p style={{ fontSize: '16px', marginBottom: '16px' }}>Hey {payeeName},</p>
       
       <p style={{ fontSize: '16px', marginBottom: '16px' }}>
-        <strong>{payerName}</strong> Started the stream for <strong>{amount} USDC</strong>
+        <strong>{payerName}</strong> Started the stream for <strong>{totalAmount} USDC</strong>
       </p>
       
       <p style={{ fontSize: '16px', marginBottom: '24px' }}>

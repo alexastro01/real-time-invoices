@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     const { data, error } = await resend.emails.send({
       from: 'Streambill@info.streambill.xyz',
       to: [receiverEmail],
-      subject: 'You received an invoice',
+      subject: '📄 You received an invoice',
       react: InvoiceCreatedEmail({ firstName, seller, amount, formattedDueDate, link }),
     });
 

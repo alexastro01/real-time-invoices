@@ -50,6 +50,8 @@ async function addStreamIdToInvoice(requestId: string, streamId: string) {
         throw new Error('Failed to add stream ID to invoice');
     }
 
+    
+
     return await response.json();
 }
 

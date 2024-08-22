@@ -7,7 +7,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 type StreamStartedEmail = {
   payerName: string;
   payeeName: string;
-  amount: string;
+  totalAmount: string;
   dueDate: any;
   receiverEmail: string;
   link: string;
@@ -15,13 +15,13 @@ type StreamStartedEmail = {
 
 export async function POST(request: Request) {
   try {
-    const { payerName, payeeName, amount, dueDate, receiverEmail, link }: StreamStartedEmail = await request.json();
+    const { payerName, payeeName, totalAmount, dueDate, receiverEmail, link }: StreamStartedEmail = await request.json();
 
-    console.log('Received email data:', { payerName, payeeName, amount, dueDate, receiverEmail, link });
+    console.log('Received email data:', { payerName, payeeName, totalAmount, dueDate, receiverEmail, link });
 
-    const formattedDueDate = format(dueDate * 1000, 'PP');
+    const formattedDueDate = format(dueDate, 'PP');
 
-    if (!payerName || !payeeName || !amount || !dueDate || !link) {
+    if (!payerName || !payeeName || !totalAmount || !dueDate || !link) {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
@@ -33,8 +33,8 @@ export async function POST(request: Request) {
     const { data, error } = await resend.emails.send({
       from: 'Streambill@info.streambill.xyz',
       to: [receiverEmail],
-      subject: 'You received an invoice',
-      react: StreamStartedEmail({ payerName, payeeName, amount, formattedDueDate, link }),
+      subject: '✅ Stream Started',
+      react: StreamStartedEmail({ payerName, payeeName, totalAmount, formattedDueDate, link }),
     });
 
     if (error) {

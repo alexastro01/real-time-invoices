@@ -101,6 +101,10 @@ const DisplayInvoice = ({
                         dueDate={invoiceData.paymentDetails.dueDate}
                         chain_id={invoiceData.paymentDetails.chain_id}
                         payerAddress={invoiceData.paymentDetails.payerAddress}
+                        payerName={invoiceData.partiesDetails.client.name}
+                        payeeName={invoiceData.partiesDetails.seller.name}
+                        receiverEmail={invoiceData.partiesDetails.seller.email}
+                        link={`https://app.streambill.xyz/invoice/${requestId}`}
 
                     />
                 </div>
