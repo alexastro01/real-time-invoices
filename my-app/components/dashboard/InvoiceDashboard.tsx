@@ -128,7 +128,7 @@ const InvoiceDashboard = () => {
 
       <div>
         <InvoiceChart />
-        <TestNewChart />
+
       </div>
      
       <Tabs defaultValue="invoicesSent">

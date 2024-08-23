@@ -1,6 +1,5 @@
-"use client"
-
-import { TrendingUp } from "lucide-react"
+import React from 'react'
+import { TrendingUp, TrendingDown } from "lucide-react"
 import { Area, AreaChart, CartesianGrid, XAxis, ResponsiveContainer } from "recharts"
 
 import {
@@ -17,38 +16,48 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 190 },
-  { month: "March", desktop: 210 },
-  { month: "April", desktop: 220 },
-  { month: "May", desktop: 230 },
-  { month: "June", desktop: 240 },
-]
+interface ChartDataPoint {
+  date: string;
+  value: number;
+}
 
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
+interface StreamForecastProps {
+  chartData: ChartDataPoint[];
+  title: string;
+  description: string;
+  trendPercentage: number;
+  dateRange: string;
+  chartColor: string;
+}
+
+const chartConfig: ChartConfig = {
+  value: {
+    label: "Value",
     color: "hsl(var(--chart-1))",
   },
-} satisfies ChartConfig
+}
 
-export function TestNewChart() {
+export function StreamForecastChart({
+  chartData,
+  title,
+  description,
+  trendPercentage,
+  dateRange,
+  chartColor
+}: StreamForecastProps) {
   return (
-    <Card className="w-full h-full flex flex-col">
+    <Card className=" flex flex-col">
       <CardHeader className="flex-shrink-0">
         <div className="flex justify-between items-center">
           <div>
-            <CardTitle className="text-lg">Balance forecast</CardTitle>
+            <CardTitle className="text-lg">{title}</CardTitle>
             <CardDescription className="text-sm">
-              Based on active streams
+              {description}
             </CardDescription>
           </div>
           <div className="text-sm text-right">
-            <div className="font-medium flex items-center">
-              Trending up by 5.2% <TrendingUp className="h-4 w-4 ml-1" />
-            </div>
-            <div className="text-muted-foreground">Jan - Jun 2024</div>
+        
+            <div className="text-muted-foreground">{dateRange}</div>
           </div>
         </div>
       </CardHeader>
@@ -66,22 +75,22 @@ export function TestNewChart() {
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis
-                dataKey="month"
+                dataKey="date"
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
-                tickFormatter={(value) => value.slice(0, 3)}
+                tickFormatter={(value) => value.slice(5)}  // Show only MM-DD
               />
               <ChartTooltip
                 cursor={false}
                 content={<ChartTooltipContent indicator="line" />}
               />
               <Area
-                dataKey="desktop"
+                dataKey="value"
                 type="monotone"
-                fill="#35b51b"
+                fill={chartColor}
                 fillOpacity={0.4}
-                stroke="#35b51b"
+                stroke={chartColor}
                 strokeWidth={2}
                 strokeDasharray="3 3"
               />

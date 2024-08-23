@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
 import { Button } from '../ui/button';
 import ViewInvoiceDialog from './ViewInvoiceDialog';
 import { Skeleton } from "@/components/ui/skeleton"
+import StreamForecast from '../stream-forecast/StreamForecast';
 
 type InvoiceProps = {
   requestId: string
@@ -59,11 +60,13 @@ const Invoice = ({
           <div className='grid grid-cols-1 lg:grid-cols-1 items-center justify-items-center w-full'>
             {invoiceData.paymentDetails.stream_id ? (
               <ActionButtons requestId={requestId} streamId={invoiceData.paymentDetails.stream_id} chain_id={invoiceData.paymentDetails.chain_id} invoiceData={invoiceData} />
+
             ) : (
               <div className='w-full'>
                 <NotPaidInvoice requestId={requestId} invoiceData={invoiceData} />
               </div>
             )}
+       
           </div>
         ) : (
           <div>No invoice data available.</div>
