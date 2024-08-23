@@ -6,7 +6,7 @@ import { InvoiceChart } from './Chart';
 import { useAccount } from 'wagmi';
 import { useWithdrawableAmounts } from '@/hooks/useWithdrawableAmounts';
 import { formatUnits } from 'viem';
-import { TestNewChart } from './TestNewChart';
+
 
 interface InvoiceStats {
   totalExpectedAmount: string;
