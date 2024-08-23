@@ -7,6 +7,7 @@ import { useAccount } from 'wagmi';
 import { useWithdrawableAmounts } from '@/hooks/useWithdrawableAmounts';
 import { formatUnits } from 'viem';
 
+
 interface InvoiceStats {
   totalExpectedAmount: string;
   totalInvoices: number;
@@ -127,6 +128,7 @@ const InvoiceDashboard = () => {
 
       <div>
         <InvoiceChart />
+
       </div>
      
       <Tabs defaultValue="invoicesSent">
