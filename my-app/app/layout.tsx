@@ -8,6 +8,7 @@ import { SessionWrapper } from "@/components/SessionWrapper";
 import { Analytics } from '@vercel/analytics/react';
 import Navbar from "@/components/Navbar";
 import OCConnectWrapper from "@/components/OCConnectWrapper";
+import { ThemeProvider } from "@/components/theme-provider"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -59,8 +60,15 @@ export default function RootLayout({
             <div className="block lg:flex">
               <Navbar /> {/* Add the Navbar here */}
               <main className="lg:flex-1 lg:ml-64 p-4 mt-4 ">
+              <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
                 {children}
                 <Analytics />
+                </ThemeProvider>
               </main>
             </div>
             </OCConnectWrapper>

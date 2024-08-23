@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import LoginButton from "./edu-connect/LoginButton";
 import UserProfileCard from "./edu-connect/UserProfileEdu";
+import ThemeToggle from './ThemeToggle';
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -81,6 +82,7 @@ export default function Navbar() {
         </ul>
       </nav>
       <div className="mt-auto space-y-4">
+       <ThemeToggle />
         {renderOCAuth()}
         <div className='hidden lg:block'>
         <ConnectButton accountStatus="address" chainStatus="icon" showBalance={false}/>
