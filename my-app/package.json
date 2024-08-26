@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/third-parties": "^14.2.6",
     "@opencampus/ocid-connect-js": "^1.0.1",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.1",
@@ -40,7 +41,7 @@
     "jsonwebtoken": "^9.0.2",
     "jspdf": "^2.5.1",
     "lucide-react": "^0.408.0",
-    "next": "14.2.5",
+    "next": "^14.2.6",
     "next-auth": "^4.24.7",
     "react": "^18",
     "react-day-picker": "^8.10.1",

@@ -8,6 +8,7 @@ import { SessionWrapper } from "@/components/SessionWrapper";
 import { Analytics } from '@vercel/analytics/react';
 import Navbar from "@/components/Navbar";
 import OCConnectWrapper from "@/components/OCConnectWrapper";
+import { GoogleTagManager } from '@next/third-parties/google'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -53,9 +54,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+      <GoogleTagManager gtmId="GTM-TP387LMZ" />
         <Providers>
           <SessionWrapper>
           <OCConnectWrapper opts={opts} sandboxMode={true}>
+
             <div className="block lg:flex">
               <Navbar /> {/* Add the Navbar here */}
               <main className="lg:flex-1 lg:ml-64 p-4 mt-4 ">
