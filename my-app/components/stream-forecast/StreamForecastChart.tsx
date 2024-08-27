@@ -52,12 +52,12 @@ export function StreamForecastChart({
           <div>
             <CardTitle className="text-lg">{title}</CardTitle>
             <CardDescription className="text-sm">
-              {description}
+              {dateRange}
             </CardDescription>
           </div>
           <div className="text-sm text-right">
         
-            <div className="text-muted-foreground">{dateRange}</div>
+            {/* <div className="text-muted-foreground">{dateRange}</div> */}
           </div>
         </div>
       </CardHeader>
@@ -78,8 +78,8 @@ export function StreamForecastChart({
                 dataKey="date"
                 tickLine={false}
                 axisLine={false}
-                tickMargin={8}
-                tickFormatter={(value) => value.slice(5)}  // Show only MM-DD
+                tickMargin={1}
+                tick={false}
               />
               <ChartTooltip
                 cursor={false}

@@ -39,7 +39,7 @@ export const useStreamForecast = (streamId: number, chain_id: number) => {
         const currentAmount = amountPerSecond * (currentTime - startTime);
 
         forecast.push({
-          date: new Date(currentTime * 1000).toISOString().split('T')[0], // Format as YYYY-MM-DD
+          date: new Date(currentTime * 1000).toISOString().replace('T', ' ').slice(0, 19) + ' UTC', // Format as YYYY-MM-DD HH:mm:ss UTC
           value: Number(currentAmount.toFixed(2))  // Changed from 'amount' to 'value'
         });
       }

@@ -1,7 +1,6 @@
 import { useStreamForecast } from '@/hooks/useStreamForecast'
 import React, { useMemo } from 'react'
-import { StreamForecastChart } from '../dashboard/StreamForecastChart'
-
+import { StreamForecastChart } from './StreamForecastChart'
 
 
 
@@ -31,8 +30,8 @@ const StreamForecast: React.FC<StreamForecastProps> = ({
 
   const dateRange = useMemo(() => {
     if (forecastData.length < 2) return ''
-    const startDate = new Date(forecastData[0].date).toLocaleDateString()
-    const endDate = new Date(forecastData[forecastData.length - 1].date).toLocaleDateString()
+    const startDate = new Date(forecastData[0].date).toLocaleString('en-US', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' }) + ' UTC'
+    const endDate = new Date(forecastData[forecastData.length - 1].date).toLocaleString('en-US', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' }) + ' UTC'
     return `${startDate} - ${endDate}`
   }, [forecastData])
 

@@ -86,7 +86,7 @@ export function InvoiceChart() {
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
           <CardTitle>Summary</CardTitle>
           <CardDescription>
-            Total activity of the last 3 months
+          <span className="text-muted-foreground text-xs opacity-50 ">Based on invoices sent due date</span>
           </CardDescription>
         </div>
         <div className="flex">

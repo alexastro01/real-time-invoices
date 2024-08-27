@@ -31,7 +31,7 @@ const StreamForecastDialog: React.FC<StreamForecastDialogProps> = ({
         <DialogHeader>
           <DialogTitle>Stream Forecast</DialogTitle>
           <DialogDescription>
-            View the forecast for your active stream.
+          
           </DialogDescription>
         </DialogHeader>
         <div className="mt-4 flex justify-center">
