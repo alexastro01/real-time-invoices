@@ -19,6 +19,12 @@ export async function POST(request: Request) {
     console.log(dueDate)
 
     // Insert invoice into Supabase
+
+    // Convert Unix timestamp to JavaScript Date object
+    const dueDateObject = new Date(dueDate * 1000);
+    
+    // Format the date as an ISO string for PostgreSQL timestamptz
+    const formattedDueDate = dueDateObject.toISOString();
     const { data, error } = await supabaseClient
       .from('invoices')
       .insert({
@@ -40,6 +46,7 @@ export async function POST(request: Request) {
         payer_evm_address: payerEVMAddress,
         payee_evm_address: payeeEVMAddress,
         expected_amount: Number(expectedAmount),
+        due_date: formattedDueDate,
         chain_id: Number(chain)
       });
 

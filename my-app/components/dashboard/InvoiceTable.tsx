@@ -21,6 +21,7 @@ type Invoice = {
   status: string;
   request_id: string;
   chain_id: number;
+  due_date: string;
   stream_id: number | string;
 };
 
@@ -119,7 +120,7 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
       <Table>
         <TableHeader>
           <TableRow className="bg-gray-100">
-            <TableHead className="font-semibold">Created Date</TableHead>
+            <TableHead className="font-semibold">Due Date</TableHead>
             <TableHead className="font-semibold">Payee</TableHead>
             <TableHead className="font-semibold">Payer</TableHead>
             <TableHead className="font-semibold">Chain</TableHead>

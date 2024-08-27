@@ -15,6 +15,7 @@ import StreamStatusDashboard from './StreamStatusDashboard';
 import PendingStatusDashboard from './PendingStatusDashboard';
 import PulsatingButton from '../ui/pulsating-button';
 import ShinyButton from '../magicui/shiny-button';
+import supabaseUTCToLocalTime from '@/utils/time/supabaseUTCToLocalTime';
 
 interface InvoiceItemProps {
   invoice: {
@@ -24,6 +25,7 @@ interface InvoiceItemProps {
     payer_evm_address: string;
     expected_amount: string;
     status: string;
+    due_date: string;
   };
   copiedAddress: string | null;
   onCopyAddress: (address: string) => void;
@@ -53,7 +55,7 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
 
   return (
     <TableRow key={invoice.id} className="hover:bg-gray-50">
-      <TableCell>{format(new Date(invoice.created_at), 'MMM dd, yyyy')}</TableCell>
+      <TableCell>{supabaseUTCToLocalTime(invoice.due_date)}</TableCell>
       <TableCell>
         <div className="flex items-center space-x-2">
           <span>{sliceAddress(invoice.payee_evm_address)}</span>

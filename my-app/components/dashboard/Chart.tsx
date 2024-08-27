@@ -18,6 +18,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { InvoiceChartSkeleton } from "./InvoiceChartSkeleton"
+import supabaseUTCToLocalTime from "@/utils/time/supabaseUTCToLocalTime"
 
 export const description = "Summary"
 
@@ -53,6 +54,9 @@ export function InvoiceChart() {
         const response = await fetch(`/api/invoice-chart-data?user_address=${address}`)
         if (!response.ok) throw new Error('Failed to fetch data')
         const data = await response.json()
+
+        console.log('----DATA FOR CHART---')
+      console.log(data)
         setChartData(data)
       } catch (err) {
         setError('Error fetching chart data')
@@ -127,11 +131,7 @@ export function InvoiceChart() {
               tickMargin={8}
               minTickGap={32}
               tickFormatter={(value) => {
-                const date = new Date(value)
-                return date.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })
+                return supabaseUTCToLocalTime(value);
               }}
             />
             <ChartTooltip
@@ -140,11 +140,7 @@ export function InvoiceChart() {
                   className="w-[150px]"
                   nameKey="amount"
                   labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })
+                    return supabaseUTCToLocalTime(value)
                   }}
                 />
               }

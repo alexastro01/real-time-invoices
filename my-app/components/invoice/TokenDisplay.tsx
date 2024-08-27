@@ -121,7 +121,7 @@ const TokenDisplay: React.FC<TokenDisplayProps> = ({
 
       {/* Label */}
       <div className="text-center text-gray-600 font-medium">
-        Out of {tokenSymbol} {maxValue}
+  
         {wasCanceled && (
           <div className="text-red-500 mt-2">
             Stream Canceled

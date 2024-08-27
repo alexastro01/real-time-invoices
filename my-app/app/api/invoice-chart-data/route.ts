@@ -1,11 +1,12 @@
 // app/api/invoice-chart-data/route.ts
 
 import { supabaseClient } from '@/lib/supabaseClient';
+import supabaseUTCToLocalTime from '@/utils/time/supabaseUTCToLocalTime';
 import { NextRequest, NextResponse } from 'next/server';
 
 // Define the structure of an invoice from Supabase
 interface Invoice {
-  created_at: string; // This will be a string representation of the timestampz
+  due_date: string; // This will be a string representation of the timestampz
   expected_amount: string; // Assuming this is stored as a string in Supabase
 }
 
@@ -30,7 +31,7 @@ export async function GET(request: NextRequest) {
 
     const { data, error } = await supabaseClient
       .from('invoices')
-      .select('created_at, expected_amount')
+      .select('due_date, expected_amount')
       .eq('payee_evm_address', user_address)
       .gte('created_at', startDate.toISOString())
       .order('created_at', { ascending: true });
@@ -39,7 +40,7 @@ export async function GET(request: NextRequest) {
 
     // Process the data to aggregate by day
     const aggregatedData = (data as Invoice[]).reduce((acc: { [key: string]: AggregatedData }, invoice) => {
-      const date = new Date(invoice.created_at).toISOString().split('T')[0]; // Get just the date part
+      const date = supabaseUTCToLocalTime(invoice.due_date).split('T')[0]; // Get just the date part
       if (!acc[date]) {
         acc[date] = { date, expectedAmount: 0, invoicesSent: 0 };
       }

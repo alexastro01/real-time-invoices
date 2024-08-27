@@ -10,6 +10,7 @@ interface Invoice {
   chain_id: number;
   stream_id: number;
   status: string;
+  due_date: string;
 }
 
 interface FormattedInvoice {
@@ -21,6 +22,7 @@ interface FormattedInvoice {
   chain_id: number;
   stream_id: number;
   status: string;
+  due_date: string;
 }
 
 export async function GET(request: Request) {
@@ -36,7 +38,7 @@ export async function GET(request: Request) {
 
     const { data, error } = await supabaseClient
       .from('invoices')
-      .select('created_at, payer_evm_address, payee_evm_address, expected_amount, request_id, chain_id, stream_id')
+      .select('created_at, payer_evm_address, payee_evm_address, expected_amount, request_id, chain_id, stream_id, due_date')
       .eq('payer_evm_address', payer_address)
       .order('created_at', { ascending: false });
 
@@ -55,7 +57,8 @@ export async function GET(request: Request) {
       request_id: invoice.request_id,
       chain_id: invoice.chain_id,
       stream_id: invoice.stream_id,
-      status: invoice.status
+      status: invoice.status,
+      due_date: new Date(invoice.due_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
     }));
 
     console.log(formattedData);

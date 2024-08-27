@@ -75,7 +75,11 @@ export function PaymentDetails({
   }, []);
 
   function validateAndProceed() {
-    if (paymentDetails.receiverAddress.trim() === "") {
+    if (paymentDetails.receiverAddress.trim() === "" ||
+      paymentDetails.invoiceItems.length === 0 ||
+      paymentDetails.dueDate === undefined ||
+      paymentDetails.chain === "" ||
+      paymentDetails.currency === "") {
       setFormError("Please fill in all required fields.");
       toast({
         variant: "destructive",
@@ -137,7 +141,7 @@ export function PaymentDetails({
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="chain">Chain</Label>
+                <Label htmlFor="chain">Chain<span className="text-red-600">*</span></Label>
 
                 <Select
                   value={paymentDetails.chain}
@@ -163,7 +167,7 @@ export function PaymentDetails({
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="currency">Currency</Label>
+                <Label htmlFor="currency">Currency<span className="text-red-600">*</span></Label>
                 <Select value={paymentDetails.currency} onValueChange={(value) => updatePaymentDetails({ currency: value })}>
                   <SelectTrigger>
                     <SelectValue />
@@ -179,7 +183,7 @@ export function PaymentDetails({
                 </Select>
               </div>
               <div className="flex flex-col space-y-1.5 mt-4">
-                <Label htmlFor="dueDate">Due Date</Label>
+                <Label htmlFor="dueDate">Due Date<span className="text-red-600">*</span></Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
@@ -213,7 +217,7 @@ export function PaymentDetails({
             {/* Invoice Items section remains the same */}
             {/* Invoice Items section */}
             <div className="mt-6">
-              <h3 className="text-lg font-semibold">Invoice Items</h3>
+              <h3 className="text-lg font-semibold">Invoice Items<span className="text-red-600">*</span></h3>
               <div className="grid grid-cols-1 lg:flex space-y-2 lg:space-y-0 lg:space-x-2 mt-2">
                 <Input
                   placeholder="Item name"
