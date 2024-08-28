@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
-import { supabaseClient } from '@/lib/supabaseClient';
 import { contracts, ValidChainId } from '@/utils/contracts/contracts';
 import { Chain, createPublicClient, http, defineChain } from 'viem';
 import { arbitrumSepolia, baseSepolia } from 'viem/chains';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { createAuthenticatedSupabaseClient } from '@/lib/createAuthenticatedSupabaseClient';
 
 const openCampus = defineChain({
   id: 656476,
@@ -55,9 +57,13 @@ const sablierABI = [
 ] as const;
 
 export async function POST(request: Request) {
+  const session = await getServerSession(authOptions);
+
   try {
     const body = await request.json();
     const { requestId, streamId } = body;
+
+    const supabase = createAuthenticatedSupabaseClient(session);
 
     if (!requestId || !streamId) {
       return NextResponse.json(
@@ -65,8 +71,9 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+    
 
-    const { data, error } = await supabaseClient
+    const { data, error } = await supabase
       .from('invoices')
       .select('stream_id, chain_id')
       .eq('request_id', requestId)

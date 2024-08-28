@@ -1,7 +1,9 @@
 // app/api/invoice-chart-data/route.ts
 
-import { supabaseClient } from '@/lib/supabaseClient';
+import { authOptions } from '@/lib/auth';
+import { createAuthenticatedSupabaseClient } from '@/lib/createAuthenticatedSupabaseClient';
 import supabaseUTCToLocalTime from '@/utils/time/supabaseUTCToLocalTime';
+import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
 // Define the structure of an invoice from Supabase
@@ -25,11 +27,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ message: 'User address is required' }, { status: 400 });
   }
 
+  const session = await getServerSession(authOptions);
+
   try {
     const startDate = new Date();
     startDate.setMonth(startDate.getMonth() - 3); // Get data for the last 3 months
-
-    const { data, error } = await supabaseClient
+   const supabase = createAuthenticatedSupabaseClient(session);
+    const { data, error } = await supabase
       .from('invoices')
       .select('due_date, expected_amount')
       .eq('payee_evm_address', user_address)

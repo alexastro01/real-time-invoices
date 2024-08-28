@@ -1,26 +1,43 @@
 import { NextResponse } from 'next/server';
-import { supabaseClient } from '@/lib/supabaseClient';
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+import { createAuthenticatedSupabaseClient } from '@/lib/createAuthenticatedSupabaseClient';
 
 export async function GET(request: Request) {
+    // Get the NextAuth session
+
     const { searchParams } = new URL(request.url);
     const address = searchParams.get('address');
   
     if (!address) {
       return NextResponse.json({ error: 'Address is required' }, { status: 400 });
     }
-  
+
+    const session = await getServerSession(authOptions);
+
     try {
-      const { data, error } = await supabaseClient
-        .from('user_details')
-        .select('*')
-        .eq('evmAddress', address)
-        .single();
-  
-      if (error) throw error;
-  
-      return NextResponse.json(data);
+        // Create authenticated Supabase client
+        console.log(session)
+        // This will throw an error if the session is invalid
+        const supabase = createAuthenticatedSupabaseClient(session);
+
+        // Your Supabase query here
+        const { data, error } = await supabase
+            .from('user_details')
+            .select('*')
+                //@ts-ignore
+            .eq('evmAddress', address);
+
+            console.log("data", data)
+
+        if (error) throw error;
+
+        return NextResponse.json(data);
     } catch (error) {
-      console.error('Error fetching user details:', error);
-      return NextResponse.json({ error: 'Failed to fetch user details' }, { status: 500 });
+        console.error('Error:', error);
+        if (error instanceof Error && error.message === 'Invalid session or missing user address') {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+        return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
     }
-  }
+}

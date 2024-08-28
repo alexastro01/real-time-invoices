@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
-import { supabaseClient } from '@/lib/supabaseClient';
+import { createAuthenticatedSupabaseClient } from '@/lib/createAuthenticatedSupabaseClient';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 interface Invoice {
   created_at: string;
@@ -28,6 +30,8 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const payee_address = searchParams.get('payee_address');
 
+  const session = await getServerSession(authOptions);
+
   if (!payee_address) {
     return NextResponse.json({ error: 'Payee address is required' }, { status: 400 });
   }
@@ -35,7 +39,9 @@ export async function GET(request: Request) {
   try {
     const supabaseStartTime = performance.now();
 
-    const { data, error } = await supabaseClient
+    const supabase = createAuthenticatedSupabaseClient(session);
+
+    const { data, error } = await supabase
       .from('invoices')
       .select('created_at, payer_evm_address, payee_evm_address, expected_amount, request_id, chain_id, stream_id, due_date')
       .eq('payee_evm_address', payee_address)

@@ -1,7 +1,9 @@
 // app/api/user-invoice-stats/route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseClient } from '@/lib/supabaseClient';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { createAuthenticatedSupabaseClient } from '@/lib/createAuthenticatedSupabaseClient';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -10,9 +12,14 @@ export async function GET(request: NextRequest) {
   if (!user_address) {
     return NextResponse.json({ error: 'User address is required' }, { status: 400 });
   }
+  
+  const session = await getServerSession(authOptions);
 
   try {
-    const { data, error } = await supabaseClient
+
+    const supabase = createAuthenticatedSupabaseClient(session);
+
+    const { data, error } = await supabase
       .from('invoices')
       .select('expected_amount')
       .eq('payer_evm_address', user_address);

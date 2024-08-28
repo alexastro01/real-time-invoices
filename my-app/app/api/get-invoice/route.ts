@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
-import { supabaseClient } from '@/lib/supabaseClient';
 import { requestClient } from '@/lib/requestNetworkClient';
 import { IInvoiceData } from '@/types/interfaces';
+import { createAuthenticatedSupabaseClient } from '@/lib/createAuthenticatedSupabaseClient';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 export async function GET(request: Request) {
 
-    
+    const session = await getServerSession(authOptions);
 
     const { searchParams } = new URL(request.url);
     const requestId = searchParams.get('request_id');
@@ -18,8 +20,9 @@ export async function GET(request: Request) {
   
     try {
         const supabaseStartTime = performance.now();
+        const supabase = createAuthenticatedSupabaseClient(session);
 
-        const { data, error } = await supabaseClient
+        const { data, error } = await supabase
             .from('invoices')
             .select('*')
             .eq('request_id', requestId)

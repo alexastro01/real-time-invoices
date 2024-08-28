@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
-import { supabaseClient } from '@/lib/supabaseClient';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { createAuthenticatedSupabaseClient } from '@/lib/createAuthenticatedSupabaseClient';
 
 export async function POST(request: Request) {
+
+  const session = await getServerSession(authOptions);
+
   try {
     const body = await request.json();
     const {
@@ -19,13 +24,13 @@ export async function POST(request: Request) {
     console.log(dueDate)
 
     // Insert invoice into Supabase
-
+    const supabase = createAuthenticatedSupabaseClient(session);
     // Convert Unix timestamp to JavaScript Date object
     const dueDateObject = new Date(dueDate * 1000);
     
     // Format the date as an ISO string for PostgreSQL timestamptz
     const formattedDueDate = dueDateObject.toISOString();
-    const { data, error } = await supabaseClient
+    const { data, error } = await supabase
       .from('invoices')
       .insert({
         request_id: requestId,
