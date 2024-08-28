@@ -13,6 +13,11 @@ export async function GET(request: Request) {
     if (!address) {
       return NextResponse.json({ error: 'Address is required' }, { status: 400 });
     }
+
+      //@ts-ignore
+  if(!session || !session.user?.address){
+    return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+  }
     
     try {
 

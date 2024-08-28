@@ -3,6 +3,8 @@ import { createPublicClient, http, decodeEventLog, Chain, Hex } from 'viem';
 import { abi } from '@/abi/SablierLinear';
 import { baseSepolia, arbitrumSepolia } from 'viem/chains';
 import { contracts, ValidChainId } from '@/utils/contracts/contracts';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 
 
@@ -39,6 +41,7 @@ function logObject(label: string, obj: any) {
 
 async function addStreamIdToInvoice(requestId: string, streamId: string) {
     const baseUrl = process.env.ENVIRONMENT === 'prod' ? 'https://app.streambill.xyz/api/add-stream-id' : 'http://localhost:3000/api/add-stream-id'
+
    
     const response = await fetch(`${baseUrl}`, {
         method: 'POST',

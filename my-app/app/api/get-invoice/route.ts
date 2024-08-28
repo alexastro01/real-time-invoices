@@ -14,9 +14,12 @@ export async function GET(request: Request) {
 
 
     if (!requestId) {
-      return NextResponse.json({ error: 'Address is required' }, { status: 400 });
+      return NextResponse.json({ error: 'requestId is required' }, { status: 400 });
     }
-  
+    //@ts-ignore
+    if(!session || !session.user?.address){
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
   
     try {
         const supabaseStartTime = performance.now();

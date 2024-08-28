@@ -37,6 +37,11 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Payee address is required' }, { status: 400 });
   }
 
+    //@ts-ignore
+    if(!session || !session.user?.address){
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
   try {
     const supabaseStartTime = performance.now();
 

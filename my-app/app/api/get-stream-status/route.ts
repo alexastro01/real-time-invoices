@@ -58,6 +58,10 @@ const sablierABI = [
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
+    //@ts-ignore
+    if(!session || !session.user?.address){
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
 
   try {
     const body = await request.json();

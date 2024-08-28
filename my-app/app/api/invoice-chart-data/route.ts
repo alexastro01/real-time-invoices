@@ -29,6 +29,11 @@ export async function GET(request: NextRequest) {
 
   const session = await getServerSession(authOptions);
 
+    //@ts-ignore
+    if(!session || !session.user?.address){
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
   try {
     const startDate = new Date();
     startDate.setMonth(startDate.getMonth() - 3); // Get data for the last 3 months

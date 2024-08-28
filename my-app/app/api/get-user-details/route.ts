@@ -8,12 +8,17 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url);
     const address = searchParams.get('address');
-  
+
     if (!address) {
-      return NextResponse.json({ error: 'Address is required' }, { status: 400 });
+        return NextResponse.json({ error: 'Address is required' }, { status: 400 });
     }
 
     const session = await getServerSession(authOptions);
+
+    //@ts-ignore
+    if (!session || !session.user?.address) {
+        return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
 
     try {
         // Create authenticated Supabase client
@@ -25,10 +30,10 @@ export async function GET(request: Request) {
         const { data, error } = await supabase
             .from('user_details')
             .select('*')
-                //@ts-ignore
+            //@ts-ignore
             .eq('evmAddress', address);
 
-            console.log("data", data)
+        console.log("data", data)
 
         if (error) throw error;
 
