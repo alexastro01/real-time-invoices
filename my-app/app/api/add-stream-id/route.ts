@@ -1,11 +1,9 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { createAuthenticatedSupabaseClient } from '@/lib/createAuthenticatedSupabaseClient';
+import { supabaseClient } from '@/lib/supabaseClient';
 
 export async function POST(request: Request) {
 
-  const session = await getServerSession(authOptions);
+
   try {
     const body = await request.json();
     const { requestId, streamId } = body;
@@ -19,9 +17,9 @@ export async function POST(request: Request) {
     console.log(requestId)
     console.log(streamId)
 
-    const supabase = createAuthenticatedSupabaseClient(session);
+    
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('invoices')
       .update({ stream_id: streamId })
       .eq('request_id', requestId)

@@ -33,9 +33,19 @@ export async function GET(request: Request) {
 
   const session = await getServerSession(authOptions);
 
+//@ts-ignore
+  if (!session || !session.user?.address) {
+    return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+  }
+
   if (!payer_address) {
     return NextResponse.json({ error: 'Payer address is required' }, { status: 400 });
   }
+  //@ts-ignore
+  if (payer_address.toLowerCase() !== session.user.address.toLowerCase()) {
+    return NextResponse.json({ error: 'Unauthorized to query this payer address' }, { status: 403 });
+  }
+
 
   try {
     const supabaseStartTime = performance.now();

@@ -32,7 +32,7 @@ export async function GET(request: Request) {
 
         if (error) throw error;
 
-        return NextResponse.json(data);
+        return NextResponse.json(data[0]);
     } catch (error) {
         console.error('Error:', error);
         if (error instanceof Error && error.message === 'Invalid session or missing user address') {

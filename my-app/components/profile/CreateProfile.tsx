@@ -64,6 +64,7 @@ export function CreateProfile() {
         throw new Error('Failed to fetch user details');
       }
       const data = await response.json();
+      console.log("data frontend", data)
       if (data) {
         setSenderDetails(prevDetails => ({
           ...prevDetails,
