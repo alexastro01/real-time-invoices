@@ -1,19 +1,31 @@
-import { supabaseClient } from '@/lib/supabaseClient';
+import { authOptions } from '@/lib/auth';
+import { createAuthenticatedSupabaseClient } from '@/lib/createAuthenticatedSupabaseClient';
+import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 
 
 
 
 export async function POST(request: Request) {
+
+  const session = await getServerSession(authOptions);
+  //@ts-ignore
+  if(!session || !session.user?.address){
+    return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+  }
+
   try {
     const body = await request.json()
     const { evmAddress, name, email, address, city, state, zip, country } = body
+
+    const supabase = createAuthenticatedSupabaseClient(session);
+
 
     if (!evmAddress || !name || !email) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    const { data, error } = await supabaseClient
+    const { data, error } = await supabase
       .from('user_details')
       .upsert(
         { evmAddress, name, email, address, city, state, zip, country },

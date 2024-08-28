@@ -2,6 +2,7 @@ import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { getCsrfToken } from "next-auth/react"
 import { SiweMessage } from "siwe"
+import jwt from 'jsonwebtoken'
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -28,6 +29,8 @@ export const authOptions: NextAuthOptions = {
             domain: nextAuthUrl.host,
             nonce: await getCsrfToken({ req: { headers: req.headers } }),
           })
+
+          console.log("result", result)
           
           if (result.success) {
             return {
@@ -47,6 +50,29 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.sub = user.id
+      }
+
+      // Generate Supabase JWT
+      const supabaseJwtPayload = {
+        aud: 'authenticated',
+        exp: Math.floor(Date.now() / 1000) + 60 * 60, // 1 hour from now
+        sub: token.sub,
+        email: token.email,
+        role: 'authenticated',
+      }
+
+      const supabaseToken = jwt.sign(
+        supabaseJwtPayload,
+        process.env.SUPABASE_JWT_SECRET!
+      )
+
+      token.supabaseAccessToken = supabaseToken
+
+      return token
+    },
     async session({ session, token }) {
       return {
         ...session,
@@ -55,13 +81,8 @@ export const authOptions: NextAuthOptions = {
           name: token.sub ?? session?.user?.name,
           address: token.sub as string | undefined,
         },
+        supabaseAccessToken: token.supabaseAccessToken,
       }
     },
-    async jwt({ token, user }) {
-      if (user) {
-        token.sub = user.id
-      }
-      return token
-    }
   }
 }

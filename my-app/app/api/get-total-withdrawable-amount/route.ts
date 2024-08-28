@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
-import { supabaseClient } from '@/lib/supabaseClient';
+import { createAuthenticatedSupabaseClient } from '@/lib/createAuthenticatedSupabaseClient';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 export async function GET(request: Request) {
+
+   const session = await getServerSession(authOptions);
+
     const { searchParams } = new URL(request.url);
     const address = searchParams.get('address');
   
@@ -9,8 +14,15 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Address is required' }, { status: 400 });
     }
 
+      //@ts-ignore
+  if(!session || !session.user?.address){
+    return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+  }
+    
     try {
-      const { data, error } = await supabaseClient
+
+      const supabase = createAuthenticatedSupabaseClient(session);
+      const { data, error } = await supabase
         .from('invoices')
         .select('stream_id, chain_id')
         .eq('payee_evm_address', address)

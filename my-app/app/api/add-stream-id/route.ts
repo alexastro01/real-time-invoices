@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { supabaseClient } from '@/lib/supabaseClient';
 
 export async function POST(request: Request) {
+
+
   try {
     const body = await request.json();
     const { requestId, streamId } = body;
@@ -14,6 +16,9 @@ export async function POST(request: Request) {
     }
     console.log(requestId)
     console.log(streamId)
+
+    
+
     const { data, error } = await supabaseClient
       .from('invoices')
       .update({ stream_id: streamId })

@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
-import { supabaseClient } from '@/lib/supabaseClient';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { createAuthenticatedSupabaseClient } from '@/lib/createAuthenticatedSupabaseClient';
 
 interface Invoice {
   created_at: string;
@@ -29,14 +31,28 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const payer_address = searchParams.get('payer_address');
 
+  const session = await getServerSession(authOptions);
+
+//@ts-ignore
+  if (!session || !session.user?.address) {
+    return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+  }
+
   if (!payer_address) {
     return NextResponse.json({ error: 'Payer address is required' }, { status: 400 });
   }
+  //@ts-ignore
+  if (payer_address.toLowerCase() !== session.user.address.toLowerCase()) {
+    return NextResponse.json({ error: 'Unauthorized to query this payer address' }, { status: 403 });
+  }
+
 
   try {
     const supabaseStartTime = performance.now();
 
-    const { data, error } = await supabaseClient
+    const supabase = createAuthenticatedSupabaseClient(session);
+
+    const { data, error } = await supabase
       .from('invoices')
       .select('created_at, payer_evm_address, payee_evm_address, expected_amount, request_id, chain_id, stream_id, due_date')
       .eq('payer_evm_address', payer_address)
