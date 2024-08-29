@@ -42,7 +42,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
   };
 
   return (
-    <Card className="w-full max-w-3xl mx-auto">
+    <Card className="w-full max-w-3xl mx-auto ">
       <CardContent className="pt-6">
         <div className="flex flex-col items-center mb-6">
           <Avatar className="h-16 w-16 sm:h-24 sm:w-24 mb-4">
