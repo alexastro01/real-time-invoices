@@ -49,8 +49,8 @@ export const config = getDefaultConfig({
   appName: 'RainbowKit demo',
   projectId: 'YOUR_PROJECT_ID',
   chains: [
-    opencampus,
     baseSepolia,
+    opencampus,
     arbitrumSepolia,
     morphholesky
   ],
