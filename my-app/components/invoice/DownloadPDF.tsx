@@ -10,9 +10,7 @@ type DownloadPdfProps = {
 const DownloadPDF = ({ invoiceData }: DownloadPdfProps) => {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-  const grandTotal = React.useMemo(() => {
-    return invoiceData.paymentDetails.invoiceItems.reduce((total, item) => total + (item.quantity * item.price), 0);
-  }, [invoiceData.paymentDetails.invoiceItems]);
+
 
   const generatePDF = async () => {
     setIsGeneratingPDF(true);

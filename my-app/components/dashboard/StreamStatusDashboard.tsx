@@ -2,7 +2,6 @@ import { abi } from '@/abi/SablierLinear'
 import { contracts } from '@/utils/contracts/contracts'
 import { ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions'
 import React, { useEffect } from 'react'
-import { parseEther } from 'viem'
 import { useReadContract } from 'wagmi'
 
 type StreamStatusDashboardProps = {

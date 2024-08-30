@@ -2,10 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import DotPattern from "@/components/magicui/dot-pattern";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ConfettiFireworks } from "./ConfettiFireWorksButton";
 import JoinWaitlistForm from "./JoinWaitlistForm";
 
 export default function Hero() {

@@ -1,5 +1,4 @@
 import React from 'react'
-import { TrendingUp, TrendingDown } from "lucide-react"
 import { Area, AreaChart, CartesianGrid, XAxis, ResponsiveContainer } from "recharts"
 
 import {

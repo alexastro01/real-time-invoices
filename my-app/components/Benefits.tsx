@@ -1,5 +1,4 @@
 import React from 'react'
-import { WithoutRealTimeInvoicing } from './animated-lists/WithoutRealTimeInvoicing'
 import { WithRealTimeInvoicing } from './animated-lists/WithRealTimeInvoicing'
 
 const Benefits = () => {

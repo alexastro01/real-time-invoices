@@ -1,16 +1,13 @@
 "use client";
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import {
-    Dialog,
     DialogContent,
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
-import { sablierLinearV2LockUpAddress, tUSDCAddress } from '@/constants/addresses';
 import { abi } from '../../abi/tUSDC'
 import { parseEther } from 'viem';
 import Spinner from '../helpers/Spinner';

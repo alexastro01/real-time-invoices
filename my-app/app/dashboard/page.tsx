@@ -1,7 +1,6 @@
 "use client";
 
 import { useSession } from 'next-auth/react';
-import CreateInvoiceComponent from '@/components/create-invoice/CreateInvoiceComponent';
 import Navbar from '@/components/Navbar';
 import NotConnected from '@/components/NotConnected';
 import React, { useEffect } from 'react';

@@ -1,17 +1,13 @@
 "use client";
 
-import { CalendarIcon, FileTextIcon } from "@radix-ui/react-icons";
+import { FileTextIcon } from "@radix-ui/react-icons";
 import { BellIcon, HandCoinsIcon, HandshakeIcon, Share2Icon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
 import {AnimatedBeamMultipleOutputDemo} from "@/components/example/animated-beam-multiple-outputs";
 import { BentoCard, BentoGrid } from "@/components/magicui/bento-grid";
 import Marquee from "@/components/magicui/marquee";
-import {AnimatedListDemo} from "@/components/example/animated-list-demo";
 import { WithRealTimeInvoicing } from "../animated-lists/WithRealTimeInvoicing";
-import CountUp from "../invoice/CountUp";
-import TokenDisplay from "../invoice/TokenDisplay";
 import DisplayCountUp from "./DisplayCountUp";
 
 const files = [

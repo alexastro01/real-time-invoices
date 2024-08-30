@@ -2,14 +2,12 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { Button } from "@/components/ui/button"
 import {
-    Dialog,
     DialogContent,
     DialogFooter,
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
-import { sablierLinearV2LockUpAddress, tUSDCAddress } from '@/constants/addresses';
 import { abi } from '../../abi/SablierLinear'
 import { parseEther, decodeEventLog } from 'viem';
 import Spinner from '../helpers/Spinner';
@@ -21,7 +19,7 @@ import PingAnimation from '../helpers/PingAnimation';
 import Image from 'next/image';
 import { Card, CardContent } from '../ui/card';
 import { Separator } from '../ui/separator';
-import { ArrowRight } from 'lucide-react';
+
 
 type StartLinearStreamProps = {
     setStep: React.Dispatch<React.SetStateAction<number>>;

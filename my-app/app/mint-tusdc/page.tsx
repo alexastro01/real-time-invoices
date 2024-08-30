@@ -1,6 +1,6 @@
 'use client';
 
-import Spinner from '@/components/helpers/Spinner'
+
 import { GetTUSDC } from '@/components/mint-tusdc/GetTUSDC'
 import Navbar from '@/components/Navbar'
 import NotConnected from '@/components/NotConnected';

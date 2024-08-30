@@ -5,7 +5,6 @@ import StatsCard from './StatsCard';
 import { InvoiceChart } from './Chart';
 import { useAccount } from 'wagmi';
 import { useWithdrawableAmounts } from '@/hooks/useWithdrawableAmounts';
-import { formatUnits } from 'viem';
 import { useToast } from '../ui/use-toast';
 
 

@@ -5,7 +5,6 @@ import Navbar from '@/components/Navbar';
 import NotConnected from '@/components/NotConnected';
 import React, { useEffect } from 'react';
 import Spinner from '@/components/helpers/Spinner';
-import Invoice from '@/components/invoice/Invoice';
 import { useParams } from 'next/navigation';
 import Profile from '@/components/profile/Profile';
 

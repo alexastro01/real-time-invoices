@@ -1,8 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Copy, ExternalLink, Check } from 'lucide-react';
-import { format } from 'date-fns';
 import { useAccount } from 'wagmi';
 import { InvoiceItem } from './InvoiceItem';
 import { InvoiceItemSkeleton } from './InvoiceItemSkeleton';

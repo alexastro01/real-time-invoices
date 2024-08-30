@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { InvoiceContentProps } from '@/types/interfaces';
-import ActionButtons from '../invoice/ActionButtons';
 import Spinner from '../helpers/Spinner';
 import InvoiceContent from '../invoice/InvoiceContent';
 import PaymentDialog from './PaymentDialog';
