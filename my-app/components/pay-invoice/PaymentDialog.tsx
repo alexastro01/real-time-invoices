@@ -9,6 +9,7 @@ import ShimmerButton from '../magicui/shimmer-button'
 import ApproveUSDCDialog from './ApproveUSDCDialog';
 import StartLinearStream from './StartLinearStream';
 import StreamCreatedSuccess from './StreamCreatedSuccess';
+import { useToast } from '../ui/use-toast';
 
 type PaymentDialogProps = {
     totalAmount: string;
@@ -37,7 +38,7 @@ const PaymentDialog = ({
 }: PaymentDialogProps) => {
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
-
+   const {toast} = useToast();
     //approve usdc
     //set step on confirmation
     //different component for approval
@@ -75,6 +76,10 @@ const PaymentDialog = ({
             console.log('Stream created email sent successfully');
         } catch (error) {
             console.error('Error sending stream created email:', error);
+            toast({
+                title: 'Error sending email, other processes successful',
+                variant: 'default'
+            })
          
         }
     };

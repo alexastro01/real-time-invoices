@@ -129,6 +129,7 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
                 data = JSON.parse(responseText);
             } catch (parseError) {
                 console.error('Error parsing JSON response:', parseError);
+                alert('Error parsing JSON Response')
                 throw new Error('Invalid JSON response from API');
             }
 

@@ -82,11 +82,12 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
       });
 
       console.log("Request Parameters:", requestParameters);
-
+     
+      
       const request = await requestClient.createRequest(requestParameters);
       setDialogMessage("Request Created Successfully! Confirming Request...");
 
-
+     
       const confirmedRequestData = await request.waitForConfirmation();
       setDialogMessage("Request Confirmed");
 
@@ -128,7 +129,8 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
 
     } catch (error: any) {
       console.log(error)
-      setDialogMessage(`Error: ${error.message}`);
+      alert(error)
+      setDialogMessage(`Error: ${error}`);
       setLoading(false)
     } finally {
 

@@ -12,6 +12,7 @@ import SellerDataFromSupabase from './SellerDataFromSupabase';
 import Spinner from '../helpers/Spinner';
 import Image from 'next/image';
 import { chainInfo, ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions';
+import { useToast } from '../ui/use-toast';
 
 
 interface ConfirmationComponentProps {
@@ -32,6 +33,8 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
    
   const {address} = useAccount();
 
+  const {toast} = useToast();
+
 
 
 
@@ -45,8 +48,13 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
         
         const data = await response.json();
         setSellerDetailsSupabase(data);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching user details:', error);
+        toast({
+          title: 'Error fetching user details',
+          description: error.message,
+          variant: 'destructive'
+        })
         // Handle the error appropriately
       } finally {
         setLoading(false);
@@ -58,59 +66,7 @@ export function ConfirmationComponent({ formData, setStep }: ConfirmationCompone
 
 
 
-  // ! SEPARATE COMPONENT FOR PDF GENERATION
-  // const compileInvoiceData = () => {
-  //   return {
-  //     seller: sellerDetailsSupabase,
-  //     client:
-  //     {
-  //       ...formData.senderDetails,
-  //       evmAddress: formData.paymentDetails.receiverAddress
-  //     },
-  //     paymentDetails: {
-  //       chain: formData.paymentDetails.chain,
-  //       currency: formData.paymentDetails.currency,
-  //       receiverAddress: formData.paymentDetails.receiverAddress,
-  //       dueDate: formData.paymentDetails.dueDate,
-  //       streamType: formData.streamType
-  //     },
-  //     invoiceItems: formData.paymentDetails.invoiceItems,
-  //     totalAmount: totalAmount
-  //   };
-  // };
 
-
-  // const generatePDF = async () => {
-  //   setIsGeneratingPDF(true);
-  //   const invoiceData = compileInvoiceData();
-  //   try {
-  //     const response = await fetch('/api/generate-pdf', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify(invoiceData),
-  //     });
-
-  //     if (response.ok) {
-  //       const blob = await response.blob();
-  //       const url = window.URL.createObjectURL(blob);
-  //       const a = document.createElement('a');
-  //       a.style.display = 'none';
-  //       a.href = url;
-  //       a.download = 'invoice.pdf';
-  //       document.body.appendChild(a);
-  //       a.click();
-  //       window.URL.revokeObjectURL(url);
-  //     } else {
-  //       console.error('Failed to generate PDF');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //   } finally {
-  //     setIsGeneratingPDF(false);
-  //   }
-  // };
 
   return (
     <div className="w-full max-w-4xl px-4 mx-auto">

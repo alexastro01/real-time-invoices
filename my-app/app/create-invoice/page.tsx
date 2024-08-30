@@ -8,13 +8,16 @@ import React, { useEffect, useState } from 'react';
 import Spinner from '@/components/helpers/Spinner';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
 
 const Page = () => {
   const { data: session, status } = useSession();
   const [userDetails, setUserDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { toast } = useToast();
 
+  
   useEffect(() => {
     const fetchUserDetails = async () => {
       if (session?.user?.name) {
@@ -27,6 +30,11 @@ const Page = () => {
           }
         } catch (error) {
           console.error('Error fetching user details:', error);
+          toast({
+            title: 'Error fetching user details',
+            description: error as string,
+            variant: 'destructive',
+          });
         } finally {
           setIsLoading(false);
         }

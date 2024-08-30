@@ -7,6 +7,7 @@ import { useAccount } from 'wagmi';
 import { InvoiceItem } from './InvoiceItem';
 import { InvoiceItemSkeleton } from './InvoiceItemSkeleton';
 import { ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions';
+import { useToast } from '../ui/use-toast';
 
 type InvoiceTableProps = {
     type: string;
@@ -32,6 +33,8 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
     const [error, setError] = useState<string | null>(null);
 
     const {address, chainId} = useAccount();
+
+    const {toast} = useToast();
   
     useEffect(() => {
       if (type === "invoicesSent") {
@@ -58,6 +61,10 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
         console.log(data)
       } catch (err) {
         setError('Error fetching invoices');
+        toast({
+          title: 'Error fetching invoices in InvoiceTable as payee',
+          variant: 'destructive',
+        });
         console.error(err);
       } finally {
         setLoading(false);
@@ -80,6 +87,10 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
         console.log(data)
       } catch (err) {
         setError('Error fetching invoices');
+        toast({
+          title: 'Error fetching invoices in InvoiceTable as payer',
+          variant: 'destructive',
+        });
         console.error(err);
       } finally {
         setLoading(false);

@@ -6,6 +6,7 @@ import { InvoiceChart } from './Chart';
 import { useAccount } from 'wagmi';
 import { useWithdrawableAmounts } from '@/hooks/useWithdrawableAmounts';
 import { formatUnits } from 'viem';
+import { useToast } from '../ui/use-toast';
 
 
 interface InvoiceStats {
@@ -40,6 +41,8 @@ const InvoiceDashboard = () => {
 
   const { withdrawableAmounts, isLoading: isLoadingWithdrawable } = useWithdrawableAmounts(streams);
 
+  const { toast } = useToast();
+
   useEffect(() => {
     const fetchInvoiceStatsAsPayee = async () => {
       if (!address) return;
@@ -51,6 +54,11 @@ const InvoiceDashboard = () => {
         setInvoiceStatsAsPayee(data);
       } catch (error) {
         console.error('Error fetching invoice stats:', error);
+        toast({
+          title: 'Error fetching invoice stats as payee',
+          description: error as string,
+          variant: 'destructive',
+        });
       }
     };
 
@@ -64,6 +72,11 @@ const InvoiceDashboard = () => {
         setInvoiceStatsAsPayer(data);
       } catch (error) {
         console.error('Error fetching invoice stats:', error);
+        toast({
+          title: 'Error fetching invoice stats as payer',
+          description: error as string,
+          variant: 'destructive',
+        });
       }
     };
 
@@ -77,6 +90,11 @@ const InvoiceDashboard = () => {
         setStreams(data);
       } catch (error) {
         console.error('Error fetching streams:', error);
+        toast({
+          title: 'Error fetching streams stats',
+          description: error as string,
+          variant: 'destructive',
+        });
       } finally {
         setLoading(false);
       }

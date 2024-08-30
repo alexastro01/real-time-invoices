@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/chart"
 import { InvoiceChartSkeleton } from "./InvoiceChartSkeleton"
 import supabaseUTCToLocalTime from "@/utils/time/supabaseUTCToLocalTime"
+import { useToast } from "../ui/use-toast"
 
 export const description = "Summary"
 
@@ -44,6 +45,9 @@ export function InvoiceChart() {
 
   const { address } = useAccount()
 
+  const {toast} = useToast();
+
+
   React.useEffect(() => {
     const fetchData = async () => {
       if (!address) return
@@ -58,8 +62,13 @@ export function InvoiceChart() {
         console.log('----DATA FOR CHART---')
       console.log(data)
         setChartData(data)
-      } catch (err) {
+      } catch (err: any) {
         setError('Error fetching chart data')
+        toast({
+          title: 'Error fetching chart data',
+          description: err.message as string,
+          variant: 'destructive'
+        })
         console.error(err)
       } finally {
         setLoading(false)

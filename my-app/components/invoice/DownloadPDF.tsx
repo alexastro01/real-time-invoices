@@ -41,6 +41,7 @@ const DownloadPDF = ({ invoiceData }: DownloadPdfProps) => {
       }
     } catch (error) {
       console.error('Error:', error);
+      alert(error)
     } finally {
       setIsGeneratingPDF(false);
     }

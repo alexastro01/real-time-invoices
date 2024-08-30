@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { IInvoiceData, InvoiceContentProps } from '@/types/interfaces';
-import InvoiceContent from './InvoiceContent';
+import { IInvoiceData } from '@/types/interfaces';
 import ActionButtons from './ActionButtons';
 import NotPaidInvoice from './NotPaidInvoice';
-import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
-import { Button } from '../ui/button';
-import ViewInvoiceDialog from './ViewInvoiceDialog';
 import { Skeleton } from "@/components/ui/skeleton"
-import StreamForecast from '../stream-forecast/StreamForecast';
+import { useToast } from '../ui/use-toast';
 
 type InvoiceProps = {
   requestId: string
@@ -18,6 +14,8 @@ const Invoice = ({
 }: InvoiceProps) => {
   const [invoiceData, setInvoiceData] = useState<IInvoiceData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const {toast} = useToast();
 
   async function getInvoiceData(requestId: string) {
     const res = await fetch(`/api/get-invoice?request_id=${requestId}`, { cache: 'no-store' });
@@ -37,6 +35,10 @@ const Invoice = ({
           console.log('Invoice Data:', data);
         } catch (error) {
           console.error('Error fetching invoice data:', error);
+          toast({
+            title: 'Error fetching invoice data in Invoice',
+            variant: 'destructive'
+          })
         } finally {
           setIsLoading(false);
         }

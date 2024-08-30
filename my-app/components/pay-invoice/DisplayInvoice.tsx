@@ -5,6 +5,7 @@ import Spinner from '../helpers/Spinner';
 import InvoiceContent from '../invoice/InvoiceContent';
 import PaymentDialog from './PaymentDialog';
 import { useAccount } from 'wagmi';
+import { useToast } from '../ui/use-toast';
 
 // New type definition
 type InvoiceData = {
@@ -63,6 +64,8 @@ const DisplayInvoice = ({
         return res.json();
     }
 
+    const {toast} = useToast();
+
     useEffect(() => {
         async function fetchInvoiceData() {
             if (requestId) {
@@ -71,6 +74,10 @@ const DisplayInvoice = ({
                     setInvoiceData(data)
                     console.log('Invoice Data:', data);
                 } catch (error) {
+                    toast({
+                        title: 'Error fetching invoice data in Display Invoice',
+                        variant: 'destructive'
+                      })
                     console.error('Error fetching invoice data:', error);
                 }
             }
