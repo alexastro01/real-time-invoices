@@ -7,6 +7,17 @@ import { abi } from '../../abi/SablierLinear'
 import { useToast } from '../ui/use-toast'
 import { useRouter } from 'next/navigation'
 import { chainInfo } from '@/utils/multi-chain/MultiChainSelectOptions'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+
 
 type CancelStreamProps = {
   streamId: number,
@@ -79,22 +90,52 @@ const CancelStream = ({
   }, [isConfirmed])
 
   return (
-    <Button
-      variant="destructive"
-      className="w-full"
-      onClick={cancelStream}
-      disabled={isPending || isConfirming || wasCanceled}
-    >
-      {isConfirming ? (
-        <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Confirming...
-        </>
-      ) : (
-        <>
-          <XCircle className="mr-2 h-4 w-4" /> Cancel Stream
-        </>
-      )}
-    </Button>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button
+          variant="destructive"
+          className="w-full"
+          disabled={isPending || isConfirming || wasCanceled}
+        >
+          {isConfirming ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Confirming...
+            </>
+          ) : (
+            <>
+              <XCircle className="mr-2 h-4 w-4" /> Cancel Stream
+            </>
+          )}
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        {isConfirming ? (
+          <div className="flex flex-col items-center justify-center h-full">
+            <Loader2 className="h-8 w-8 animate-spin mb-4" />
+            <DialogDescription>
+              Confirming cancellation...
+            </DialogDescription>
+          </div>
+        ) : (
+          <>
+            <DialogHeader>
+              <DialogTitle>Cancel Stream</DialogTitle>
+            </DialogHeader>
+            <div className="flex flex-col items-center justify-center py-4">
+              <DialogDescription className="text-center text-xl text-primary">
+                Are you sure you want to cancel the stream?
+              </DialogDescription>
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="secondary">No, keep it</Button>
+              </DialogClose>
+              <Button variant="destructive" onClick={cancelStream}>Yes, cancel it</Button>
+            </DialogFooter>
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
   )
 }
 
