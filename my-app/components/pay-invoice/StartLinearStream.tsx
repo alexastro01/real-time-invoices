@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog"
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { abi } from '../../abi/SablierLinear'
-import { parseEther, decodeEventLog } from 'viem';
+import { parseEther, decodeEventLog, formatUnits } from 'viem';
 import Spinner from '../helpers/Spinner';
 import { useToast } from '../ui/use-toast';
 import { getTimeRemainingInSeconds } from '@/utils/sablier/getTimeToStreamInSeconds';
@@ -68,7 +68,7 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
                     [
                         address,
                         payeeAddress,
-                        parseEther(amountToStream),
+                        chainId === 2810 ? formatUnits(parseEther(amountToStream), 12) :parseEther(amountToStream),
                         tUSDCAddress,
                         true,
                         false,
