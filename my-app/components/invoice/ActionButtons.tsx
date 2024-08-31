@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import TokenDisplay from './TokenDisplay';
 import { useAccount, useReadContract } from 'wagmi';
 import { abi } from '../../abi/SablierLinear'
-import { formatEther } from 'viem';
+import { formatEther, formatUnits } from 'viem';
 import { StreamData } from '@/types/types';
 import CancelStream from './CancelStream';
 import ShareInvoiceComponent from './ShareInvoiceComponent';
@@ -57,13 +57,15 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
     <div className="flex flex-col space-y-4 w-full max-w-md">
       {streamData  ? (
         <TokenDisplay
-          maxValue={Number(formatEther(typedStreamData.amounts.deposited))}
+          maxValue={chain_id === 2810 ? Number(formatUnits(typedStreamData.amounts.deposited, 6)) : Number(formatEther(typedStreamData.amounts.deposited))}
           tokenSymbol="tUSDC"
           startTime={typedStreamData.startTime}
           endTime={typedStreamData.endTime}
           wasCanceled={typedStreamData.wasCanceled}
           refundedAmount={typedStreamData.amounts.refunded}
-          withdrawnAmount={withdrawnAmount ? Number(formatEther(withdrawnAmount as bigint)) : 0}
+          
+          withdrawnAmount={withdrawnAmount ? 
+             Number(formatEther(withdrawnAmount as bigint)) : 0}
         />
       ) : null}
       {streamData && address === invoiceData.paymentDetails.payeeAddress ? <WithdrawComponent streamId={streamId} chain_id={chain_id} /> : null}
