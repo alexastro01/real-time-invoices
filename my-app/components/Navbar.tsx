@@ -39,7 +39,7 @@ export default function Navbar() {
     { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { href: "/create-invoice", icon: FileText, label: "Create Invoice" },
     { href: "/profile", icon: UserCircle, label: "Profile" },
-    { href: chainIdToStablecoinLink[chainId as number], icon: DollarSign, label: "Get test stablecoin" }
+    { href: '/mint-tusdc', icon: DollarSign, label: "Get test stablecoin" }
   ];
 
 
@@ -86,10 +86,10 @@ export default function Navbar() {
       <nav className="lg:flex-1">
         <ul className="flex flex-col gap-4">
           {navItems.map((item) => (
-            <li key={item.href}>
+            <li key={item.label}>
               <Link
-                href={chainId ? item.href : '/'}
-                target={chainId && chainId === 2810 ? '_blank' : '_self' }
+                href={item.href}
+           
                 className={`flex w-full items-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 ${
                   pathname === item.href ? 'bg-accent text-accent-foreground' : 'bg-background'
                 }`}

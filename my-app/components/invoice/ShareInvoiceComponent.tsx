@@ -4,11 +4,13 @@ import { ShareIcon } from 'lucide-react'
 import { useToast } from '../ui/use-toast'
 
 type ShareInvoiceComponentProps ={
-  requestId:string
+  requestId:string;
+  wasCanceled?:boolean;
 }
 
 const ShareInvoiceComponent = ({
-  requestId
+  requestId,
+  wasCanceled
 } : ShareInvoiceComponentProps) => {
 
   const [copied, setIsCopied] = useState(false);
@@ -40,7 +42,7 @@ const ShareInvoiceComponent = ({
             onClick={handleShareInvoice}
             disabled={copied}
           >
-          <ShareIcon className='h-4 w-4 mr-2' />  {copied ? "Link Copied!" : "Share invoice to payer"}
+          <ShareIcon className='h-4 w-4 mr-2' />  {copied ? "Link Copied!" : "Share invoice"}
           </Button>
 
   )

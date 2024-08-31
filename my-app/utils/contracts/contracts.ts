@@ -22,6 +22,6 @@ export const contracts: Record<ValidChainId, {
     //MORPH holesky
     2810: {
         tUSDCAddress: "0x06e6eAd6899F44441a187d4bA907D1f527C7536c",
-        sablierLinearV2LockUpAddress: "0x29B056690e7273a896Ed5a007c6acc4f64fE31d3"
+        sablierLinearV2LockUpAddress: "0x4b4126036726085636BC2A4788a448d5C26705E4"
     }
 };
