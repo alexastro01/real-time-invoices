@@ -89,7 +89,7 @@ export default function Navbar() {
             <li key={item.href}>
               <Link
                 href={chainId ? item.href : '/'}
-                target={chainId && chainId === 2810 ? '_blank' : '_self' }
+                target={item.href === "https://testnet.bulbaswap.io/swap" ? '_blank' : '_self' }
                 className={`flex w-full items-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 ${
                   pathname === item.href ? 'bg-accent text-accent-foreground' : 'bg-background'
                 }`}

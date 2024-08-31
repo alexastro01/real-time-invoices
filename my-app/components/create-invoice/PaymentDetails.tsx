@@ -24,7 +24,7 @@ import {
 import { cn } from "@/lib/utils"
 import { CalendarIcon, XIcon } from "lucide-react"
 import Image from "next/image"
-import { getChainOptions } from "@/utils/multi-chain/MultiChainSelectOptions"
+import { getChainOptions, getCurrencyOptionsForChain, ValidChainId } from "@/utils/multi-chain/MultiChainSelectOptions"
 
 
 
@@ -117,7 +117,10 @@ export function PaymentDetails({
   };
 
   const chainOptions = getChainOptions(); // Get the chain options
-
+  const currencyOptions = React.useMemo(() => {
+    if (!paymentDetails.chain) return [];
+    return getCurrencyOptionsForChain(Number(paymentDetails.chain) as ValidChainId);
+  }, [paymentDetails.chain]);
 
 
   return (
@@ -145,7 +148,9 @@ export function PaymentDetails({
 
                 <Select
                   value={paymentDetails.chain}
-                  onValueChange={(value) => updatePaymentDetails({ chain: value })}
+                  onValueChange={(value) => {
+                    updatePaymentDetails({ chain: value, currency: '' }); // Reset currency when chain changes
+                  }}
                 >
 
                   <SelectTrigger>
@@ -167,21 +172,27 @@ export function PaymentDetails({
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="currency">Currency<span className="text-red-600">*</span></Label>
-                <Select value={paymentDetails.currency} onValueChange={(value) => updatePaymentDetails({ currency: value })}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="USDC">
+              <Label htmlFor="currency">Currency<span className="text-red-600">*</span></Label>
+              <Select 
+                value={paymentDetails.currency} 
+                onValueChange={(value) => updatePaymentDetails({ currency: value })}
+                disabled={!paymentDetails.chain}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a currency" />
+                </SelectTrigger>
+                <SelectContent>
+                  {currencyOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
                       <div className="flex items-center font-semibold">
-                        <Image src="/usdc.png" alt="USDC" className="w-6 h-6 mr-2" width={24} height={24} />
-                        USDC
+                        {option.icon}
+                        {option.label}
                       </div>
                     </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
               <div className="flex flex-col space-y-1.5 mt-4">
                 <Label htmlFor="dueDate">Due Date<span className="text-red-600">*</span></Label>
                 <Popover>

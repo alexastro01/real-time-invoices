@@ -9,19 +9,21 @@ import {
 } from "@/components/ui/dialog"
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { abi } from '../../abi/tUSDC'
-import { parseEther } from 'viem';
+import { formatUnits, parseEther } from 'viem';
 import Spinner from '../helpers/Spinner';
 import { useToast } from '../ui/use-toast';
 import { contracts, ValidChainId } from '@/utils/contracts/contracts';
 import { chainInfo } from '@/utils/multi-chain/MultiChainSelectOptions';
 import PingAnimation from '../helpers/PingAnimation';
 import Image from 'next/image';
+import { coinAddressToIcon } from '@/utils/contracts/coinAddressToIcon';
 
 
 type ApproveUSDCDialogProps = {
     setStep: React.Dispatch<React.SetStateAction<number>>;
     amountToApprove: string;
-    chain_id: number
+    chain_id: number;
+    currency: string;
 
 }
 
@@ -29,7 +31,8 @@ type ApproveUSDCDialogProps = {
 const ApproveUSDCDialog = ({
     setStep,
     amountToApprove,
-    chain_id
+    chain_id,
+    currency
 }:
     ApproveUSDCDialogProps
 ) => {
@@ -44,6 +47,10 @@ const ApproveUSDCDialog = ({
     } = useWriteContract()
 
 
+   useEffect(() => {
+   console.log('Amount to approve', amountToApprove)
+   }, [])
+
     async function Approve() {
         if (chainId !== chain_id) {
             toast({
@@ -57,7 +64,7 @@ const ApproveUSDCDialog = ({
                     address: contracts[chainId as ValidChainId].tUSDCAddress,
                     abi,
                     functionName: 'approve',
-                    args: [contracts[chainId as ValidChainId].sablierLinearV2LockUpAddress, parseEther(amountToApprove)],
+                    args: [contracts[chainId as ValidChainId].sablierLinearV2LockUpAddress, chainId === 2810 ? formatUnits(parseEther(amountToApprove), 12) :parseEther(amountToApprove) ],
                 })
             }
         }
@@ -87,6 +94,11 @@ const ApproveUSDCDialog = ({
         }
     }, [error])
 
+    useEffect(() => {
+        console.log('---------currency prop ')
+   console.log(currency)
+    }, [currency])
+
     return (
         <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
@@ -98,7 +110,7 @@ const ApproveUSDCDialog = ({
                 </div> :
                 <div className="py-4 flex justify-center">
                     <p className="text-2xl font-semibold">{amountToApprove}</p>
-                    <Image src={'/usdc.png'} width={32} height={32} alt={'USDC LOGO'} className='ml-1'/>
+                    <Image src={coinAddressToIcon[contracts[chain_id as ValidChainId].tUSDCAddress]} width={32} height={32} alt={'STABLECOIN LOGO'} className='ml-1'/>
                 </div>
 
             }

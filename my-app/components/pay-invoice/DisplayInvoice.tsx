@@ -110,6 +110,7 @@ const DisplayInvoice = ({
                         payeeName={invoiceData.partiesDetails.seller.name}
                         receiverEmail={invoiceData.partiesDetails.seller.email}
                         link={`https://app.streambill.xyz/invoice/${requestId}`}
+                        currency={invoiceData.paymentDetails.currency}
 
                     />
                 </div>

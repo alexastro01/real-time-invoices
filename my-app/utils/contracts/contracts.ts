@@ -3,6 +3,7 @@ export type ValidChainId = 656476 | 84532 | 421614 | 2810;
 export const contracts: Record<ValidChainId, {
     tUSDCAddress: `0x${string}`;
     sablierLinearV2LockUpAddress: `0x${string}`;
+    USDTAddress?: `0x${string}`
 }> = {
     //OPEN CAMPUS
     656476: {
@@ -21,7 +22,9 @@ export const contracts: Record<ValidChainId, {
     },
     //MORPH holesky
     2810: {
-        tUSDCAddress: "0x06e6eAd6899F44441a187d4bA907D1f527C7536c",
+        //It's actually usdt address, leaving this here for now, will fix later
+        tUSDCAddress: "0x67330f6BC8dcE05816662785A89fb0611F6D149F",
+        USDTAddress: '0x67330f6BC8dcE05816662785A89fb0611F6D149F',
         sablierLinearV2LockUpAddress: "0x29B056690e7273a896Ed5a007c6acc4f64fE31d3"
     }
 };

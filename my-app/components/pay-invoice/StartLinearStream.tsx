@@ -19,6 +19,7 @@ import PingAnimation from '../helpers/PingAnimation';
 import Image from 'next/image';
 import { Card, CardContent } from '../ui/card';
 import { Separator } from '../ui/separator';
+import { coinAddressToIcon } from '@/utils/contracts/coinAddressToIcon';
 
 
 type StartLinearStreamProps = {
@@ -204,7 +205,7 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
                 <div className="space-y-4">
                     <div className="flex items-center justify-center space-x-2">
                         <span className="text-3xl font-bold">{amountToStream}</span>
-                        <Image src='/usdc.png' width={36} height={36} alt='USDC LOGO' className='inline-block' />
+                        <Image src={coinAddressToIcon[contracts[chain_id as ValidChainId].tUSDCAddress]} width={36} height={36} alt='USDC LOGO' className='inline-block' />
                     </div>
                     
                     <Separator className="my-2" />

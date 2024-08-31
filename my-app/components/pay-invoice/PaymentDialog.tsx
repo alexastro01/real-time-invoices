@@ -21,7 +21,8 @@ type PaymentDialogProps = {
     payerName: string;
     payeeName: string;
     receiverEmail: string;
-    link:string
+    link:string;
+    currency: string;
 }
 
 const PaymentDialog = ({
@@ -34,7 +35,8 @@ const PaymentDialog = ({
     payerName,
     payeeName,
     receiverEmail,
-    link
+    link,
+    currency
 }: PaymentDialogProps) => {
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
@@ -84,6 +86,8 @@ const PaymentDialog = ({
         }
     };
 
+    
+
 
     return (
         <Dialog>
@@ -93,7 +97,7 @@ const PaymentDialog = ({
                 </ShimmerButton>
             </DialogTrigger>
             {
-                step === 0 && <ApproveUSDCDialog setStep={setStep} amountToApprove={totalAmount} chain_id={chain_id} />
+                step === 0 && <ApproveUSDCDialog setStep={setStep} amountToApprove={totalAmount} chain_id={chain_id} currency={currency} />
             }
 
             {
