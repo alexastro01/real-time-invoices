@@ -15,14 +15,34 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import LoginButton from "./edu-connect/LoginButton";
 import UserProfileCard from "./edu-connect/UserProfileEdu";
 
-const navItems = [
-  { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/create-invoice", icon: FileText, label: "Create Invoice" },
-  { href: "/profile", icon: UserCircle, label: "Profile" },
-  { href: "/mint-tusdc", icon: DollarSign, label: "Get test usdc" }
-];
+
+
+
+const chainIdToStablecoinLink: { [key: number]: string } = {
+  //Morph holesky
+  2810: "https://testnet.bulbaswap.io/swap", // Morph holesky
+  //Arbitrum sepolia
+  421614: "/mint-tusdc", // Mint arbitrum sepolia tusdc
+  //Base sepolia
+  84532: "/mint-tusdc", // Mint base sepolia tusdc
+  //Edu chain
+  656476: "/mint-tusdc", // Mint edu chain tusdc
+};
+
 
 export default function Navbar() {
+
+
+  const {chainId} = useAccount();
+
+  const navItems = [
+    { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+    { href: "/create-invoice", icon: FileText, label: "Create Invoice" },
+    { href: "/profile", icon: UserCircle, label: "Profile" },
+    { href: chainIdToStablecoinLink[chainId as number], icon: DollarSign, label: "Get test stablecoin" }
+  ];
+
+
   const pathname = usePathname();
   const { authState: eduConnectAuthState, ocAuth } = useOCAuth();
   const { chain } = useAccount();
@@ -68,7 +88,8 @@ export default function Navbar() {
           {navItems.map((item) => (
             <li key={item.href}>
               <Link
-                href={item.href}
+                href={chainId ? item.href : '/'}
+                target={chainId && chainId === 2810 ? '_blank' : '_self' }
                 className={`flex w-full items-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 ${
                   pathname === item.href ? 'bg-accent text-accent-foreground' : 'bg-background'
                 }`}

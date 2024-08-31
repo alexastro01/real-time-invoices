@@ -44,7 +44,6 @@ const ApproveUSDCDialog = ({
     } = useWriteContract()
 
 
-
     async function Approve() {
         if (chainId !== chain_id) {
             toast({
@@ -63,6 +62,8 @@ const ApproveUSDCDialog = ({
             }
         }
     }
+
+
 
     const { isLoading: isConfirming, isSuccess: isConfirmed } =
         useWaitForTransactionReceipt({
