@@ -121,7 +121,7 @@ export function PaymentDetails({
 
 
   return (
-    <div className="w-[90%] lg:w-[85%] xl:w-[50%]" >
+    <div className=" lg:w-[85%] xl:w-[65%]" >
       <Progress value={66} className="my-8" />
       <Card className="">
         <CardHeader>

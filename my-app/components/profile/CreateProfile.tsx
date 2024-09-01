@@ -163,7 +163,7 @@ export function CreateProfile() {
   };
 
   return (
-    <div className="w-[90%] lg:w-[85%] xl:w-[50%] mt-20 md:mt-0" >
+    <div className="w-[90%] lg:w-[85%] xl:w-[65%] mt-20 md:mt-0" >
       <Card className="">
         <CardHeader>
           <CardTitle>Your profile</CardTitle>

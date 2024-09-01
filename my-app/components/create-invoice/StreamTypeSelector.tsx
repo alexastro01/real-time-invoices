@@ -30,7 +30,7 @@ export function StreamTypeSelector({ setStep, streamType, updateStreamType }: St
   );
 
   return (
-    <div className="w-[90%] lg:w-[85%] xl:w-[50%]">
+    <div className="w-[90%] lg:w-[85%] xl:w-[65%]">
       <Progress value={85} className="my-8" />
       <Card>
         <CardHeader>
