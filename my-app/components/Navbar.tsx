@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import LoginButton from "./edu-connect/LoginButton";
 import UserProfileCard from "./edu-connect/UserProfileEdu";
+import { ModeToggle } from './mode-toggle';
 
 
 
@@ -104,6 +105,7 @@ export default function Navbar() {
       <div className="mt-auto space-y-4">
         {renderOCAuth()}
         <div className='hidden lg:block'>
+          <ModeToggle />
         <ConnectButton accountStatus="address" chainStatus="icon" showBalance={false}/>
         </div>
       </div>

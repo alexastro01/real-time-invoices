@@ -46,7 +46,7 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
 
 
   return (
-    <TableRow key={invoice.id} className="hover:bg-gray-50">
+    <TableRow key={invoice.id} className="hover:bg-primary-foreground">
       <TableCell>{supabaseUTCToLocalTime(invoice.due_date)}</TableCell>
       <TableCell>
         <div className="flex items-center space-x-2">

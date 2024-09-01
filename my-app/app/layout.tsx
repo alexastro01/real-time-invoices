@@ -9,7 +9,7 @@ import { Analytics } from '@vercel/analytics/react';
 import Navbar from "@/components/Navbar";
 import OCConnectWrapper from "@/components/OCConnectWrapper";
 import { GoogleAnalytics } from '@next/third-parties/google'
-
+import { ThemeProvider } from "@/components/theme-provider"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -55,6 +55,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+      <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
       <GoogleAnalytics gaId="G-NCZ42WG6BR" />
         <Providers>
           <SessionWrapper>
@@ -71,6 +77,7 @@ export default function RootLayout({
             <Toaster />
           </SessionWrapper>
         </Providers>
+        </ThemeProvider>
       </body>
     </html>
   );
