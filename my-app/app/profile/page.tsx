@@ -13,7 +13,7 @@ const Page = () => {
   const params = useParams();
 
   useEffect(() => {
-    console.log(session);
+    console.log('session');
   }, [session]);
 
  

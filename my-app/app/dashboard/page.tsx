@@ -11,7 +11,7 @@ const Page = () => {
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    console.log(session)
+    console.log('session')
   }, [session])
 
   return (
