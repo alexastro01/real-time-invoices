@@ -81,21 +81,21 @@ const TokenDisplay: React.FC<TokenDisplayProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-center space-y-8 p-8 rounded-2xl shadow-lg
-                    bg-gradient-to-br from-white via-gray-100 to-gray-100
-                    border border-gray-200
+                  bg-gradient-to-br from-background via-muted to-muted
+                    border border-muted
                     transition-all duration-300 ease-in-out
                     hover:shadow-xl hover:scale-105">
       {/* Big beautiful number */}
-      <div className="text-5xl lg:text-7xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-zinc-600">
+      <div className="text-5xl lg:text-7xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary">
         {renderIntegerPart()}.
         <span className="text-2xl lg:text-4xl">{decimalPart}</span>
       </div>
       
       <div className="w-full max-w-md space-y-6">
         {/* Amount Streamed Progress Bar */}
-        <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="bg-card p-4 rounded-lg shadow-md">
           <div className="flex justify-between mb-2">
-            <span className="text-sm font-semibold text-gray-700">Amount Streamed</span>
+            <span className="text-sm font-semibold text-primary">Amount Streamed</span>
             <span className="text-sm font-bold text-yellow-600">{streamedPercentage.toFixed(2)}%</span>
           </div>
           <Progress value={streamedPercentage} className="h-3 bg-yellow-100 rounded-full" 
@@ -106,9 +106,9 @@ const TokenDisplay: React.FC<TokenDisplayProps> = ({
         </div>
 
         {/* Amount Withdrawn Progress Bar */}
-        <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="bg-card p-4 rounded-lg shadow-md">
           <div className="flex justify-between mb-2">
-            <span className="text-sm font-semibold text-gray-700">Amount Withdrawn</span>
+            <span className="text-sm font-semibold text-primary">Amount Withdrawn</span>
             <span className="text-sm font-bold text-green-600">{withdrawnPercentage.toFixed(2)}%</span>
           </div>
           <Progress value={withdrawnPercentage} className="h-3 bg-green-100 rounded-full" 

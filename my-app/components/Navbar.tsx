@@ -81,7 +81,7 @@ export default function Navbar() {
   const NavContent = () => (
     <>
       <Link href="/" className="flex items-center mb-6">
-        <Image src="/logo_cropped.png" width={48} height={48} alt="Stream Bill logo"/>
+        <Image src="/logo_cropped.png" width={48} height={48} alt="Stream Bill logo" className='rounded-full'/>
         <span className="ml-2 font-semibold">StreamBill<span className="text-gray-400 text-xs ml-1">testnet</span></span>
       </Link>
       <nav className="lg:flex-1">
@@ -104,9 +104,13 @@ export default function Navbar() {
       </nav>
       <div className="mt-auto space-y-4">
         {renderOCAuth()}
-        <div className='hidden lg:block'>
-          <ModeToggle />
-        <ConnectButton accountStatus="address" chainStatus="icon" showBalance={false}/>
+        
+        <div className='hidden lg:flex'>
+         
+        <ConnectButton accountStatus="avatar" chainStatus="icon" showBalance={false}/>
+        <div className="ml-4">
+        <ModeToggle />
+        </div>
         </div>
       </div>
     </>
@@ -117,7 +121,7 @@ export default function Navbar() {
       {/* Mobile Navbar */}
       <header className="lg:hidden fixed top-0 left-0 right-0 bg-background border-b border-accent p-4 flex justify-between items-center z-50">
         <Link href="/" className="flex items-center">
-          <Image src="/logo_cropped.png" width={32} height={32} alt="Stream Bill logo"/>
+          <Image src="/logo_cropped.png" width={32} height={32} alt="Stream Bill logo" className='rounded-full'/>
           <span className="ml-2 font-semibold">StreamBill</span>
         </Link>
         <ConnectButton  accountStatus='avatar' chainStatus="icon" showBalance={false} />

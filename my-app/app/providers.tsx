@@ -17,7 +17,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
        <SessionProvider refetchInterval={0}>
       <QueryClientProvider client={queryClient}>
       <RainbowKitSiweNextAuthProvider>
-        <RainbowKitProvider>{children}</RainbowKitProvider>
+        <RainbowKitProvider >{children}</RainbowKitProvider>
         </RainbowKitSiweNextAuthProvider>
       </QueryClientProvider>
       </SessionProvider>

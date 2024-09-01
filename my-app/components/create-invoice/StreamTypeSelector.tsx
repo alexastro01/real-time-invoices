@@ -40,9 +40,9 @@ export function StreamTypeSelector({ setStep, streamType, updateStreamType }: St
         <CardContent>
           <RadioGroup value={streamType} onValueChange={(value) => updateStreamType(value as StreamType)}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <Card className={`cursor-pointer bg-white ${streamType === "linear" ? "border-gray-500" : ""}`}>
+              <Card className={`cursor-pointer bg-background ${streamType === "linear" ? "border-primary" : ""}`}>
                 <CardHeader>
-                  <CardTitle className="text-white">Linear Stream</CardTitle>
+                  <CardTitle className="text-primary">Linear Stream</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="h-24">
