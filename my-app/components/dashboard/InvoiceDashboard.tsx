@@ -133,7 +133,7 @@ const InvoiceDashboard = () => {
           amount={loading ? 'Loading...' : `$${formatAmount(Number(invoiceStatsAsPayee.totalExpectedAmount))}`} 
         />
         <StatsCard 
-          description={'Available to withdraw from streams'} 
+          description={'Available to withdraw'} 
           amount={loading || isLoadingWithdrawable ? 'Loading...' : `$${formatAmount(totalWithdrawableAmount)}`} 
         />
         <StatsCard 
