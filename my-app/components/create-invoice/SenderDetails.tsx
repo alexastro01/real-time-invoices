@@ -88,7 +88,7 @@ export function SenderDetails({
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="address">Address </Label>
+                <Label htmlFor="address">Address / Street </Label>
                 <Input 
                   id="address" 
                   placeholder="Street address" 
