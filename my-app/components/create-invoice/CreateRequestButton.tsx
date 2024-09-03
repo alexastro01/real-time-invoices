@@ -61,9 +61,10 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
 
     try {
       const web3SignatureProvider = new Web3SignatureProvider(walletClient);
+      //switch to sepolia for now
       const requestClient = new RequestNetwork({
         nodeConnectionConfig: {
-          baseURL: "https://gnosis.gateway.request.network",
+          baseURL: "https://sepolia.gateway.request.network",
         },
         signatureProvider: web3SignatureProvider,
       });
@@ -111,7 +112,8 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
           payeeEVMAddress,
           expectedAmount,
           dueDate,
-          chain
+          chain,
+          gateway: 'sepolia'
         }),
       });
 

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { requestClient } from '@/lib/requestNetworkClient';
+import { requestClientSepolia } from '@/lib/requestNetworkClientSepolia';
 import { IInvoiceData } from '@/types/interfaces';
 import { createAuthenticatedSupabaseClient } from '@/lib/createAuthenticatedSupabaseClient';
 import { getServerSession } from 'next-auth';
@@ -40,10 +41,11 @@ export async function GET(request: Request) {
    
        const requestStartTime = performance.now();
 
-      const requestnetwork = await requestClient.fromRequestId(
-        requestId,
-      );
-      const requestData =  requestnetwork.getData();
+      // Choose the appropriate client based on the gateway
+      const client = data.gateway === 'sepolia' ? requestClientSepolia : requestClient;
+      console.log(`Used gateway: ${data.gateway}`);
+      const requestnetwork = await client.fromRequestId(requestId);
+      const requestData = requestnetwork.getData();
 
         const requestNetworkEndTime = performance.now();
 

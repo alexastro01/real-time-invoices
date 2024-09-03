@@ -50,9 +50,7 @@ const CreateInvoiceComponent = () => {
       
     return (
         <div className='flex flex-col items-center mt-8'>
-            <div className="w-full bg-yellow-500 text-black text-center py-2 mb-4">
-                Create invoice currently down - investigating - thank you for understanding
-            </div>
+           
             
             {step === 0 && (
                 <SenderDetails 

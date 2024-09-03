@@ -22,7 +22,8 @@ export async function POST(request: Request) {
       payeeEVMAddress,
       expectedAmount,
       chain,
-      dueDate
+      dueDate,
+      gateway
     } = body;
     
     console.log('``DUE DATE```')
@@ -57,7 +58,8 @@ export async function POST(request: Request) {
         payee_evm_address: payeeEVMAddress,
         expected_amount: Number(expectedAmount),
         due_date: formattedDueDate,
-        chain_id: Number(chain)
+        chain_id: Number(chain),
+        gateway: gateway
       });
 
     if (error) throw error;
