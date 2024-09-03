@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import LoginButton from "./edu-connect/LoginButton";
 import UserProfileCard from "./edu-connect/UserProfileEdu";
+import { TwitterLogoIcon } from '@radix-ui/react-icons';
 
 
 
@@ -40,7 +41,8 @@ export default function Navbar() {
     { href: "/create-invoice", icon: FileText, label: "Create Invoice" },
     { href: "/profile", icon: UserCircle, label: "Profile" },
     { href: '/mint-tusdc', icon: DollarSign, label: "Get test stablecoin" },
-    { href: 'https://t.me/streambill', icon: MessageCircle, label: "Join Telegram"}
+    { href: 'https://t.me/streambill', icon: MessageCircle, label: "Join Telegram"},
+    { href: 'https://x.com/intent/user?screen_name=streambillxyz', icon: TwitterLogoIcon, label: "Join X"},
   ];
 
 
