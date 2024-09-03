@@ -137,7 +137,7 @@ export function SenderDetails({
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button variant={"ghost"}>Back</Button>
-          <Button onClick={validateAndProceed}>Next</Button>
+          <Button onClick={validateAndProceed} disabled={true}>Next</Button>
         </CardFooter>
       </Card>
     </div>
