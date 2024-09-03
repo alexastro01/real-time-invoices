@@ -4,7 +4,7 @@ import React from 'react';
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Link from "next/link";
-import { LayoutDashboard, UserCircle, FileText, DollarSign, Menu } from "lucide-react";
+import { LayoutDashboard, UserCircle, FileText, DollarSign, Menu, MessageCircle } from "lucide-react";
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { useAccount } from 'wagmi';
@@ -39,7 +39,8 @@ export default function Navbar() {
     { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { href: "/create-invoice", icon: FileText, label: "Create Invoice" },
     { href: "/profile", icon: UserCircle, label: "Profile" },
-    { href: '/mint-tusdc', icon: DollarSign, label: "Get test stablecoin" }
+    { href: '/mint-tusdc', icon: DollarSign, label: "Get test stablecoin" },
+    { href: 'https://t.me/streambill', icon: MessageCircle, label: "Join Telegram"}
   ];
 
 
