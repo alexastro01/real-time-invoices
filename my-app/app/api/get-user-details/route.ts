@@ -22,7 +22,7 @@ export async function GET(request: Request) {
 
     try {
         // Create authenticated Supabase client
-        console.log(session)
+        // console.log(session)
         // This will throw an error if the session is invalid
         const supabase = createAuthenticatedSupabaseClient(session);
 
