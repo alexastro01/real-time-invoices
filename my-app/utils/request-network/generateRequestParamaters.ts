@@ -77,8 +77,11 @@ export function generateRequestParameters({
       invoiceItems: invoiceItems,
       dueDate: dueDate as number * 1000,
       RequestType: 'InvoiceStreaming',
+      builderId: "streambill",
+      createdWith: window.location.hostname,
       chain: chain
     },
+    
     
     // The identity that signs the request, either payee or payer identity.
     signer: {
@@ -92,7 +95,6 @@ export function generateRequestParameters({
 
 }
 
-console.log(invoiceItems)
 return requestCreateParameters;
 
 
