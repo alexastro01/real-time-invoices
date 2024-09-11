@@ -10,7 +10,6 @@ import ApproveUSDCDialog from './ApproveUSDCDialog';
 import StartLinearStream from './StartLinearStream';
 import StreamCreatedSuccess from './StreamCreatedSuccess';
 import { useToast } from '../ui/use-toast';
-import { Button } from '../ui/button';
 
 type PaymentDialogProps = {
     totalAmount: string;
@@ -22,7 +21,7 @@ type PaymentDialogProps = {
     payerName: string;
     payeeName: string;
     receiverEmail: string;
-    link: string
+    link:string
 }
 
 const PaymentDialog = ({
@@ -39,7 +38,7 @@ const PaymentDialog = ({
 }: PaymentDialogProps) => {
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
-    const { toast } = useToast();
+   const {toast} = useToast();
     //approve usdc
     //set step on confirmation
     //different component for approval
@@ -81,20 +80,17 @@ const PaymentDialog = ({
                 title: 'Error sending email, other processes successful',
                 variant: 'default'
             })
-
+         
         }
     };
-
-    const isPastDue = dueDate ? new Date(dueDate) < new Date() : false
 
 
     return (
         <Dialog>
             <DialogTrigger asChild>
-                {isPastDue ? <Button disabled={isPastDue}>Invoice is past due</Button> : <ShimmerButton>
+                <ShimmerButton>
                     {loading ? "Loading..." : "Pay invoice"}
-                </ShimmerButton>}
-
+                </ShimmerButton>
             </DialogTrigger>
             {
                 step === 0 && <ApproveUSDCDialog setStep={setStep} amountToApprove={totalAmount} chain_id={chain_id} />

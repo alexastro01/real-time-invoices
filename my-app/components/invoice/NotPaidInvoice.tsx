@@ -4,7 +4,6 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import ViewInvoiceDialog from './ViewInvoiceDialog';
 import { IInvoiceData } from '@/types/interfaces';
-import { AlertCircle } from 'lucide-react';
 
 interface NotPaidInvoiceProps {
   requestId: string;
@@ -33,22 +32,14 @@ const NotPaidInvoice: React.FC<NotPaidInvoiceProps> = ({ requestId, invoiceData 
     });
   };
 
-  const isPastDue = new Date(invoiceData.paymentDetails.dueDate) < new Date()
-
   return (
     <div className="flex items-center justify-center min-h-screen">
       <Card className="w-full max-w-md">
-        <CardContent className="pt-6 space-y-4">
+        <CardContent className="pt-6">
           <p className="text-center text-lg font-semibold">
             The invoice has not been paid yet
             
           </p>
-          {isPastDue && (
-            <div className="flex items-center justify-center space-x-2 text-red-500">
-              <AlertCircle className="h-5 w-5" />
-              <p className="text-sm font-medium">This invoice is past due</p>
-            </div>
-          )}
         </CardContent>
         <CardFooter className="grid grid-cols-1 space-y-4 justify-center">
           <Button 
@@ -62,7 +53,7 @@ const NotPaidInvoice: React.FC<NotPaidInvoiceProps> = ({ requestId, invoiceData 
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 };
 
 export default NotPaidInvoice;
