@@ -38,6 +38,7 @@ const NotPaidInvoice: React.FC<NotPaidInvoiceProps> = ({ requestId, invoiceData 
         <CardContent className="pt-6">
           <p className="text-center text-lg font-semibold">
             The invoice has not been paid yet
+            
           </p>
         </CardContent>
         <CardFooter className="grid grid-cols-1 space-y-4 justify-center">
