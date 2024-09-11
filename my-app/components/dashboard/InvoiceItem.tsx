@@ -45,7 +45,18 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
   };
 
   const isDueDatePast = new Date(invoice.due_date) < new Date();
+   
   const isDueDateDestructive = !stream_id && isDueDatePast;
+
+  // useEffect(() => {
+  //   console.log('Invoice due date from db')
+  //   console.log(invoice.due_date)
+  //   console.log('New date from invoice due_date')
+  //   console.log(new Date(invoice.due_date))
+  //   console.log('Date now')
+  //   console.log(new Date())
+  
+  // }, [])
 
   return (
     <TableRow key={invoice.id} className="hover:bg-gray-50">
