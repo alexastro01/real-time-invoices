@@ -41,6 +41,7 @@ const NotPaidInvoice: React.FC<NotPaidInvoiceProps> = ({ requestId, invoiceData 
         <CardContent className="pt-6 space-y-4">
           <p className="text-center text-lg font-semibold">
             The invoice has not been paid yet
+            
           </p>
           {isPastDue && (
             <div className="flex items-center justify-center space-x-2 text-red-500">
