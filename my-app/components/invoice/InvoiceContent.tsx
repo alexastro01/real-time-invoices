@@ -1,25 +1,22 @@
-import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { format } from 'date-fns';
-import {
-  IInvoiceData
-
-} from '@/types/interfaces';
-import Image from 'next/image';
-import { chainInfo, ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions';
-import { contracts } from '@/utils/contracts/contracts';
-
+import React from 'react'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { format } from 'date-fns'
+import { IInvoiceData } from '@/types/interfaces'
+import Image from 'next/image'
+import { chainInfo, ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions'
+import { contracts } from '@/utils/contracts/contracts'
+import { AlertCircle } from 'lucide-react'
 
 interface InvoiceContentProps {
-  invoiceData: IInvoiceData;
+  invoiceData: IInvoiceData
 }
 
-// New InvoiceContent component
-const InvoiceContent = ({ invoiceData }: InvoiceContentProps) => {
+export default function InvoiceContent({ invoiceData }: InvoiceContentProps) {
+  const { seller, client } = invoiceData.partiesDetails
+  const { payeeAddress, payerAddress, currency, streamType, dueDate, totalAmount, invoiceItems, chain_id } = invoiceData.paymentDetails
 
-  const { seller, client } = invoiceData.partiesDetails;
-  const { payeeAddress, payerAddress, currency, streamType, dueDate, totalAmount, invoiceItems, chain_id } = invoiceData.paymentDetails;
+  const isPastDue = dueDate ? new Date(dueDate) < new Date() : false
 
   return (
     <div className="w-full max-w-4xl px-4 mx-auto">
@@ -28,6 +25,12 @@ const InvoiceContent = ({ invoiceData }: InvoiceContentProps) => {
           <CardTitle className="text-2xl sm:text-3xl font-bold text-center">Invoice</CardTitle>
         </CardHeader>
         <CardContent className="pt-6">
+          {isPastDue && (
+            <div className="flex items-center justify-center space-x-2 text-red-500 mb-4">
+              <AlertCircle className="h-5 w-5" />
+              <p className="text-sm font-medium">This invoice is past due</p>
+            </div>
+          )}
           <div className="flex flex-col lg:flex-row justify-between mb-8 gap-8">
             <div className="w-full lg:w-1/2">
               <h3 className="font-semibold text-lg mb-2">Seller:</h3>
@@ -59,7 +62,7 @@ const InvoiceContent = ({ invoiceData }: InvoiceContentProps) => {
             </div>
             <p>Currency: {contracts[chain_id as ValidChainId].tUSDCAddress}</p>
             <p>Stream Type: {streamType}</p>
-            <p>Due Date: {dueDate ? format(dueDate, 'PP') : 'Not set'}</p>
+            <p>Due Date: {dueDate ? format(new Date(dueDate), 'PP') : 'Not set'}</p>
           </div>
           
           <div className="overflow-x-auto">
@@ -91,7 +94,5 @@ const InvoiceContent = ({ invoiceData }: InvoiceContentProps) => {
         </CardContent>
       </Card>
     </div>
-  );
-};
-
-export default InvoiceContent;
+  )
+}

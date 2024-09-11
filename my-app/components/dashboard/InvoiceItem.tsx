@@ -8,6 +8,7 @@ import { chainInfo, ValidChainId } from '@/utils/multi-chain/MultiChainSelectOpt
 import StreamStatusDashboard from './StreamStatusDashboard';
 import PendingStatusDashboard from './PendingStatusDashboard';
 import supabaseUTCToLocalTime from '@/utils/time/supabaseUTCToLocalTime';
+import { cn } from "@/lib/utils";
 
 interface InvoiceItemProps {
   invoice: {
@@ -38,16 +39,21 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
   chainId,
   stream_id
 }) => {
-
   const [isStreaming, setIsStreaming] = useState(false);
   const updateStreamingStatus = (status: boolean) => {
     setIsStreaming(status);
   };
 
+  const isDueDatePast = new Date(invoice.due_date) < new Date();
+  const isDueDateDestructive = !stream_id && isDueDatePast;
 
   return (
     <TableRow key={invoice.id} className="hover:bg-gray-50">
-      <TableCell>{supabaseUTCToLocalTime(invoice.due_date)}</TableCell>
+      <TableCell className={cn(
+        isDueDateDestructive && "text-destructive font-semibold"
+      )}>
+        {supabaseUTCToLocalTime(invoice.due_date)}
+      </TableCell>
       <TableCell>
         <div className="flex items-center space-x-2">
           <span>{sliceAddress(invoice.payee_evm_address)}</span>
@@ -86,29 +92,26 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
         <Image src={chainInfo[chainId].logoUrl} alt="chain logo" width={24} height={24} className='flex justify-center' />
       </TableCell>
       <TableCell className="font-medium">{invoice.expected_amount} USD</TableCell>
-
       <TableCell>
-        {stream_id ? <StreamStatusDashboard stream_id={stream_id} chainId={chainId} setIsStreaming={updateStreamingStatus} /> : <PendingStatusDashboard />}
+        {stream_id ? <StreamStatusDashboard stream_id={stream_id} chainId={chainId} setIsStreaming={updateStreamingStatus} /> : <PendingStatusDashboard isDueDateDestructive={isDueDateDestructive} />}
       </TableCell>
       <TableCell>
         {
           isStreaming === true ?
           <Link href={`/invoice/${requestId}`}>
-          <Button  size="sm" className="flex items-center space-x-1">
-            <DollarSignIcon className="h-5 w-5" />
-            <span>View Stream</span>
-          </Button>
-        </Link>
-            :
-
-            <Link href={type === 'invoicesReceived' && !stream_id ? `/pay-invoice/${requestId}` : `/invoice/${requestId}`}>
-              <Button variant="outline" size="sm" className="flex items-center space-x-1">
-                <ExternalLink className="h-4 w-4" />
-                <span>View Invoice</span>
-              </Button>
-            </Link>
+            <Button size="sm" className="flex items-center space-x-1">
+              <DollarSignIcon className="h-5 w-5" />
+              <span>View Stream</span>
+            </Button>
+          </Link>
+          :
+          <Link href={type === 'invoicesReceived' && !stream_id ? `/pay-invoice/${requestId}` : `/invoice/${requestId}`}>
+            <Button variant="outline" size="sm" className="flex items-center space-x-1">
+              <ExternalLink className="h-4 w-4" />
+              <span>View Invoice</span>
+            </Button>
+          </Link>
         }
-
       </TableCell>
     </TableRow>
   );
