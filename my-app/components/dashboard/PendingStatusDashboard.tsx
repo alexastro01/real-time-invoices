@@ -1,10 +1,20 @@
 import React from 'react'
 
-const PendingStatusDashboard = () => {
 
+type PendingStatusDashboard = {
+  isDueDateDestructive: boolean;
+}
+
+const PendingStatusDashboard = ({
+  isDueDateDestructive
+}: PendingStatusDashboard) => {
+
+
+    const className = isDueDateDestructive ? 'font-medium text-red-400' : 'font-medium text-yellow-300'
+    const textMessage = isDueDateDestructive ? 'Expired' : 'Pending'
 
   return (
-    <p className='font-medium text-yellow-300'>Pending</p>
+    <p className={className}>{textMessage}</p>
   )
 }
 
