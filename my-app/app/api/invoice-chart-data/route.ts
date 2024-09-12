@@ -2,9 +2,9 @@
 
 import { authOptions } from '@/lib/auth';
 import { createAuthenticatedSupabaseClient } from '@/lib/createAuthenticatedSupabaseClient';
-import supabaseUTCToLocalTime from '@/utils/time/supabaseUTCToLocalTime';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
+import { parseISO, format } from 'date-fns';
 
 // Define the structure of an invoice from Supabase
 interface Invoice {
@@ -29,15 +29,15 @@ export async function GET(request: NextRequest) {
 
   const session = await getServerSession(authOptions);
 
-    //@ts-ignore
-    if(!session || !session.user?.address){
-      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
-    }
+  //@ts-ignore
+  if(!session || !session.user?.address){
+    return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+  }
 
   try {
     const startDate = new Date();
     startDate.setMonth(startDate.getMonth() - 3); // Get data for the last 3 months
-   const supabase = createAuthenticatedSupabaseClient(session);
+    const supabase = createAuthenticatedSupabaseClient(session);
     const { data, error } = await supabase
       .from('invoices')
       .select('due_date, expected_amount')
@@ -49,7 +49,8 @@ export async function GET(request: NextRequest) {
 
     // Process the data to aggregate by day
     const aggregatedData = (data as Invoice[]).reduce((acc: { [key: string]: AggregatedData }, invoice) => {
-      const date = supabaseUTCToLocalTime(invoice.due_date).split('T')[0]; // Get just the date part
+      const parsedDate = parseISO(invoice.due_date);
+      const date = format(parsedDate, 'yyyy-MM-dd'); // Format date as 'YYYY-MM-DD'
       if (!acc[date]) {
         acc[date] = { date, expectedAmount: 0, invoicesSent: 0 };
       }
