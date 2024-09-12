@@ -9,7 +9,8 @@ import StreamStatusDashboard from './StreamStatusDashboard';
 import PendingStatusDashboard from './PendingStatusDashboard';
 import supabaseUTCToLocalTime from '@/utils/time/supabaseUTCToLocalTime';
 import { cn } from "@/lib/utils";
-import { parseISO, isAfter, isValid } from 'date-fns';
+import { parseISO, format, isAfter, isValid } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
 
 interface InvoiceItemProps {
   invoice: {
@@ -46,23 +47,24 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
   };
 
   const parsedDueDate = parseISO(invoice.due_date);
-  const isDueDateValid = isValid(parsedDueDate);
-  const isDueDatePast = isDueDateValid && isAfter(new Date(), parsedDueDate);
+  const localDueDate = toZonedTime(parsedDueDate, Intl.DateTimeFormat().resolvedOptions().timeZone);
+  const isDueDateValid = isValid(localDueDate);
+  const isDueDatePast = isDueDateValid && isAfter(new Date(), localDueDate);
   const isDueDateDestructive = !stream_id && isDueDatePast;
 
   useEffect(() => {
     const currentDate = new Date();
     console.table({
       'invoice amount': invoice.expected_amount,
-      'Due Date (original)': invoice.due_date,
-      'Due Date (parsed)': parsedDueDate.toString(),
+      'Due Date (UTC)': invoice.due_date,
+      'Due Date (Local)': isDueDateValid ? format(localDueDate, 'yyyy-MM-dd HH:mm:ss') : 'Invalid Date',
       'Is Due Date Valid': isDueDateValid ? 'Yes' : 'No',
-      'Current Date': currentDate.toString(),
+      'Current Date': format(currentDate, 'yyyy-MM-dd HH:mm:ss'),
       'Current Date (ISO)': currentDate.toISOString(),
       'Is Past Due': isDueDatePast ? 'Yes' : 'No',
-      'Time Zone Offset': currentDate.getTimezoneOffset()
+      'Time Zone': Intl.DateTimeFormat().resolvedOptions().timeZone
     });
-  }, [invoice.due_date, invoice.expected_amount, isDueDatePast, parsedDueDate, isDueDateValid]);
+  }, [invoice.due_date, invoice.expected_amount, isDueDatePast, localDueDate, isDueDateValid]);
 
   return (
     <TableRow key={invoice.id} className="hover:bg-gray-50">

@@ -74,7 +74,7 @@ export async function GET(request: Request) {
       chain_id: invoice.chain_id,
       stream_id: invoice.stream_id,
       status: invoice.status,
-      due_date: new Date(invoice.due_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+      due_date: new Date(invoice.due_date).toISOString(), // Keep it as ISO string
     }));
 
     console.log(formattedData);
