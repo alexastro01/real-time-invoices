@@ -49,16 +49,19 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
 
 
   useEffect(() => {
-  console.table(
-    {
+    const currentDate = new Date();
+    const dueDate = new Date(invoice.due_date);
+    console.table({
       'invoice amount': invoice.expected_amount,
       'Due Date': invoice.due_date,
-      'New Date Object': new Date(invoice.due_date),
-      'Current Date': new Date().toString(),
-      'Is Past Due': isDueDatePast ? 'Yes' : 'No'
-    }
-  )
-  }, [])
+      'Due Date (ISO)': dueDate.toISOString(),
+      'New Date Object': dueDate.toString(),
+      'Current Date': currentDate.toString(),
+      'Current Date (ISO)': currentDate.toISOString(),
+      'Is Past Due': isDueDatePast ? 'Yes' : 'No',
+      'Time Zone Offset': currentDate.getTimezoneOffset()
+    });
+  }, [invoice.due_date, invoice.expected_amount, isDueDatePast]);
 
   return (
     <TableRow key={invoice.id} className="hover:bg-gray-50">
