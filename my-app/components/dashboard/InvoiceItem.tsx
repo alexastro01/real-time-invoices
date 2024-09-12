@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Copy, ExternalLink, Check, DollarSignIcon } from 'lucide-react';
@@ -46,6 +46,18 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
 
   const isDueDatePast = new Date(invoice.due_date) < new Date();
   const isDueDateDestructive = !stream_id && isDueDatePast;
+
+  useEffect(() => {
+  console.table(
+    {
+      'invoice amount': invoice.expected_amount,
+      'Due Date': invoice.due_date,
+      'New Date Object': new Date(invoice.due_date),
+      'Current Date': new Date().toString(),
+      'Is Past Due': isDueDatePast ? 'Yes' : 'No'
+    }
+  )
+  }, [])
 
   return (
     <TableRow key={invoice.id} className="hover:bg-gray-50">
