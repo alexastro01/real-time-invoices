@@ -9,6 +9,7 @@ import StreamStatusDashboard from './StreamStatusDashboard';
 import PendingStatusDashboard from './PendingStatusDashboard';
 import supabaseUTCToLocalTime from '@/utils/time/supabaseUTCToLocalTime';
 import { cn } from "@/lib/utils";
+import { parseISO, isAfter, isValid } from 'date-fns';
 
 interface InvoiceItemProps {
   invoice: {
@@ -44,24 +45,24 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
     setIsStreaming(status);
   };
 
-  const isDueDatePast = new Date(invoice.due_date) < new Date();
+  const parsedDueDate = parseISO(invoice.due_date);
+  const isDueDateValid = isValid(parsedDueDate);
+  const isDueDatePast = isDueDateValid && isAfter(new Date(), parsedDueDate);
   const isDueDateDestructive = !stream_id && isDueDatePast;
-
 
   useEffect(() => {
     const currentDate = new Date();
-    const dueDate = new Date(invoice.due_date);
     console.table({
       'invoice amount': invoice.expected_amount,
-      'Due Date': invoice.due_date,
-      'Due Date (ISO)': dueDate.toISOString(),
-      'New Date Object': dueDate.toString(),
+      'Due Date (original)': invoice.due_date,
+      'Due Date (parsed)': parsedDueDate.toString(),
+      'Is Due Date Valid': isDueDateValid ? 'Yes' : 'No',
       'Current Date': currentDate.toString(),
       'Current Date (ISO)': currentDate.toISOString(),
       'Is Past Due': isDueDatePast ? 'Yes' : 'No',
       'Time Zone Offset': currentDate.getTimezoneOffset()
     });
-  }, [invoice.due_date, invoice.expected_amount, isDueDatePast]);
+  }, [invoice.due_date, invoice.expected_amount, isDueDatePast, parsedDueDate, isDueDateValid]);
 
   return (
     <TableRow key={invoice.id} className="hover:bg-gray-50">
