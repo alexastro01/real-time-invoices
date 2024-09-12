@@ -47,6 +47,7 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
   const isDueDatePast = new Date(invoice.due_date) < new Date();
   const isDueDateDestructive = !stream_id && isDueDatePast;
 
+
   useEffect(() => {
   console.table(
     {
