@@ -49,8 +49,7 @@ export async function GET(request: NextRequest) {
 
     // Process the data to aggregate by day
     const aggregatedData = (data as Invoice[]).reduce((acc: { [key: string]: AggregatedData }, invoice) => {
-      const parsedDate = parseISO(invoice.due_date);
-      const date = format(parsedDate, 'yyyy-MM-dd'); // Format date as 'YYYY-MM-DD'
+      const date = invoice.due_date; // Use the UTC date string directly
       if (!acc[date]) {
         acc[date] = { date, expectedAmount: 0, invoicesSent: 0 };
       }
@@ -63,6 +62,9 @@ export async function GET(request: NextRequest) {
     const chartData = Object.values(aggregatedData).sort((a, b) => 
       new Date(a.date).getTime() - new Date(b.date).getTime()
     );
+
+    console.log('Chart Data');
+    console.log(chartData);
 
     return NextResponse.json(chartData);
   } catch (error) {

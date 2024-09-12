@@ -20,6 +20,7 @@ import {
 import { InvoiceChartSkeleton } from "./InvoiceChartSkeleton"
 import supabaseUTCToLocalTime from "@/utils/time/supabaseUTCToLocalTime"
 import { useToast } from "../ui/use-toast"
+import { convertChartDataToLocalTime } from "@/utils/time/convertChartDataToLocalTime"
 
 export const description = "Summary"
 
@@ -58,10 +59,10 @@ export function InvoiceChart() {
         const response = await fetch(`/api/invoice-chart-data?user_address=${address}`)
         if (!response.ok) throw new Error('Failed to fetch data')
         const data = await response.json()
-
+        const localTimeData = convertChartDataToLocalTime(data)
         console.log('----DATA FOR CHART---')
-      console.log(data)
-        setChartData(data)
+        console.log(localTimeData)
+        setChartData(localTimeData)
       } catch (err: any) {
         setError('Error fetching chart data')
         toast({
