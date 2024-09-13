@@ -5,10 +5,11 @@ import { toast } from "@/components/ui/use-toast";
 import ViewInvoiceDialog from './ViewInvoiceDialog';
 import { IInvoiceData } from '@/types/interfaces';
 import { AlertCircle } from 'lucide-react';
+import ResendInvoice from '../dashboard/ResendInvoice';
 
 interface NotPaidInvoiceProps {
   requestId: string;
-  invoiceData: IInvoiceData
+  invoiceData: IInvoiceData;
 }
 
 const NotPaidInvoice: React.FC<NotPaidInvoiceProps> = ({ requestId, invoiceData }) => {
@@ -35,6 +36,7 @@ const NotPaidInvoice: React.FC<NotPaidInvoiceProps> = ({ requestId, invoiceData 
 
   const isPastDue = new Date(invoiceData.paymentDetails.dueDate) < new Date()
 
+
   return (
     <div className="flex items-center justify-center min-h-screen">
       <Card className="w-full max-w-md">
@@ -57,7 +59,11 @@ const NotPaidInvoice: React.FC<NotPaidInvoiceProps> = ({ requestId, invoiceData 
           >
             {isCopied ? "Link Copied!" : "Share invoice to payer"}
           </Button>
+      
           <ViewInvoiceDialog invoiceData={invoiceData} />
+          {isPastDue && (
+            <ResendInvoice invoiceData={invoiceData} />
+          )}
         </CardFooter>
       </Card>
     </div>
