@@ -71,8 +71,8 @@ const TokenDisplay: React.FC<TokenDisplayProps> = ({
     return paddedInteger.split('').map((digit, index) => (
       <span key={index} className={
         index < paddedInteger.length - integerPart.length
-          ? "text-gray-400"
-          : "text-gray-800"
+          ? "text-gray-400 dark:text-gray-500"
+          : "text-gray-800 dark:text-gray-200"
       }>
         {digit}
       </span>
@@ -82,48 +82,49 @@ const TokenDisplay: React.FC<TokenDisplayProps> = ({
   return (
     <div className="flex flex-col items-center justify-center space-y-8 p-8 rounded-2xl shadow-lg
                     bg-gradient-to-br from-white via-gray-100 to-gray-100
-                    border border-gray-200
+                    dark:from-gray-800 dark:via-gray-900 dark:to-gray-900
+                    border border-gray-200 dark:border-gray-700
                     transition-all duration-300 ease-in-out
                     hover:shadow-xl hover:scale-105">
       {/* Big beautiful number */}
-      <div className="text-5xl lg:text-7xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-zinc-600">
+      <div className="text-5xl lg:text-7xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-zinc-600 dark:from-gray-300 dark:to-zinc-300">
         {renderIntegerPart()}.
         <span className="text-2xl lg:text-4xl">{decimalPart}</span>
       </div>
       
       <div className="w-full max-w-md space-y-6">
         {/* Amount Streamed Progress Bar */}
-        <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
           <div className="flex justify-between mb-2">
-            <span className="text-sm font-semibold text-gray-700">Amount Streamed</span>
-            <span className="text-sm font-bold text-yellow-600">{streamedPercentage.toFixed(2)}%</span>
+            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Amount Streamed</span>
+            <span className="text-sm font-bold text-yellow-600 dark:text-yellow-400">{streamedPercentage.toFixed(2)}%</span>
           </div>
-          <Progress value={streamedPercentage} className="h-3 bg-yellow-100 rounded-full" 
-                    indicatorClassName="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full" />
-      <div className="mt-2 text-xs text-gray-500 text-right">
-  {wasCanceled ? displayValueCanceled.toFixed(4) : displayValue.toFixed(4)} / {maxValue} {tokenSymbol}
-</div>
+          <Progress value={streamedPercentage} className="h-3 bg-yellow-100 dark:bg-yellow-900 rounded-full" 
+                    indicatorClassName="bg-gradient-to-r from-yellow-400 to-yellow-600 dark:from-yellow-500 dark:to-yellow-700 rounded-full" />
+          <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 text-right">
+            {wasCanceled ? displayValueCanceled.toFixed(4) : displayValue.toFixed(4)} / {maxValue} {tokenSymbol}
+          </div>
         </div>
 
         {/* Amount Withdrawn Progress Bar */}
-        <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
           <div className="flex justify-between mb-2">
-            <span className="text-sm font-semibold text-gray-700">Amount Withdrawn</span>
-            <span className="text-sm font-bold text-green-600">{withdrawnPercentage.toFixed(2)}%</span>
+            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Amount Withdrawn</span>
+            <span className="text-sm font-bold text-green-600 dark:text-green-400">{withdrawnPercentage.toFixed(2)}%</span>
           </div>
-          <Progress value={withdrawnPercentage} className="h-3 bg-green-100 rounded-full" 
-                    indicatorClassName="bg-gradient-to-r from-green-400 to-green-600 rounded-full" />
-          <div className="mt-2 text-xs text-gray-500 text-right">
+          <Progress value={withdrawnPercentage} className="h-3 bg-green-100 dark:bg-green-900 rounded-full" 
+                    indicatorClassName="bg-gradient-to-r from-green-400 to-green-600 dark:from-green-500 dark:to-green-700 rounded-full" />
+          <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 text-right">
             {withdrawnAmount.toFixed(4)} / {maxValue} {tokenSymbol}
           </div>
         </div>
       </div>
 
       {/* Label */}
-      <div className="text-center text-gray-600 font-medium">
+      <div className="text-center text-gray-600 dark:text-gray-400 font-medium">
   
         {wasCanceled && (
-          <div className="text-red-500 mt-2">
+          <div className="text-red-500 dark:text-red-400 mt-2">
             Stream Canceled
             <div className="text-sm">
               Refunded: {Number(formatEther(refundedAmount)).toFixed(4)} {tokenSymbol}
