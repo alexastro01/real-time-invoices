@@ -4,7 +4,7 @@ import React from 'react';
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Link from "next/link";
-import { LayoutDashboard, UserCircle, FileText, DollarSign, Menu, MessageCircle } from "lucide-react";
+import { LayoutDashboard, UserCircle, FileText, DollarSign, Menu, MessageCircle, ChevronDown, Share2, Monitor } from "lucide-react";
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { useAccount } from 'wagmi';
@@ -15,36 +15,27 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import LoginButton from "./edu-connect/LoginButton";
 import UserProfileCard from "./edu-connect/UserProfileEdu";
 import { TwitterLogoIcon } from '@radix-ui/react-icons';
-
-
-
-
-const chainIdToStablecoinLink: { [key: number]: string } = {
-  //Morph holesky
-  2810: "https://testnet.bulbaswap.io/swap", // Morph holesky
-  //Arbitrum sepolia
-  421614: "/mint-tusdc", // Mint arbitrum sepolia tusdc
-  //Base sepolia
-  84532: "/mint-tusdc", // Mint base sepolia tusdc
-  //Edu chain
-  656476: "/mint-tusdc", // Mint edu chain tusdc
-};
-
+import { ModeToggle } from './dashboard/ThemeToggle';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Navbar() {
-
-
-  const {chainId} = useAccount();
 
   const navItems = [
     { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { href: "/create-invoice", icon: FileText, label: "Create Invoice" },
     { href: "/profile", icon: UserCircle, label: "Profile" },
     { href: '/mint-tusdc', icon: DollarSign, label: "Get test stablecoin" },
+  ];
+
+  const socialItems = [
     { href: 'https://t.me/streambill', icon: MessageCircle, label: "Join Telegram"},
     { href: 'https://x.com/intent/user?screen_name=streambillxyz', icon: TwitterLogoIcon, label: "Join X"},
   ];
-
 
   const pathname = usePathname();
   const { authState: eduConnectAuthState, ocAuth } = useOCAuth();
@@ -83,7 +74,7 @@ export default function Navbar() {
   const NavContent = () => (
     <>
       <Link href="/" className="flex items-center mb-6">
-        <Image src="/logo_cropped.png" width={48} height={48} alt="Stream Bill logo"/>
+        <Image src="/logo_cropped.png" width={48} height={48} alt="Stream Bill logo" className='dark:invert rounded-full'/>
         <span className="ml-2 font-semibold">StreamBill<span className="text-gray-400 text-xs ml-1">testnet</span></span>
       </Link>
       <nav className="lg:flex-1">
@@ -102,6 +93,39 @@ export default function Navbar() {
               </Link>
             </li>
           ))}
+          <li>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex w-full items-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50">
+                <Share2 className="mr-2 h-4 w-4" />
+                Socials
+                <ChevronDown className="ml-auto h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {socialItems.map((item) => (
+                  <DropdownMenuItem key={item.label}>
+                    <Link href={item.href} className="flex items-center w-full">
+                      <item.icon className="mr-2 h-4 w-4" />
+                      {item.label}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </li>
+          <li>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex w-full items-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50">
+                <Monitor className="mr-2 h-4 w-4" />
+                Display
+                <ChevronDown className="ml-auto h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  <ModeToggle />
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </li>
         </ul>
       </nav>
       <div className="mt-auto space-y-4">

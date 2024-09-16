@@ -3,7 +3,7 @@ import { TableCell, TableRow } from "@/components/ui/table"
 
 export function InvoiceItemSkeleton() {
   return (
-    <TableRow className="hover:bg-gray-50">
+    <TableRow className="hover:bg-primary-foreground">
       <TableCell>
         <Skeleton className="h-4 w-24" /> {/* Date */}
       </TableCell>
