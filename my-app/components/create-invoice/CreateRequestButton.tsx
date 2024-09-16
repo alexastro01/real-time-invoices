@@ -152,7 +152,7 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
 
   return (
     <>
-      <ShimmerButton onClick={handleClick} className=" mt-0" disabled={loading}>
+      <ShimmerButton onClick={handleClick} className=" mt-0" disabled={loading} >
         {loading ? "Loading..." : "Create Invoice"}
       </ShimmerButton>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

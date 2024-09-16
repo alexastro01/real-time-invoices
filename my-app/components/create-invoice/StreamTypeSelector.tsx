@@ -25,7 +25,7 @@ export function StreamTypeSelector({ setStep, streamType, updateStreamType }: St
 
   const LinearStreamSVG = () => (
     <svg width="100%" height="100" viewBox="0 0 200 100" preserveAspectRatio="none">
-      <line x1="0" y1="100" x2="200" y2="0" stroke="green" strokeWidth="3" />
+      <line x1="0" y1="100" x2="200" y2="0" stroke="currentColor" strokeWidth="3" />
     </svg>
   );
 
@@ -40,41 +40,41 @@ export function StreamTypeSelector({ setStep, streamType, updateStreamType }: St
         <CardContent>
           <RadioGroup value={streamType} onValueChange={(value) => updateStreamType(value as StreamType)}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <Card className={`cursor-pointer bg-white ${streamType === "linear" ? "border-gray-500" : ""}`}>
+              <Card className={`cursor-pointer bg-muted ${streamType === "linear" ? "border-primary" : "border-transparent"}`}>
                 <CardHeader>
-                  <CardTitle className="text-white">Linear Stream</CardTitle>
+                  <CardTitle className="text-primary">Linear Stream</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-24">
+                  <div className="h-24 text-primary">
                     <LinearStreamSVG />
                   </div>
-                  <CardDescription className="text-gray-400 mt-4">
+                  <CardDescription className="text-muted-foreground mt-4">
                     Distribute assets at a constant rate/second
                   </CardDescription>
                   <RadioGroupItem value="linear" className="sr-only" />
                 </CardContent>
                 <CardFooter>
-                  <Button variant="secondary" className="w-full">
-                    Picked
+                  <Button variant="default" className="w-full">
+                    {streamType === "linear" ? "Picked" : "Select"}
                   </Button>
                 </CardFooter>
               </Card>
 
-              <Card className={`cursor-pointer ${streamType === "monthly" ? "border-primary" : "opacity-50"}`}>
+              <Card className={`cursor-pointer ${streamType === "monthly" ? "border-primary" : "border-transparent opacity-50"}`}>
                 <CardHeader>
-                  <CardTitle>Monthly Unlocks</CardTitle>
+                  <CardTitle className="text-primary-foreground">Monthly Unlocks</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-24 flex items-end">
+                  <div className="h-24 flex items-end text-primary">
                     <div className="w-1/4 bg-primary h-4 mr-1"></div>
                     <div className="w-1/4 bg-primary h-8 mr-1"></div>
                     <div className="w-1/4 bg-primary h-12 mr-1"></div>
                     <div className="w-1/4 bg-primary h-16"></div>
                   </div>
-                  <CardDescription className="mt-2">
+                  <CardDescription className="mt-2 text-muted-foreground">
                     Unlock assets on the same day every month
                   </CardDescription>
-                  <p className="text-gray-900 font-semibold mt-2 text-4xl">Coming soon...</p>
+                  <p className="text-muted-foreground font-semibold mt-2 text-4xl">Coming soon...</p>
                   <RadioGroupItem value="monthly" className="sr-only" />
                 </CardContent>
               </Card>

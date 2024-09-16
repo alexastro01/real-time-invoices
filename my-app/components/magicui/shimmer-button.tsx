@@ -1,5 +1,4 @@
 import React, { CSSProperties } from "react";
-
 import { cn } from "@/lib/utils";
 
 export interface ShimmerButtonProps
@@ -8,7 +7,6 @@ export interface ShimmerButtonProps
   shimmerSize?: string;
   borderRadius?: string;
   shimmerDuration?: string;
-  background?: string;
   className?: string;
   children?: React.ReactNode;
 }
@@ -20,7 +18,6 @@ const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonProps>(
       shimmerSize = "0.05em",
       shimmerDuration = "3s",
       borderRadius = "100px",
-      background = "rgba(0, 0, 0, 1)",
       className,
       children,
       ...props
@@ -36,12 +33,15 @@ const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonProps>(
             "--radius": borderRadius,
             "--speed": shimmerDuration,
             "--cut": shimmerSize,
-            "--bg": background,
           } as CSSProperties
         }
         className={cn(
-          "group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap border border-white/10 px-6 py-3 text-white [background:var(--bg)] [border-radius:var(--radius)] dark:text-black",
+          "group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap border px-6 py-3",
           "transform-gpu transition-transform duration-300 ease-in-out active:translate-y-[1px]",
+          "text-white dark:text-black",
+          "border-white/10 dark:border-black/10",
+          "bg-black dark:bg-white",
+          "[border-radius:var(--radius)]",
           className,
         )}
         ref={ref}
@@ -66,24 +66,21 @@ const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonProps>(
         <div
           className={cn(
             "insert-0 absolute h-full w-full",
-
-            "rounded-2xl px-4 py-1.5 text-sm font-medium shadow-[inset_0_-8px_10px_#ffffff1f]",
-
+            "rounded-2xl px-4 py-1.5 text-sm font-medium",
+            "shadow-[inset_0_-8px_10px_#ffffff1f] dark:shadow-[inset_0_-8px_10px_#0000001f]",
             // transition
             "transform-gpu transition-all duration-300 ease-in-out",
-
             // on hover
-            "group-hover:shadow-[inset_0_-6px_10px_#ffffff3f]",
-
+            "group-hover:shadow-[inset_0_-6px_10px_#ffffff3f] dark:group-hover:shadow-[inset_0_-6px_10px_#0000003f]",
             // on click
-            "group-active:shadow-[inset_0_-10px_10px_#ffffff3f]",
+            "group-active:shadow-[inset_0_-10px_10px_#ffffff3f] dark:group-active:shadow-[inset_0_-10px_10px_#0000003f]",
           )}
         />
 
         {/* backdrop */}
         <div
           className={cn(
-            "absolute -z-20 [background:var(--bg)] [border-radius:var(--radius)] [inset:var(--cut)]",
+            "absolute -z-20 bg-black dark:bg-white [border-radius:var(--radius)] [inset:var(--cut)]",
           )}
         />
       </button>
