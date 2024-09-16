@@ -15,7 +15,8 @@ const RequestConfirmed = ({
 ) => {
   return (
     <NeonGradientCard className="max-w-sm items-center justify-center text-center">
-      <span className="pointer-events-none z-10 h-full whitespace-pre-wrap bg-gradient-to-br from-[#6fd3a1] from-35% to-[#00FFF1] bg-clip-text text-center text-6xl font-bold leading-none tracking-tighter text-transparent dark:drop-shadow-[0_5px_5px_rgba(111,211,161,0.8)]">
+
+      <span className="pointer-events-none z-10 h-full whitespace-pre-wrap bg-gradient-to-br from-[#77d36f] from-35% to-[#00ff37] bg-clip-text text-center text-6xl font-bold leading-none tracking-tighter text-transparent dark:drop-shadow-[0_2px_4px_rgba(111,211,161,0.4)]">
         Request Confirmed
       </span>
 

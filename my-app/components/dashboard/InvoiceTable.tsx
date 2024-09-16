@@ -127,7 +127,7 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
     return (
       <Table>
         <TableHeader>
-          <TableRow className="bg-gray-100">
+          <TableRow className="bg-primary-foreground">
             <TableHead className="font-semibold">Due Date</TableHead>
             <TableHead className="font-semibold">Payee</TableHead>
             <TableHead className="font-semibold">Payer</TableHead>

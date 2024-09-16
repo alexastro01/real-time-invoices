@@ -67,7 +67,7 @@ export const InvoiceItem: React.FC<InvoiceItemProps> = ({
   }, [invoice.due_date, invoice.expected_amount, isDueDatePast, localDueDate, isDueDateValid]);
 
   return (
-    <TableRow key={invoice.id} className="hover:bg-gray-50">
+    <TableRow key={invoice.id} className="hover:bg-primary-foreground">
       <TableCell className={cn(
         isDueDateDestructive && "text-destructive font-semibold"
       )}>
