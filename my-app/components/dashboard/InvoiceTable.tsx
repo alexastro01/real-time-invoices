@@ -5,6 +5,7 @@ import { InvoiceItem } from './InvoiceItem';
 import { InvoiceItemSkeleton } from './InvoiceItemSkeleton';
 import { ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions';
 import { useToast } from '../ui/use-toast';
+import { ChevronDown } from 'lucide-react'; // Add this import
 
 type InvoiceTableProps = {
     type: string;
@@ -28,6 +29,7 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
     const {address, chainId} = useAccount();
 
@@ -102,6 +104,16 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
       setTimeout(() => setCopiedAddress(null), 2000);
     }, []);
 
+    const handleSort = () => {
+        const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+        setSortOrder(newSortOrder);
+        setInvoices(prevInvoices => [...prevInvoices].sort((a, b) => {
+            const dateA = new Date(a.due_date).getTime();
+            const dateB = new Date(b.due_date).getTime();
+            return newSortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+        }));
+    };
+
     const renderTableContent = () => {
       if (loading) {
         return Array(5).fill(null).map((_, index) => (
@@ -128,7 +140,10 @@ const InvoiceTable = ({ type }: InvoiceTableProps) => {
       <Table>
         <TableHeader>
           <TableRow className="bg-primary-foreground">
-            <TableHead className="font-semibold">Due Date</TableHead>
+            <TableHead className="font-semibold cursor-pointer" onClick={handleSort}>
+              Due Date
+              <ChevronDown className={`inline-block ml-1 h-4 w-4 transition-transform ${sortOrder === 'desc' ? 'transform rotate-180' : ''}`} />
+            </TableHead>
             <TableHead className="font-semibold">Payee</TableHead>
             <TableHead className="font-semibold">Payer</TableHead>
             <TableHead className="font-semibold">Chain</TableHead>
