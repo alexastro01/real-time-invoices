@@ -1,16 +1,18 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Clock } from "lucide-react"
+import { Clock, DollarSign } from "lucide-react"
 import Link from "next/link"
 import Gig from "./Gig"
+import AddGigCard from "./AddGigCard"
+
 
 interface Gig {
   title: string
   description: string
   link: string
-  deliveryTime: string,
-  price: number,
+  deliveryTime: string
+  price: number
 }
 
 interface GigsProps {
@@ -40,7 +42,6 @@ export default function Gigs({
       price: 500,
     },
     { 
-
       title: "Smart Contract Development", 
       description: "Develop secure and efficient smart contracts for blockchain applications.",
       link: "https://example.com/smart-contracts",
@@ -68,14 +69,22 @@ export default function Gigs({
         </CardContent>
       </Card>
 
-
       <h3 className="text-2xl font-semibold mb-4">Gigs</h3>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
         {gigs.map((gig, index) => (
-          <Gig key={index} id={index} title={gig.title} description={gig.description} deliveryTime={gig.deliveryTime} link={gig.link} price={gig.price} viewGig={true}  />
+          <Gig 
+            key={index} 
+            id={index} 
+            title={gig.title} 
+            description={gig.description} 
+            deliveryTime={gig.deliveryTime} 
+            link={gig.link} 
+            price={gig.price} 
+            viewGig={true}  
+          />
         ))}
+        <AddGigCard /> {/* Add the AddGigCard as the last element */}
       </div>
-
     </div>
   )
 }

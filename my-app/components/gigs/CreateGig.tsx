@@ -1,9 +1,12 @@
+'use client'
 import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Button } from '../ui/button'
+
 import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 
 interface CreateGigProps {
   // Define any props if needed
@@ -86,25 +89,23 @@ const CreateGig: React.FC<CreateGigProps> = () => {
             </div>
             <div>
               <label className="block text-sm font-medium">Delivery Time</label>
-              <Input
-                type="text"
-                value={deliveryTime}
-                onChange={(e) => setDeliveryTime(e.target.value)}
-                required
-                placeholder="e.g., 3 days"
-              />
+              <Select value={deliveryTime} onValueChange={setDeliveryTime}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select number of days" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">1 day</SelectItem>
+                  <SelectItem value="3">3 days</SelectItem>
+                  <SelectItem value="5">5 days</SelectItem>
+                  <SelectItem value="7">7 days</SelectItem>
+                  <SelectItem value="14">14 days</SelectItem>
+                  <SelectItem value="30">30 days</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
+        
             <div>
-              <label className="block text-sm font-medium">Link</label>
-              <Input
-                type="url"
-                value={link}
-                onChange={(e) => setLink(e.target.value)}
-                placeholder="https://example.com"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Price (ETH)</label>
+              <label className="block text-sm font-medium">Price (USDC)</label>
               <Input
                 type="number"
                 min="0"
@@ -112,7 +113,7 @@ const CreateGig: React.FC<CreateGigProps> = () => {
                 value={price}
                 onChange={(e) => setPrice(e.target.value === '' ? '' : Number(e.target.value))}
                 required
-                placeholder="0.00"
+                placeholder="100"
               />
             </div>
           </div>
