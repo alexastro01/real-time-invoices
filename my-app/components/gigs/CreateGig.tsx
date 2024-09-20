@@ -8,6 +8,9 @@ import { Textarea } from '../ui/textarea'
 import { useRouter } from 'next/navigation'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 
+import { ValidChainId } from '../../utils/multi-chain/MultiChainSelectOptions';
+import ChainSelector from '../helpers/ChainSelector'
+
 interface CreateGigProps {
   // Define any props if needed
 }
@@ -18,13 +21,13 @@ const CreateGig: React.FC<CreateGigProps> = () => {
   const [deliveryTime, setDeliveryTime] = useState('')
   const [link, setLink] = useState('')
   const [price, setPrice] = useState<number | ''>('')
+  const [selectedChain, setSelectedChain] = useState<ValidChainId | null>(null);
+
   const router = useRouter()
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
+  const handleCreateGig = async () => {
     // Validate inputs
-    if (!title || !description || !deliveryTime || !price) {
+    if (!title || !description || !deliveryTime || !price || selectedChain === null) {
       alert('Please fill in all required fields.')
       return
     }
@@ -35,6 +38,7 @@ const CreateGig: React.FC<CreateGigProps> = () => {
       deliveryTime,
       link,
       price: Number(price),
+      chain: selectedChain,
     }
 
     try {
@@ -60,8 +64,8 @@ const CreateGig: React.FC<CreateGigProps> = () => {
   }
 
   return (
-    <Card className="max-w-lg mx-auto">
-      <form onSubmit={handleSubmit}>
+    <div className="flex items-center justify-center min-h-screen">
+      <Card className="max-w-lg w-full">
         <CardHeader>
           <CardTitle>Create a New Gig</CardTitle>
           <CardDescription>Fill in the details of your gig below.</CardDescription>
@@ -116,15 +120,16 @@ const CreateGig: React.FC<CreateGigProps> = () => {
                 placeholder="100"
               />
             </div>
+            <ChainSelector onSelectionChange={setSelectedChain} />
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full">
+          <Button onClick={handleCreateGig} className="w-full">
             Create Gig
           </Button>
         </CardFooter>
-      </form>
-    </Card>
+      </Card>
+    </div>
   )
 }
 

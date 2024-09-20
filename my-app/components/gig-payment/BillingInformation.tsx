@@ -5,14 +5,17 @@ import { Button } from '../ui/button';
 import { useAccount } from 'wagmi';
 
 
+
 interface UserDetails {
+  evmAddress: string;
   name: string;
   email: string;
-  address?: string;
-  city?: string;
-  stateProvince?: string;
-  zipPostalCode?: string;
-  country?: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+  created_at: string;
 }
 
 const BillingInformation = () => {
@@ -23,22 +26,26 @@ const BillingInformation = () => {
 
   useEffect(() => {
     const fetchUserDetails = async () => {
+        if(address){
       try {
-        const response = await fetch(`/api/get-user-details?address=${address}`); // Replace with actual address
+        const response = await fetch(`/api/get-user-details?address=${address}`);
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
-        const data: UserDetails = await response.json();
-        setUserDetails(data);
+        const data = await response.json();
+        setUserDetails(data as UserDetails);
+        console.log('User details:', data);
       } catch (err: any) {
         setError(err.message || 'An unexpected error occurred');
+        console.error('Error fetching user details:', err);
       } finally {
         setLoading(false);
       }
     };
+}
 
     fetchUserDetails();
-  }, []);
+  }, [address]);
 
   if (loading) {
     return <Card className="w-full mb-6"><CardContent>Loading...</CardContent></Card>;
@@ -63,36 +70,26 @@ const BillingInformation = () => {
           <span className="font-semibold">Email:</span>
           <span>{userDetails?.email || 'No email provided'}</span>
         </div>
-        {userDetails?.address && (
-          <div className="flex justify-between">
-            <span className="font-semibold">Address:</span>
-            <span>{userDetails.address}</span>
-          </div>
-        )}
-        {userDetails?.city && (
-          <div className="flex justify-between">
-            <span className="font-semibold">City:</span>
-            <span>{userDetails.city}</span>
-          </div>
-        )}
-        {userDetails?.stateProvince && (
-          <div className="flex justify-between">
-            <span className="font-semibold">State/Province:</span>
-            <span>{userDetails.stateProvince}</span>
-          </div>
-        )}
-        {userDetails?.zipPostalCode && (
-          <div className="flex justify-between">
-            <span className="font-semibold">Zip/Postal Code:</span>
-            <span>{userDetails.zipPostalCode}</span>
-          </div>
-        )}
-        {userDetails?.country && (
-          <div className="flex justify-between">
-            <span className="font-semibold">Country:</span>
-            <span>{userDetails.country}</span>
-          </div>
-        )}
+        <div className="flex justify-between">
+          <span className="font-semibold">Address:</span>
+          <span>{userDetails?.address || 'No address provided'}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="font-semibold">City:</span>
+          <span>{userDetails?.city || 'No city provided'}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="font-semibold">State:</span>
+          <span>{userDetails?.state || 'No state provided'}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="font-semibold">Zip/Postal Code:</span>
+          <span>{userDetails?.zip || 'No zip code provided'}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="font-semibold">Country:</span>
+          <span>{userDetails?.country || 'No country provided'}</span>
+        </div>
       </CardContent>
  
     </Card>
