@@ -28,7 +28,7 @@ export default function Gigs({
     { 
       title: "Web Development", 
       description: "Full-stack web development using modern technologies.",
-      link: "https://example.com/web-dev",
+      link: "/gig-payment/1",
       deliveryTime: "2 weeks",
       price: 1000,
     },
@@ -72,7 +72,7 @@ export default function Gigs({
       <h3 className="text-2xl font-semibold mb-4">Gigs</h3>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
         {gigs.map((gig, index) => (
-          <Gig key={index} id={index} title={gig.title} description={gig.description} deliveryTime={gig.deliveryTime} link={gig.link} price={gig.price} />
+          <Gig key={index} id={index} title={gig.title} description={gig.description} deliveryTime={gig.deliveryTime} link={gig.link} price={gig.price} viewGig={true}  />
         ))}
       </div>
 
