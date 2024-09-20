@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 
 import { Label } from "@/components/ui/label"
 import { Button } from '../ui/button'
@@ -19,13 +20,13 @@ interface PaymentInformationProps {
 }
 
 const PaymentInformation: React.FC<PaymentInformationProps> = ({ gigPrice, recipientAddress, duration }) => {
-  // Remove the useState for selectedChain
   const morphHoleskyChainId: ValidChainId = 2810;
   const morphHoleskyInfo = chainInfo[morphHoleskyChainId];
+  const [note, setNote] = useState('');
 
   const handlePayment = () => {
     // Implement payment logic here
-    console.log("Payment Confirmed", morphHoleskyChainId)
+    console.log("Payment Confirmed", morphHoleskyChainId, "Note:", note)
   }
 
   return (
@@ -61,6 +62,16 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({ gigPrice, recip
             />
             <span>{morphHoleskyInfo.name}</span>
           </div>
+        </div>
+        <div>
+          <Label htmlFor="note">Leave a note (requirements, specifics, contact details)</Label>
+          <Textarea 
+            id="note" 
+            placeholder="Enter any additional requirements or specifics about the payment..."
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            className="mt-1"
+          />
         </div>
       </CardContent>
       <CardContent className="text-sm text-gray-500">
