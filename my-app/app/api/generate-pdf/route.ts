@@ -14,65 +14,85 @@ export async function POST(req: NextRequest) {
   const chunks: Buffer[] = [];
   doc.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
 
-  // Define colors for light mode
+  // Define colors for a more professional look
   const backgroundColor = '#ffffff';
   const textColor = '#333333';
-  const warningColor = '#ff6b6b';
-  const borderColor = '#cccccc';
+  const accentColor = '#00b496';
+  const warningColor = '#e74c3c';
+  const borderColor = '#e0e0e0';
 
   // Set background color
   doc.rect(0, 0, doc.page.width, doc.page.height).fill(backgroundColor);
 
-  // Add title
-  doc.fontSize(28)
-     .fillColor(textColor)
-     .text('Invoice', 50, 50, { align: 'center' });
+  // Add a header with a colored bar
+  doc.rect(0, 0, doc.page.width, 15).fill(accentColor);
 
-  // Add warning if past due
+  // Add title with a more professional font and styling
+  doc.font('Helvetica-Bold')
+     .fontSize(28)
+     .fillColor(textColor)
+     .text('INVOICE', 50, 50, { align: 'center' });
+
+  // Add invoice number and date
+  doc.fontSize(10)
+     .font('Helvetica')
+     .text(`Date: ${formatDate(new Date().getTime())}`, 50, 105, { align: 'right' });
+
+  // Add warning if past due with improved styling
   const currentDate = new Date();
   const dueDate = new Date(invoiceData.paymentDetails.dueDate);
   if (currentDate > dueDate) {
     doc.fontSize(12)
+       .font('Helvetica-Bold')
        .fillColor(warningColor)
-       .text('This invoice is past due', 50, 90, { align: 'center' });
+       .text('PAST DUE', 50, 130, { align: 'center' })
+       .rect(200, 125, 200, 25).stroke(warningColor);
   }
 
-  // Add seller and client information
-  doc.fontSize(14)
+  // Add seller and client information with improved layout
+  doc.font('Helvetica-Bold')
+     .fontSize(14)
      .fillColor(textColor);
-  const infoY = 130;
-  addInformation(doc, 'Seller:', invoiceData.partiesDetails.seller, invoiceData.paymentDetails.payeeAddress, 50, infoY);
-  addInformation(doc, 'Client:', invoiceData.partiesDetails.client, invoiceData.paymentDetails.payerAddress, 300, infoY);
+  const infoY = 160;
+  addInformation(doc, 'From:', invoiceData.partiesDetails.seller, invoiceData.paymentDetails.payeeAddress, 50, infoY);
+  addInformation(doc, 'To:', invoiceData.partiesDetails.client, invoiceData.paymentDetails.payerAddress, 300, infoY);
   
-  // Add border around seller and client information
-  doc.rect(40, infoY - 10, 515, 200).stroke(borderColor);
+  // Add subtle border around seller and client information
+  doc.rect(40, infoY - 10, 515, 200).lineWidth(0.5).stroke(borderColor);
 
-  // Add payment details
-  const paymentY = 350;
+  // Add payment details with improved styling
+  const paymentY = 380;
   doc.fontSize(16)
-     .text('Payment Details:', 50, paymentY);
+     .font('Helvetica-Bold')
+     .text('Payment Details', 50, paymentY);
   
-  doc.fontSize(12);
-  addDetailRow(doc, 'Chain:', chainInfo[invoiceData.paymentDetails.chain as ValidChainId].name, 50, paymentY + 30);
-  addDetailRow(doc, 'Currency:', invoiceData.paymentDetails.currency, 50, paymentY + 50);
-  addDetailRow(doc, 'Stream Type:', invoiceData.paymentDetails.streamType, 50, paymentY + 70);
-  addDetailRow(doc, 'Due Date:', formatDate(invoiceData.paymentDetails.dueDate as any), 50, paymentY + 90);
+  doc.fontSize(10)
+     .font('Helvetica');
+  addDetailRow(doc, 'Chain:', chainInfo[invoiceData.paymentDetails.chain as ValidChainId].name, 50, paymentY + 25);
+  addDetailRow(doc, 'Currency:', invoiceData.paymentDetails.currency, 50, paymentY + 45);
+  addDetailRow(doc, 'Stream Type:', invoiceData.paymentDetails.streamType, 50, paymentY + 65);
+  addDetailRow(doc, 'Due Date:', formatDate(invoiceData.paymentDetails.dueDate as any), 50, paymentY + 85);
 
-  // Add border around payment details
-  doc.rect(40, paymentY - 10, 515, 130).stroke(borderColor);
+  // Add subtle border around payment details
+  doc.rect(40, paymentY - 10, 515, 120).lineWidth(0.5).stroke(borderColor);
 
-  // Add invoice items
-  const itemsY = 500;
+  // Add invoice items with improved table styling
+  const itemsY = 520;
   doc.fontSize(16)
+     .font('Helvetica-Bold')
      .text('Invoice Items', 50, itemsY);
 
-  const tableTop = itemsY + 30;
-  generateTable(doc, invoiceData.paymentDetails.invoiceItems, tableTop, borderColor);
+  const tableTop = itemsY + 25;
+  generateTable(doc, invoiceData.paymentDetails.invoiceItems, tableTop, borderColor, accentColor);
 
-  // Add total amount
+  // Add total amount with improved styling
   const totalTop = tableTop + (invoiceData.paymentDetails.invoiceItems.length + 1) * 30 + 20;
   doc.fontSize(16)
+     .font('Helvetica-Bold')
+     .fillColor('black')
      .text(`Total Amount: ${invoiceData.paymentDetails.totalAmount} USDC`, 50, totalTop, { align: 'right' });
+
+
 
   doc.end();
 
@@ -92,48 +112,46 @@ export async function POST(req: NextRequest) {
 }
 
 function addInformation(doc: PDFKit.PDFDocument, title: string, data: any, evmAddress: string, x: number, y: number) {
-  doc.fontSize(14)
+  doc.fontSize(12)
+     .font('Helvetica-Bold')
      .text(title, x, y);
   doc.fontSize(10)
-     .text(data.name, x, y + 25)
-     .text(data.email, x, y + 40)
-     .text(data.address || '', x, y + 55)
-     .text(`${data.city || ''}, ${data.state || ''} ${data.zip || ''}`, x, y + 70)
-     .text(data.country || '', x, y + 85)
-     .text('EVM Address:', x, y + 100)
-     .text(evmAddress, x, y + 115, { width: 200, align: 'left' });
+     .font('Helvetica')
+     .text(data.name, x, y + 20)
+     .text(data.email, x, y + 35)
+     .text(data.address || '', x, y + 50)
+     .text(`${data.city || ''}, ${data.state || ''} ${data.zip || ''}`, x, y + 65)
+     .text(data.country || '', x, y + 80)
+     .text('EVM Address:', x, y + 95)
+     .text(evmAddress, x, y + 110, { width: 200, align: 'left' });
 }
 
 function addDetailRow(doc: PDFKit.PDFDocument, label: string, value: string, x: number, y: number) {
-  doc.text(label, x, y)
-     .text(value, x + 150, y);
+  doc.font('Helvetica-Bold').text(label, x, y)
+     .font('Helvetica').text(value, x + 100, y);
 }
 
-function generateTable(doc: PDFKit.PDFDocument, items: any[], y: number, borderColor: string) {
+function generateTable(doc: PDFKit.PDFDocument, items: any[], y: number, borderColor: string, headerColor: string) {
   const headers = ['Item', 'Quantity', 'Price', 'Total'];
   const columnWidth = 128;
   
-  doc.fontSize(12);
+  doc.fontSize(10).font('Helvetica-Bold');
 
-  // Draw table header
-  doc.rect(50, y, 515, 30).stroke(borderColor);
+  // Draw table header with colored background
+  doc.rect(50, y, 515, 25).fill(headerColor);
   headers.forEach((header, i) => {
-    doc.text(header, 55 + i * columnWidth, y + 10);
-    if (i < headers.length - 1) {
-      doc.moveTo(50 + (i + 1) * columnWidth, y)
-         .lineTo(50 + (i + 1) * columnWidth, y + 30 + items.length * 30)
-         .stroke(borderColor);
-    }
+    doc.fillColor('#ffffff').text(header, 55 + i * columnWidth, y + 8);
   });
 
   // Draw table rows
+  doc.font('Helvetica').fillColor('black');
   items.forEach((item, i) => {
-    const rowY = y + 30 + (i * 30);
-    doc.rect(50, rowY, 515, 30).stroke(borderColor);
-    doc.text(item.name, 55, rowY + 10)
-       .text(item.quantity.toString(), 55 + columnWidth, rowY + 10)
-       .text(item.price.toFixed(2), 55 + 2 * columnWidth, rowY + 10)
-       .text((item.quantity * item.price).toFixed(2), 55 + 3 * columnWidth, rowY + 10);
+    const rowY = y + 25 + (i * 25);
+    doc.rect(50, rowY, 515, 25).lineWidth(0.5).stroke(borderColor);
+    doc.text(item.name, 55, rowY + 8)
+       .text(item.quantity.toString(), 55 + columnWidth, rowY + 8)
+       .text(item.price.toFixed(2), 55 + 2 * columnWidth, rowY + 8)
+       .text((item.quantity * item.price).toFixed(2), 55 + 3 * columnWidth, rowY + 8);
   });
 }
 
