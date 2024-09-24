@@ -102,3 +102,14 @@ export interface SenderDetails {
     wasCanceled: boolean;
   }
   
+  export type Gig = {
+    gig_id: string;
+    creator_address: string;  // This is now the evmAddress
+    title: string;
+    description: string | null;
+    price: number;
+    chain_id: number;
+    delivery_time: string;
+    created_at: string;
+  }
+  

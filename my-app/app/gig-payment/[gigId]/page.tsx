@@ -14,6 +14,7 @@ import GigPaymentParent from '@/components/gig-payment/GigPaymentParent';
 const Page = () => {
   const { data: session, status } = useSession();
   const params = useParams();
+  const gigId = params.gigId as string;
 
   const renderContent = () => {
     switch (status) {
@@ -24,8 +25,7 @@ const Page = () => {
           </div>
         );
       case 'authenticated':
-        return <GigPaymentParent
-         
+        return <GigPaymentParent gigId={gigId}
       />;
       case 'unauthenticated':
         return <NotConnected />;

@@ -13,9 +13,6 @@ const Page = () => {
   const params = useParams();
   const gigId = params.gigId as string;
 
-  console.log("Params:", params);
-  console.log("GigId:", gigId);
-
   const renderContent = () => {
     switch (status) {
       case 'loading':
@@ -25,7 +22,7 @@ const Page = () => {
           </div>
         );
       case 'authenticated':
-        return gigId ? <GigPage gigId={gigId} /> : <div>No gig ID provided</div>;
+        return <GigPage gigId={gigId} />;
       case 'unauthenticated':
         return <NotConnected />;
       default:

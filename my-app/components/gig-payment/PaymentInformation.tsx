@@ -47,7 +47,7 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({ gigPrice, recip
           </div>
           <div>
             <Label htmlFor="duration">Duration</Label>
-            <Input id="duration" value={duration} readOnly />
+            <Input id="duration" value={`${duration} days`} readOnly />
           </div>
         </div>
         <div>
@@ -75,12 +75,16 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({ gigPrice, recip
         </div>
       </CardContent>
       <CardContent className="text-sm text-gray-500">
-        Streaming {gigPrice} USDC to {recipientAddress} over {duration} on {morphHoleskyInfo.name}
+        Streaming {gigPrice} USDC to {recipientAddress} over {duration} days on {morphHoleskyInfo.name}
+        <br></br>
+          You can cancel the order within {Math.floor(Number(duration) * 0.25)} days for free.
+   
+        
       </CardContent>
       <Separator className="my-4" />
       <CardContent>
         <Button className="w-full" onClick={handlePayment}>
-          Confirm & Start Streaming
+         <Image src="/logo_cropped.png" alt="Streambill" width={30} height={30} className="w-6 h-6 mr-2" /> Pay with Streambill
         </Button>
       </CardContent>
     </Card>

@@ -6,17 +6,9 @@ import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { chainInfo, ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions'
 import Image from 'next/image'
+import Link from 'next/link'
+import { Gig } from '@/types/types'
 
-interface Gig {
-  gig_id: string;
-  creator_address: string;  // This is now the evmAddress
-  title: string;
-  description: string | null;
-  price: number;
-  chain_id: number;
-  delivery_time: string;
-  created_at: string;
-}
 
 export default function GigPage({
     gigId
@@ -74,7 +66,7 @@ export default function GigPage({
             </div>
             <Badge variant="outline" className="text-xl font-bold py-1 px-3">
               <DollarSign className="h-5 w-5 mr-1" />
-              {(gig.price / 100).toFixed(2)} {/* Assuming price is stored in cents */}
+               {gig.price}
               <Image src={chainInfo[gig.chain_id as ValidChainId].logoUrl} alt="chain logo" width={30} height={30} className='ml-2' />
             </Badge>
           </div>
@@ -92,9 +84,11 @@ export default function GigPage({
           </div>
         </CardContent>
         <CardFooter>
+            <Link href={`/gig-payment/${gig.gig_id}`} className='w-full'>
           <Button className="w-full" size="lg">
             Order Now
           </Button>
+          </Link>
         </CardFooter>
       </Card>
     </div>
