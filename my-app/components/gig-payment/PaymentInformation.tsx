@@ -11,6 +11,7 @@ import { Separator } from '../ui/separator'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ValidChainId, chainInfo, getChainOptions } from '@/utils/multi-chain/MultiChainSelectOptions'
 import Image from 'next/image'
+import StreamForecastWithCliffChart from '../stream-forecast/StreamForecastWithCliff'
 
 interface PaymentInformationProps {
   gigPrice: number;
@@ -87,6 +88,14 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({ gigPrice, recip
          <Image src="/logo_cropped.png" alt="Streambill" width={30} height={30} className="w-6 h-6 mr-2" /> Pay with Streambill
         </Button>
       </CardContent>
+
+      <StreamForecastWithCliffChart
+  title="250-Day Token Release Schedule"
+  description="Token release over 250 days with cliff at day 50"
+  trendPercentage={300}  // The increase from 25 to 100 is a 300% increase
+  totalAmount={250}  // Total amount of tokens or currency to be released
+  chartColor="#ff9800"
+/>
     </Card>
   )
 }
