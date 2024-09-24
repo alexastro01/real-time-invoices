@@ -25,13 +25,7 @@ import {
 
 export default function Navbar() {
 
-  const navItems = [
-    { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-    { href: "/create-invoice", icon: FileText, label: "Create Invoice" },
-    { href: '/my-gigs', icon: Briefcase, label: "My Gigs" },
-    { href: "/profile", icon: UserCircle, label: "Profile" },
-    { href: '/mint-tusdc', icon: DollarSign, label: "Get test stablecoin" },
-  ];
+
 
   const socialItems = [
     { href: 'https://t.me/streambill', icon: MessageCircle, label: "Join Telegram"},
@@ -40,7 +34,15 @@ export default function Navbar() {
 
   const pathname = usePathname();
   const { authState: eduConnectAuthState, ocAuth } = useOCAuth();
-  const { chain } = useAccount();
+  const { chain, address } = useAccount();
+
+  const navItems = [
+    { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+    { href: "/create-invoice", icon: FileText, label: "Create Invoice" },
+    { href: `/gigs/${address}`, icon: Briefcase, label: "My Gigs" },
+    { href: "/profile", icon: UserCircle, label: "Profile" },
+    { href: '/mint-tusdc', icon: DollarSign, label: "Get test stablecoin" },
+  ];
 
   useEffect(() => {
     // console.log(eduConnectAuthState);

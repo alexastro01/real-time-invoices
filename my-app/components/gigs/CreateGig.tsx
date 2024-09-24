@@ -11,6 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { ValidChainId } from '../../utils/multi-chain/MultiChainSelectOptions';
 import ChainSelector from '../helpers/ChainSelector'
 import { useAccount } from 'wagmi'
+import { useToast } from '@/components/ui/use-toast' // Import useToast
+import { Loader2 } from 'lucide-react'
 
 interface CreateGigProps {
   // Define any props if needed
@@ -23,26 +25,41 @@ const CreateGig: React.FC<CreateGigProps> = () => {
   const [link, setLink] = useState('')
   const [price, setPrice] = useState<number | ''>('')
   const [selectedChain, setSelectedChain] = useState<ValidChainId | null>(null);
-  const {address} = useAccount()
+  const { address } = useAccount()
+  const { toast } = useToast() // Initialize useToast
 
   const router = useRouter()
 
   const handleCreateGig = async () => {
     // Validate inputs
     if (!title || !description || !deliveryTime || !price || selectedChain === null) {
-      alert('Please fill in all required fields.')
+      toast({
+        title: 'Validation Error',
+        description: 'Please fill in all required fields.',
+        variant: 'destructive',
+      })
       return
     }
-  
-    const priceInCents = Math.round(Number(price) * 100) // Convert to cents
   
     const newGig = {
       title,
       description,
-      price: priceInCents,
+      delivery_time: deliveryTime, // Changed to match backend expectation
+      price: price,
       chain_id: selectedChain,
-      delivery_time: deliveryTime,
+      // link is not used in the backend, so we can omit it
     }
+  
+    toast({
+      title: "Creating Gig",
+      description: (
+        <div className="flex items-center space-x-2">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <span>Please wait while we create your gig...</span>
+        </div>
+      ),
+      variant: "default",
+    })
   
     try {
       const response = await fetch('/api/create-gig', {
@@ -54,19 +71,30 @@ const CreateGig: React.FC<CreateGigProps> = () => {
       })
   
       if (response.ok) {
-        const data = await response.json()
-        alert('Gig created successfully!')
-        router.push('/my-gigs') // Redirect to gigs page
+        toast({
+          title: 'Success',
+          description: 'Gig created successfully!',
+          variant: "default"
+        })
+        router.push(`/gigs/${address}`) // Redirect to gigs page
       } else {
         const errorData = await response.json()
-        alert(`Error: ${errorData.error || 'Failed to create gig'}`)
+        console.log(errorData)
+        toast({
+          title: 'Error',
+          description: `Error: ${errorData.error || errorData.message}`,
+          variant: 'destructive',
+        })
       }
     } catch (error) {
       console.error('Error creating gig:', error)
-      alert('An unexpected error occurred. Please try again.')
+      toast({
+        title: 'Unexpected Error',
+        description: 'An unexpected error occurred.',
+        variant: 'destructive',
+      })
     }
   }
-
   return (
     <div className="flex items-center justify-center min-h-screen">
       <Card className="max-w-lg w-full">
@@ -111,7 +139,6 @@ const CreateGig: React.FC<CreateGigProps> = () => {
                 </SelectContent>
               </Select>
             </div>
-        
             <div>
               <label className="block text-sm font-medium">Price (USDC)</label>
               <Input

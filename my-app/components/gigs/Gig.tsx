@@ -37,7 +37,7 @@ const Gig: React.FC<GigProps> = ({ id, title, description, deliveryTime, link, p
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <div className="flex items-center">
             <Clock className="mr-2 h-4 w-4" />
-            <span>Delivery: {deliveryTime}</span>
+            <span>Delivery: {deliveryTime} days</span>
           </div>
           {price !== undefined && (
             <Badge variant="outline" className="text-lg font-bold">
