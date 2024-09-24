@@ -74,6 +74,12 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({ gigPrice, recip
             className="mt-1"
           />
         </div>
+        <StreamForecastWithCliffChart
+  title="Payment schedule preview"
+  description="Preview of the payment schedule based on the gig price and duration"
+  totalAmount={250}  // Total amount of tokens or currency to be released
+  chartColor="#ff9800"
+/>
       </CardContent>
       <CardContent className="text-sm text-gray-500">
         Streaming {gigPrice} USDC to {recipientAddress} over {duration} days on {morphHoleskyInfo.name}
@@ -89,13 +95,6 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({ gigPrice, recip
         </Button>
       </CardContent>
 
-      <StreamForecastWithCliffChart
-  title="250-Day Token Release Schedule"
-  description="Token release over 250 days with cliff at day 50"
-  trendPercentage={300}  // The increase from 25 to 100 is a 300% increase
-  totalAmount={250}  // Total amount of tokens or currency to be released
-  chartColor="#ff9800"
-/>
     </Card>
   )
 }

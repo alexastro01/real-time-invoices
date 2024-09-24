@@ -16,30 +16,29 @@ interface ChartDataPoint {
 interface StreamForecastProps {
   title: string;
   description: string;
-  trendPercentage: number;
   totalAmount: number;
   chartColor: string;
 }
 
-function generateChartData(totalDays: number, cliffDay: number, totalAmount: number): ChartDataPoint[] {
+function generateChartData(totalHours: number, cliffHour: number, totalAmount: number): ChartDataPoint[] {
   const data: ChartDataPoint[] = []
   const baseValue = 0
   const cliffValue = totalAmount * 0.25
   const maxValue = totalAmount
   const startDate = new Date()
 
-  for (let i = 0; i < totalDays; i++) {
-    const currentDate = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000)
-    if (i < cliffDay) {
+  for (let i = 0; i < totalHours; i++) {
+    const currentDate = new Date(startDate.getTime() + i * 60 * 60 * 1000) // Increment by hour
+    if (i < cliffHour) {
       data.push({ date: currentDate, value: baseValue })
-    } else if (i === cliffDay) {
-      // Add two data points for the cliff day to create a vertical line
+    } else if (i === cliffHour) {
+      // Add two data points for the cliff hour to create a vertical line
       data.push({ date: currentDate, value: baseValue })
       data.push({ date: currentDate, value: cliffValue })
     } else {
-      const remainingDays = totalDays - cliffDay - 1
-      const dailyIncrement = (maxValue - cliffValue) / remainingDays
-      data.push({ date: currentDate, value: cliffValue + (i - cliffDay) * dailyIncrement })
+      const remainingHours = totalHours - cliffHour - 1
+      const hourlyIncrement = (maxValue - cliffValue) / remainingHours
+      data.push({ date: currentDate, value: cliffValue + (i - cliffHour) * hourlyIncrement })
     }
   }
 
@@ -49,16 +48,15 @@ function generateChartData(totalDays: number, cliffDay: number, totalAmount: num
 export default function StreamForecastWithCliff({
   title,
   description,
-  trendPercentage,
   totalAmount,
   chartColor
 }: StreamForecastProps) {
-  const totalDays = 250
-  const cliffDay = 50  // Cliff at day 50
-  const chartData = generateChartData(totalDays, cliffDay, totalAmount)
+  const totalHours = 9 * 24 // 9 days
+  const cliffHour = 2 * 24  // Cliff at day 2 (48 hours)
+  const chartData = generateChartData(totalHours, cliffHour, totalAmount)
 
   const formatXAxis = (tickItem: Date) => {
-    return tickItem.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    return tickItem.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
   }
 
   const formatYAxis = (tickItem: number) => {
@@ -68,8 +66,8 @@ export default function StreamForecastWithCliff({
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-2 border border-gray-300 rounded shadow">
-          <p className="label">{`Date: ${label.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`}</p>
+        <div className="bg-primary-foreground p-2 border border-gray-300 rounded shadow">
+          <p className="label">{`Date: ${label.toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`}</p>
           <p className="value">{`Tokens: ${Math.round(payload[0].value)}`}</p>
         </div>
       );
@@ -87,9 +85,7 @@ export default function StreamForecastWithCliff({
               {description}
             </CardDescription>
           </div>
-          <div className="text-sm text-right">
-            <div className="font-medium">{trendPercentage}% increase</div>
-          </div>
+         
         </div>
       </CardHeader>
       <CardContent className="flex-grow">
@@ -107,7 +103,10 @@ export default function StreamForecastWithCliff({
             <XAxis 
               dataKey="date" 
               tickFormatter={formatXAxis}
-              ticks={[0, 50, 100, 150, 200, 249].map(day => chartData[day].date.toISOString())}
+              // Show ticks every 6 hours to reduce clutter
+              ticks={chartData
+                .filter((_, index) => index % 6 === 0)
+                .map(point => point.date.getTime())} // Convert Date to number
             />
             <YAxis tickFormatter={formatYAxis} domain={[0, totalAmount]} />
             <Tooltip content={<CustomTooltip />} />
