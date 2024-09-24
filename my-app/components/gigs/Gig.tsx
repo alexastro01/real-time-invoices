@@ -7,7 +7,7 @@ import { Badge } from '../ui/badge';
 
 interface GigProps {
   // Add properties that a Gig should have
-  id: number;
+  id: string;
   title: string;
   description: string;
   deliveryTime: string;

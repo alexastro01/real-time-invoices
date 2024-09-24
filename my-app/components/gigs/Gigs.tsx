@@ -10,11 +10,11 @@ import Gig from "./Gig"
 import AddGigCard from "./AddGigCard"
 
 interface GigType {
-  id: number
-  title: string
-  description: string
-  delivery_time: string
-  price: number
+  gig_id: string;
+  title: string;
+  description: string;
+  delivery_time: string;
+  price: number;
   // Add other fields as necessary
 }
 
@@ -35,6 +35,7 @@ export default function Gigs({ creator }: GigsProps) {
           throw new Error('Failed to fetch gigs')
         }
         const data = await response.json()
+        console.log(data.gigs)
         setGigs(data.gigs)
       } catch (err) {
         setError('Failed to load gigs')
@@ -70,13 +71,13 @@ export default function Gigs({ creator }: GigsProps) {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
         {gigs.map((gig) => (
           <Gig 
-            key={gig.id}
-            id={gig.id}
+            key={gig.gig_id}
+            id={gig.gig_id}
             title={gig.title}
             description={gig.description}
             deliveryTime={gig.delivery_time}
             price={gig.price}
-            link={`/gig/${gig.id}`}
+            link={`/gig/${gig.gig_id}`}
             viewGig={true}
           />
         ))}
