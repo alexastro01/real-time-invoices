@@ -33,7 +33,7 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({ gigPrice, recip
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Money Streaming Escrow</CardTitle>
+        <CardTitle>Pay with Streambill</CardTitle>
         <CardDescription>Payment method details</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-6">
