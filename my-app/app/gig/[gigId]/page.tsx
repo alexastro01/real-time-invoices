@@ -6,14 +6,15 @@ import Navbar from '@/components/Navbar';
 import NotConnected from '@/components/NotConnected';
 import React from 'react';
 import Spinner from '@/components/helpers/Spinner';
-import Invoice from '@/components/invoice/Invoice';
-import Gigs from '@/components/gigs/Gigs';
 import GigPage from '@/components/gigs/GigPage';
-import GigPaymentParent from '@/components/gig-payment/GigPaymentParent';
 
 const Page = () => {
   const { data: session, status } = useSession();
   const params = useParams();
+  const gigId = params.gigId as string;
+
+  console.log("Params:", params);
+  console.log("GigId:", gigId);
 
   const renderContent = () => {
     switch (status) {
@@ -24,9 +25,7 @@ const Page = () => {
           </div>
         );
       case 'authenticated':
-        return <GigPaymentParent
-         
-      />;
+        return gigId ? <GigPage gigId={gigId} /> : <div>No gig ID provided</div>;
       case 'unauthenticated':
         return <NotConnected />;
       default:

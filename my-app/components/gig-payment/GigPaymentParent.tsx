@@ -6,7 +6,7 @@ import BillingInformation from './BillingInformation'
 import PaymentInformation from './PaymentInformation'
 
 interface GigProps {
-  id: number;
+  id: string;
   title: string;
   description: string;
   deliveryTime: string;
@@ -20,7 +20,7 @@ interface GigProps {
 
 export default function GigPaymentParent() {
   const gigData: GigProps = {
-    id: 1,
+    id: '1',
     title: "Web Development Gig",
     description: "Full-stack web application development using React and Node.js",
     deliveryTime: "3 weeks",

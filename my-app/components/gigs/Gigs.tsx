@@ -30,7 +30,7 @@ export default function Gigs({ creator }: GigsProps) {
   useEffect(() => {
     const fetchGigs = async () => {
       try {
-        const response = await fetch(`/api/fetch-user-gigs?creator=${creator}`)
+        const response = await fetch(`/api/get-user-gigs?creator=${creator}`)
         if (!response.ok) {
           throw new Error('Failed to fetch gigs')
         }
