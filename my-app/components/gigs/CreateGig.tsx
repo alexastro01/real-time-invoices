@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 
 import { ValidChainId } from '../../utils/multi-chain/MultiChainSelectOptions';
 import ChainSelector from '../helpers/ChainSelector'
+import { useAccount } from 'wagmi'
 
 interface CreateGigProps {
   // Define any props if needed
@@ -22,6 +23,7 @@ const CreateGig: React.FC<CreateGigProps> = () => {
   const [link, setLink] = useState('')
   const [price, setPrice] = useState<number | ''>('')
   const [selectedChain, setSelectedChain] = useState<ValidChainId | null>(null);
+  const {address} = useAccount()
 
   const router = useRouter()
 
@@ -31,35 +33,37 @@ const CreateGig: React.FC<CreateGigProps> = () => {
       alert('Please fill in all required fields.')
       return
     }
-
+  
+    const priceInCents = Math.round(Number(price) * 100) // Convert to cents
+  
     const newGig = {
       title,
       description,
-      deliveryTime,
-      link,
-      price: Number(price),
-      chain: selectedChain,
+      price: priceInCents,
+      chain_id: selectedChain,
+      delivery_time: deliveryTime,
     }
-
+  
     try {
-      const response = await fetch('/api/gigs', {
+      const response = await fetch('/api/create-gig', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(newGig),
       })
-
+  
       if (response.ok) {
+        const data = await response.json()
         alert('Gig created successfully!')
         router.push('/my-gigs') // Redirect to gigs page
       } else {
         const errorData = await response.json()
-        alert(`Error: ${errorData.message}`)
+        alert(`Error: ${errorData.error || 'Failed to create gig'}`)
       }
     } catch (error) {
       console.error('Error creating gig:', error)
-      alert('An unexpected error occurred.')
+      alert('An unexpected error occurred. Please try again.')
     }
   }
 
