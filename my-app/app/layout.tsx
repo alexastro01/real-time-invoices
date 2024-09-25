@@ -66,7 +66,7 @@ export default function RootLayout({
       <GoogleAnalytics gaId="G-NCZ42WG6BR" />
         <Providers>
           <SessionWrapper>
-          <OCConnectWrapper opts={opts} >
+          <OCConnectWrapper opts={opts} sandboxMode={true} >
 
             <div className="block lg:flex">
               <Navbar /> {/* Add the Navbar here */}
