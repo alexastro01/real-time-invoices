@@ -6,10 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MapPin, Mail, Building, Globe, Info, ChevronUp, ChevronDown } from 'lucide-react';
+import { MapPin, Mail, Building, Globe, Info, ChevronUp, ChevronDown, Upload } from 'lucide-react';
 import { Switch } from "@/components/ui/switch";
 import { AnimatePresence } from 'framer-motion';
 import { motion } from 'framer-motion'
+import { useToast } from "@/components/ui/use-toast";
+import { createClient } from '@supabase/supabase-js';
+import { createAuthenticatedSupabaseClient } from '@/lib/createAuthenticatedSupabaseClient';
 
 interface ProfileFormProps {
   senderDetails: SenderDetails;
@@ -31,12 +34,60 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
   isLoading
 }) => {
   const [showAdditionalDetails, setShowAdditionalDetails] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const { toast } = useToast();
+  const [isUploading, setIsUploading] = useState(false);
+
 
   const handleSwitchChange = (checked: boolean) => {
     setShowAdditionalDetails(checked);
     if (!checked) {
       // Clear additional details when switch is turned off
+    }
+  };
 
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setSelectedImage(file);
+      setPreviewUrl(URL.createObjectURL(file));
+      
+      setIsUploading(true);
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+  
+        const response = await fetch('/api/upload-image', {
+          method: 'POST',
+          body: formData,
+        });
+  
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to upload image');
+        }
+  
+        const { imageUrl } = await response.json();
+  
+        handleInputChange({
+          target: { id: 'profileImage', value: imageUrl }
+        } as React.ChangeEvent<HTMLInputElement>);
+  
+        toast({
+          title: "Image uploaded successfully",
+          description: "Your profile picture has been updated.",
+        });
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        toast({
+          title: "Error uploading image",
+          description: "Please try again later.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsUploading(false);
+      }
     }
   };
 
@@ -53,38 +104,80 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
   ];
 
   const handleSave = async () => {
-    await validateAndProceed();
-    toggleEditMode();
+    try {
+      await validateAndProceed();
+      toggleEditMode();
+      toast({
+        title: "Profile updated",
+        description: "Your profile has been successfully updated.",
+      });
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      toast({
+        title: "Error saving profile",
+        description: "Please check your inputs and try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
-    <Card className="w-full max-w-3xl mx-auto">
-    <CardContent className="pt-6">
-      <div className="flex flex-col items-center mb-6">
-        <Avatar className="h-16 w-16 sm:h-24 sm:w-24 mb-4">
-          <AvatarImage src={`https://api.dicebear.com/6.x/initials/svg?seed=${senderDetails.name}`} />
-          <AvatarFallback>{senderDetails.name.split(' ').map(n => n[0]).join('').toUpperCase()}</AvatarFallback>
-        </Avatar>
-        {isFetching ? (
-          <Skeleton className="h-8 w-48" />
-        ) : editMode ? (
-          <div className="w-full max-w-xs">
-            <Label htmlFor="name" className="sr-only">Name</Label>
-            <Input
-              id="name"
-              value={senderDetails.name}
-              onChange={handleInputChange}
-              className="text-xl sm:text-2xl font-bold text-center"
-              required
-            />
-            <p className="text-xs text-red-500 text-center mt-1">* Required</p>
+<Card className="w-full max-w-3xl mx-auto">
+      <CardContent className="pt-6">
+        <div className="flex flex-col items-center mb-6">
+          <div className="relative">
+            <Avatar className="h-16 w-16 sm:h-24 sm:w-24 mb-4">
+              {previewUrl ? (
+                <AvatarImage src={previewUrl} alt="Profile" />
+              ) : (
+                <>
+                  <AvatarImage src={`https://api.dicebear.com/6.x/initials/svg?seed=${senderDetails.name}`} />
+                  <AvatarFallback>{senderDetails.name.split(' ').map(n => n[0]).join('').toUpperCase()}</AvatarFallback>
+                </>
+              )}
+            </Avatar>
+            {editMode && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="absolute bottom-0 right-0 rounded-full"
+                onClick={() => document.getElementById('profile-image')?.click()}
+                disabled={isUploading}
+              >
+                {isUploading ? (
+                  <span className="loading loading-spinner loading-xs"></span>
+                ) : (
+                  <Upload className="h-4 w-4" />
+                )}
+              </Button>
+            )}
           </div>
-        ) : (
-          <h2 className="text-xl sm:text-2xl font-bold text-center">{senderDetails.name} <span className='text-red-500 text-xs'>*</span></h2>
-        )}
-        <p className="text-xs sm:text-sm text-muted-foreground mt-1 text-center break-all">{senderDetails.evmAddress}</p>
-      </div>
-
+          <Input
+            id="profile-image"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+          />
+          {isFetching ? (
+            <Skeleton className="h-8 w-48" />
+          ) : editMode ? (
+            <div className="w-full max-w-xs mt-2">
+              <Label htmlFor="name" className="sr-only">Name</Label>
+              <Input
+                id="name"
+                value={senderDetails.name}
+                onChange={handleInputChange}
+                className="text-xl sm:text-2xl font-bold text-center"
+                required
+              />
+              <p className="text-xs text-red-500 text-center mt-1">* Required</p>
+            </div>
+          ) : (
+            <h2 className="text-xl sm:text-2xl font-bold text-center">{senderDetails.name} <span className='text-red-500 text-xs'>*</span></h2>
+          )}
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1 text-center break-all">{senderDetails.evmAddress}</p>
+        </div>
       <div className="space-y-4">
       {basicFields.map((field) => (
           <div key={field.id} className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
@@ -183,7 +276,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
 
       <div className="mt-6 flex flex-col items-center">
         {editMode ? (
-          <Button onClick={handleSave} disabled={isLoading} className="w-full sm:w-auto">
+          <Button onClick={handleSave} disabled={isLoading || isUploading} className="w-full sm:w-auto">
             {isLoading ? 'Saving...' : 'Save Profile'}
           </Button>
         ) : (

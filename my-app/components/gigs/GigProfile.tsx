@@ -1,10 +1,7 @@
-"use client"
-
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
-import EditProfileDialog from './EditProfileDialog'
 import Link from 'next/link'
 import { Button } from '../ui/button'
 
@@ -16,7 +13,7 @@ const GigProfile = ({
     editMode: boolean;
 }) => {
   const [name, setName] = useState<string | null>(null)
-  const [image, setImage] = useState<string | null>(null)
+  const [profileImage, setProfileImage] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -30,7 +27,7 @@ const GigProfile = ({
         }
         const data = await response.json()
         setName(data.name)
-        setImage(data.profile_picture || null)
+        setProfileImage(data.profile_image || null)
       } catch (err) {
         setError('Failed to load profile')
         console.error(err)
@@ -41,14 +38,6 @@ const GigProfile = ({
 
     fetchProfile()
   }, [creator])
-
-  const handleSave = async (newName: string, newImage: string | null) => {
-    // Implement save logic here
-    // For now, we'll just update the local state
-    setName(newName)
-    setImage(newImage)
-    // You would typically make an API call here to update the backend
-  }
 
   if (loading) {
     return (
@@ -82,8 +71,8 @@ const GigProfile = ({
         <div className="flex flex-col sm:flex-row sm:justify-between items-center space-y-4 sm:space-y-0">
           <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
             <Avatar className="w-24 h-24">
-              {image ? (
-                <AvatarImage src={image} alt={name || ''} />
+              {profileImage ? (
+                <AvatarImage src={profileImage} alt={name || ''} />
               ) : (
                 <AvatarFallback>{name ? name.slice(0, 2).toUpperCase() : 'NA'}</AvatarFallback>
               )}
