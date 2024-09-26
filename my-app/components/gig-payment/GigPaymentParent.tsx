@@ -4,6 +4,7 @@ import Gig from '../gigs/Gig'
 import BillingInformation from './BillingInformation'
 import PaymentInformation from './PaymentInformation'
 import { ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions'
+import { useAccount } from 'wagmi'
 
 interface GigPaymentParentProps {
   gigId: string;
@@ -19,29 +20,56 @@ interface GigData {
   chain_id: number;
 }
 
+interface UserDetails {
+  evmAddress: string;
+  name: string;
+  email: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+  created_at: string;
+}
+
 export default function GigPaymentParent({ gigId }: GigPaymentParentProps) {
   const [gigData, setGigData] = useState<GigData | null>(null);
+  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const { address } = useAccount();
 
   useEffect(() => {
-    const fetchGig = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(`/api/get-gig?gig_id=${gigId}`);
-        const data = await response.json();
-        if (response.ok) {
-          setGigData(data.gig);
+        const [gigResponse, userResponse] = await Promise.all([
+          fetch(`/api/get-gig?gig_id=${gigId}`),
+          address ? fetch(`/api/get-user-details?address=${address}`) : Promise.resolve(null)
+        ]);
+
+        const gigData = await gigResponse.json();
+        if (gigResponse.ok) {
+          setGigData(gigData.gig);
         } else {
-          console.error('Error fetching gig:', data.error);
+          console.error('Error fetching gig:', gigData.error);
+        }
+
+        if (userResponse) {
+          const userData = await userResponse.json();
+          if (userResponse.ok) {
+            setUserDetails(userData);
+          } else {
+            console.error('Error fetching user details:', userData.error);
+          }
         }
       } catch (error) {
-        console.error('Error fetching gig:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchGig();
-  }, [gigId]);
+    fetchData();
+  }, [gigId, address]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -56,12 +84,13 @@ export default function GigPaymentParent({ gigId }: GigPaymentParentProps) {
       <h1 className="text-3xl font-bold mb-6">Checkout</h1>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <BillingInformation />
+          <BillingInformation userDetails={userDetails} />
           <PaymentInformation 
             gigPrice={gigData.price} 
             recipientAddress={gigData.creator_address} 
             duration={gigData.delivery_time} 
             chainId={gigData.chain_id as ValidChainId}
+            userDetails={userDetails}
           />
         </div>
         <div className="lg:col-span-1">

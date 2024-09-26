@@ -1,10 +1,8 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from '../ui/button';
 import { useAccount } from 'wagmi';
-
-
 
 interface UserDetails {
   evmAddress: string;
@@ -18,41 +16,13 @@ interface UserDetails {
   created_at: string;
 }
 
-const BillingInformation = () => {
-  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const {address} = useAccount();
-
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-        if(address){
-      try {
-        const response = await fetch(`/api/get-user-details?address=${address}`);
-        if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
-        }
-        const data = await response.json();
-        setUserDetails(data as UserDetails);
-        console.log('User details:', data);
-      } catch (err: any) {
-        setError(err.message || 'An unexpected error occurred');
-        console.error('Error fetching user details:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+interface BillingInformationProps {
+  userDetails: UserDetails | null;
 }
 
-    fetchUserDetails();
-  }, [address]);
-
-  if (loading) {
+const BillingInformation: React.FC<BillingInformationProps> = ({ userDetails }) => {
+  if (!userDetails) {
     return <Card className="w-full mb-6"><CardContent>Loading...</CardContent></Card>;
-  }
-
-  if (error) {
-    return <Card className="w-full mb-6"><CardContent>Error: {error}</CardContent></Card>;
   }
 
   return (
