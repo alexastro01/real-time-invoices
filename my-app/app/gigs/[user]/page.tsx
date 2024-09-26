@@ -4,13 +4,17 @@ import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import NotConnected from '@/components/NotConnected';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Spinner from '@/components/helpers/Spinner';
 import Invoice from '@/components/invoice/Invoice';
 import Gigs from '@/components/gigs/Gigs';
+import { useAccount } from 'wagmi';
 
 const Page = () => {
   const { data: session, status } = useSession();
+  const {address} = useAccount();
+
+
   const params = useParams();
 
   const renderContent = () => {
@@ -22,7 +26,8 @@ const Page = () => {
           </div>
         );
       case 'authenticated':
-        return <Gigs creator={params.user as string} />;
+        //@ts-ignore
+        return <Gigs creator={params.user as string} editMode={session?.user?.address === params.user ? true : false} />;
       case 'unauthenticated':
         return <NotConnected />;
       default:
