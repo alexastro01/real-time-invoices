@@ -81,6 +81,7 @@ export interface SenderDetails {
     state: string;
     zip: string;
     country: string;
+    profile_image?: string;
   }
 
   export type StreamData = {
