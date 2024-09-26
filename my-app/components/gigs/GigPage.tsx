@@ -8,6 +8,7 @@ import { chainInfo, ValidChainId } from '@/utils/multi-chain/MultiChainSelectOpt
 import Image from 'next/image'
 import Link from 'next/link'
 import { Gig } from '@/types/types'
+import GigCreatorPreview from './GigCreatorPreview'
 
 
 export default function GigPage({
@@ -71,17 +72,10 @@ export default function GigPage({
             </Badge>
           </div>
           
-          <div className="border-t pt-4">
-            <h3 className="text-lg font-semibold mb-2">Creator</h3>
-            <div className="flex items-center space-x-4">
-              <Avatar>
-                <AvatarFallback>{gig.creator_address.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div>
-                <p className="text-sm text-muted-foreground">{formatEvmAddress(gig.creator_address)}</p>
-              </div>
-            </div>
-          </div>
+          <GigCreatorPreview 
+            creatorAddress={gig.creator_address} 
+            formatEvmAddress={formatEvmAddress} 
+          />
         </CardContent>
         <CardFooter>
             <Link href={`/gig-payment/${gig.gig_id}`} className='w-full'>
