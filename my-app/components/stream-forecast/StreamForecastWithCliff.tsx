@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { timeToCancelationPeriod } from '@/constants/timeToCancelationPeriod';
 
 interface ChartDataPoint {
   date: Date;
@@ -18,12 +19,13 @@ interface StreamForecastProps {
   description: string;
   totalAmount: number;
   chartColor: string;
+  duration: number;
 }
 
 function generateChartData(totalHours: number, cliffHour: number, totalAmount: number): ChartDataPoint[] {
   const data: ChartDataPoint[] = []
   const baseValue = 0
-  const cliffValue = totalAmount * 0.25
+  const cliffValue = (cliffHour / totalHours) * totalAmount
   const maxValue = totalAmount
   const startDate = new Date()
 
@@ -49,10 +51,11 @@ export default function StreamForecastWithCliff({
   title,
   description,
   totalAmount,
-  chartColor
+  chartColor,
+  duration
 }: StreamForecastProps) {
-  const totalHours = 9 * 24 // 9 days
-  const cliffHour = 2 * 24  // Cliff at day 2 (48 hours)
+  const totalHours = (duration + timeToCancelationPeriod[duration as number]) * 24 // duration in days
+  const cliffHour = timeToCancelationPeriod[duration as number] * 24  // Cliff at specified time
   const chartData = generateChartData(totalHours, cliffHour, totalAmount)
 
   const formatXAxis = (tickItem: Date) => {

@@ -12,22 +12,24 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ValidChainId, chainInfo, getChainOptions } from '@/utils/multi-chain/MultiChainSelectOptions'
 import Image from 'next/image'
 import StreamForecastWithCliffChart from '../stream-forecast/StreamForecastWithCliff'
+import { timeToCancelationPeriod } from '@/constants/timeToCancelationPeriod'
 
 interface PaymentInformationProps {
   gigPrice: number;
   recipientAddress: string;
   duration: string;
+  chainId: ValidChainId;
 //   availableChainIds: ValidChainId[];
 }
 
-const PaymentInformation: React.FC<PaymentInformationProps> = ({ gigPrice, recipientAddress, duration }) => {
-  const morphHoleskyChainId: ValidChainId = 2810;
-  const morphHoleskyInfo = chainInfo[morphHoleskyChainId];
+const PaymentInformation: React.FC<PaymentInformationProps> = ({ gigPrice, recipientAddress, duration, chainId }) => {
+
+  const chainData = chainInfo[chainId];
   const [note, setNote] = useState('');
 
   const handlePayment = () => {
     // Implement payment logic here
-    console.log("Payment Confirmed", morphHoleskyChainId, "Note:", note)
+    console.log("Payment Confirmed", chainData, "Note:", note)
   }
 
   return (
@@ -55,13 +57,13 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({ gigPrice, recip
           <Label htmlFor="chain">Chain</Label>
           <div className="flex items-center border rounded-md p-2">
             <Image
-              src={morphHoleskyInfo.logoUrl}
-              alt={`${morphHoleskyInfo.name} logo`}
+              src={chainData.logoUrl}
+              alt={`${chainData.name} logo`}
               width={24}
               height={24}
               className="w-6 h-6 mr-2"
             />
-            <span>{morphHoleskyInfo.name}</span>
+            <span>{chainData.name}</span>
           </div>
         </div>
         <div>
@@ -77,14 +79,15 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({ gigPrice, recip
         <StreamForecastWithCliffChart
   title="Payment schedule preview"
   description="Preview of the payment schedule based on the gig price and duration"
-  totalAmount={250}  // Total amount of tokens or currency to be released
+  duration={Number(duration)}
+  totalAmount={gigPrice}  // Total amount of tokens or currency to be released
   chartColor="#ff9800"
 />
       </CardContent>
       <CardContent className="text-sm text-gray-500">
-        Streaming {gigPrice} USDC to {recipientAddress} over {duration} days on {morphHoleskyInfo.name}
+        Streaming {gigPrice} USDC to {recipientAddress} over {duration} days and {24 * timeToCancelationPeriod[Number(duration)]} hours on {chainData.name}
         <br></br>
-          You can cancel the order within {Math.floor(Number(duration) * 0.25)} days for free.
+          You can cancel the order within {24 * timeToCancelationPeriod[Number(duration)]} hours for free.
    
         
       </CardContent>

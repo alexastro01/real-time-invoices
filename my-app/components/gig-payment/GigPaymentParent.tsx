@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Gig from '../gigs/Gig'
 import BillingInformation from './BillingInformation'
 import PaymentInformation from './PaymentInformation'
+import { ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions'
 
 interface GigPaymentParentProps {
   gigId: string;
@@ -60,6 +61,7 @@ export default function GigPaymentParent({ gigId }: GigPaymentParentProps) {
             gigPrice={gigData.price} 
             recipientAddress={gigData.creator_address} 
             duration={gigData.delivery_time} 
+            chainId={gigData.chain_id as ValidChainId}
           />
         </div>
         <div className="lg:col-span-1">

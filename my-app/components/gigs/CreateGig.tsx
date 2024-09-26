@@ -130,12 +130,12 @@ const CreateGig: React.FC<CreateGigProps> = () => {
                   <SelectValue placeholder="Select number of days" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">1 day</SelectItem>
-                  <SelectItem value="3">3 days</SelectItem>
-                  <SelectItem value="5">5 days</SelectItem>
-                  <SelectItem value="7">7 days</SelectItem>
-                  <SelectItem value="14">14 days</SelectItem>
-                  <SelectItem value="30">30 days</SelectItem>
+                  <SelectItem value="1">1 day (+ 6 hours cancelation period)</SelectItem>
+                  <SelectItem value="3">3 days (+ 12 hours cancelation period)</SelectItem>
+                  <SelectItem value="5">5 days (+ 1 day cancelation period)</SelectItem>
+                  <SelectItem value="7">7 days (+ 2 days cancelation period)</SelectItem>
+                  <SelectItem value="14">14 days (+ 3 days cancelation period)</SelectItem>
+                  <SelectItem value="30">30 days (+ 5 days cancelation period)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
