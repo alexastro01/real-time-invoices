@@ -31,6 +31,7 @@ interface PaymentInformationProps {
   duration: string;
   chainId: ValidChainId;
   userDetails: UserDetails | null;
+  gigId: string;
 }
 
 const PaymentInformation: React.FC<PaymentInformationProps> = ({ 
@@ -38,6 +39,7 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
   recipientAddress, 
   duration, 
   chainId,
+  gigId,
   userDetails 
 }) => {
   const chainData = chainInfo[chainId];
@@ -64,7 +66,43 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
         <CardDescription>Payment method details</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-6">
-        {/* ... (previous content remains the same) ... */}
+      <div>
+          <Label htmlFor="recipient">Recipient Address</Label>
+          <Input id="recipient" value={recipientAddress} readOnly />
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="amount">Amount (USDC)</Label>
+            <Input id="amount" value={gigPrice} readOnly />
+          </div>
+          <div>
+            <Label htmlFor="duration">Duration</Label>
+            <Input id="duration" value={`${duration} days`} readOnly />
+          </div>
+        </div>
+        <div>
+          <Label htmlFor="chain">Chain</Label>
+          <div className="flex items-center border rounded-md p-2">
+            <Image
+              src={chainData.logoUrl}
+              alt={`${chainData.name} logo`}
+              width={24}
+              height={24}
+              className="w-6 h-6 mr-2"
+            />
+            <span>{chainData.name}</span>
+          </div>
+        </div>
+        <div>
+          <Label htmlFor="note">Leave a note (requirements, specifics, contact details)</Label>
+          <Textarea 
+            id="note" 
+            placeholder="Enter any additional requirements or specifics about the payment..."
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            className="mt-1"
+          />
+        </div>
         <StreamForecastWithCliffChart
           title="Payment schedule preview"
           description="Preview of the payment schedule based on the gig price and duration"
@@ -85,6 +123,7 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
           gigPrice={gigPrice}
           recipientAddress={recipientAddress}
           dueDate={dueDate}
+          gigId={gigId}
           chainId={chainId.toString()}
         />
       </CardContent>

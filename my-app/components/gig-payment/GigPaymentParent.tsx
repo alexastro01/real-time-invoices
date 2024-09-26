@@ -91,6 +91,7 @@ export default function GigPaymentParent({ gigId }: GigPaymentParentProps) {
             duration={gigData.delivery_time} 
             chainId={gigData.chain_id as ValidChainId}
             userDetails={userDetails}
+            gigId={gigData.gig_id}
           />
         </div>
         <div className="lg:col-span-1">

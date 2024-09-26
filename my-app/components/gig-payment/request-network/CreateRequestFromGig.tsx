@@ -29,11 +29,13 @@ interface CreateRequestFromGigProps {
   recipientAddress: string;
   dueDate: number;
   chainId: string;
+  gigId: string;
 }
 
 const CreateRequestFromGig: React.FC<CreateRequestFromGigProps> = ({
   payerDetails,
   gigPrice,
+  gigId,
   recipientAddress,
   dueDate,
   chainId
@@ -105,7 +107,8 @@ const CreateRequestFromGig: React.FC<CreateRequestFromGigProps> = ({
           expectedAmount: gigPrice,
           dueDate: dueDate,
           chain: chainId,
-          gateway: 'gnosis'
+          gateway: 'gnosis',
+          gigId: gigId
         }),
       });
 

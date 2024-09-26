@@ -23,7 +23,8 @@ export async function POST(request: Request) {
       expectedAmount,
       chain,
       dueDate,
-      gateway
+      gateway,
+      gigId
     } = body;
     
     console.log('``DUE DATE```')
@@ -59,7 +60,8 @@ export async function POST(request: Request) {
         expected_amount: Number(expectedAmount),
         due_date: formattedDueDate,
         chain_id: Number(chain),
-        gateway: gateway
+        gateway: gateway,
+        gig_id: gigId
       });
 
     if (error) throw error;
