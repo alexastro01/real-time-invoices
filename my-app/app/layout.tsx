@@ -47,6 +47,7 @@ export const metadata: Metadata = {
 
 const opts = {
   redirectUri: process.env.NEXT_PUBLIC_ENVIRONMENT === 'prod' ? 'https://app.streambill.xyz/edu-redirect' : 'http://localhost:3000/edu-redirect', // Adjust this URL
+  referralCode: 'PARTNER6'
 };
 
 export default function RootLayout({
@@ -66,7 +67,7 @@ export default function RootLayout({
       <GoogleAnalytics gaId="G-NCZ42WG6BR" />
         <Providers>
           <SessionWrapper>
-          <OCConnectWrapper opts={opts} sandboxMode={true} >
+          <OCConnectWrapper opts={opts} >
 
             <div className="block lg:flex">
               <Navbar /> {/* Add the Navbar here */}
