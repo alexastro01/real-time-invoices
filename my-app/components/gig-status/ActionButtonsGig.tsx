@@ -72,6 +72,7 @@ const ActionButtonsGig: React.FC<ActionButtonsGigProps> = ({
         duration={Number(gigData.delivery_time)}
     />
 ) : null}
+ 
             {streamData && address === invoiceData.paymentDetails.payeeAddress ? <WithdrawComponent streamId={streamId} chain_id={chain_id} /> : null}
             {streamData && invoiceData.paymentDetails.stream_id ? <StreamForecastDialogCliff
                 title="Stream Forecast"

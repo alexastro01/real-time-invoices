@@ -1,154 +1,160 @@
-import React, { useEffect, useState } from 'react';
-import useCountUp from '@/hooks/useCountUp';
-import { Progress } from "@/components/ui/progress";
-import { formatEther } from 'viem';
-import { timeToCancelationPeriodInSeconds } from '@/constants/timeToCancelationPeriod';
-import { cn } from "@/lib/utils";
+"use client"
+
+import React, { useEffect, useState } from 'react'
+import { formatEther } from 'viem'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
+import { Badge } from "@/components/ui/badge"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { InfoIcon } from 'lucide-react'
+import useCountUp from '@/hooks/useCountUp'
+import { timeToCancelationPeriodInSeconds } from '@/constants/timeToCancelationPeriod'
 
 interface TokenDisplayCliffProps {
-  maxValue: number;
-  tokenSymbol: string;
-  startTime: number;
-  endTime: number;
-  wasCanceled: boolean;
-  refundedAmount: bigint;
-  withdrawnAmount: number;
-  duration: number; // Duration in days
+  maxValue: number
+  tokenSymbol: string
+  startTime: number
+  endTime: number
+  wasCanceled: boolean
+  refundedAmount: bigint
+  withdrawnAmount: number
+  duration: number // Duration in days
 }
 
-const TokenDisplayCliff: React.FC<TokenDisplayCliffProps> = ({ 
-  maxValue, 
-  tokenSymbol, 
-  endTime, 
-  startTime, 
+export default function TokenDisplayCliff({
+  maxValue,
+  tokenSymbol,
+  startTime,
+  endTime,
   wasCanceled,
   refundedAmount,
   withdrawnAmount,
   duration
-}) => {
-  const totalDuration = endTime - startTime;
-  const cliffDuration = timeToCancelationPeriodInSeconds[duration] || 0;
-  const cliffEndTime = startTime + cliffDuration;
-  const [currentValue, setCurrentValue] = useState(0);
+}: TokenDisplayCliffProps) {
+  const totalDuration = endTime - startTime
+  const cliffDuration = timeToCancelationPeriodInSeconds[duration] || 0
+  const cliffEndTime = startTime + cliffDuration
+  const [currentValue, setCurrentValue] = useState(0)
 
   useEffect(() => {
     if (wasCanceled) {
-      const refundedEther = Number(formatEther(refundedAmount));
-      const finalStreamedAmount = maxValue - refundedEther;
-      setCurrentValue(finalStreamedAmount);
+      const refundedEther = Number(formatEther(refundedAmount))
+      const finalStreamedAmount = maxValue - refundedEther
+      setCurrentValue(finalStreamedAmount)
     } else {
       const interval = setInterval(() => {
-        const now = Date.now() / 1000;
+        const now = Date.now() / 1000
         if (now < cliffEndTime) {
-          setCurrentValue(0);
+          setCurrentValue(0)
         } else {
-          const elapsedAfterCliff = Math.max(now - cliffEndTime, 0);
-          const streamDuration = totalDuration - cliffDuration;
-          const percentageElapsed = Math.min((elapsedAfterCliff / streamDuration) * 100, 100);
-          setCurrentValue(maxValue * (percentageElapsed / 100));
+          const elapsedAfterCliff = Math.max(now - cliffEndTime, 0)
+          const streamDuration = totalDuration - cliffDuration
+          const percentageElapsed = Math.min((elapsedAfterCliff / streamDuration) * 100, 100)
+          setCurrentValue(maxValue * (percentageElapsed / 100))
         }
-      }, 1000);
+      }, 1000)
 
-      return () => clearInterval(interval);
+      return () => clearInterval(interval)
     }
-  }, [wasCanceled, startTime, endTime, totalDuration, maxValue, refundedAmount, cliffEndTime, cliffDuration]);
+  }, [wasCanceled, startTime, endTime, totalDuration, maxValue, refundedAmount, cliffEndTime, cliffDuration])
 
-  const remainingDuration = wasCanceled ? 0 : Math.max(endTime - Date.now() / 1000, 0);
-  const countUpValue = useCountUp(currentValue, maxValue, remainingDuration * 1000);
-  const displayValue = wasCanceled ? currentValue : countUpValue;
-  
-  const streamedPercentage = (currentValue / maxValue) * 100;
-  const withdrawnPercentage = (withdrawnAmount / maxValue) * 100;
-  const cliffPercentage = (cliffDuration / totalDuration) * 100;
-  const now = Date.now() / 1000;
-  const elapsedPercentage = ((now - startTime) / totalDuration) * 100;
+  const remainingDuration = wasCanceled ? 0 : Math.max(endTime - Date.now() / 1000, 0)
+  const countUpValue = useCountUp(currentValue, maxValue, remainingDuration * 1000)
+  const displayValue = wasCanceled ? currentValue : countUpValue
 
-  const formattedNumber = displayValue.toFixed(8);
-  const [integerPart, decimalPart] = formattedNumber.split('.');
+  const streamedPercentage = (currentValue / maxValue) * 100
+  const withdrawnPercentage = (withdrawnAmount / maxValue) * 100
+  const cliffPercentage = (cliffDuration / totalDuration) * 100
+  const now = Date.now() / 1000
+  const elapsedPercentage = ((now - startTime) / totalDuration) * 100
+
+  const formattedNumber = displayValue.toFixed(8)
+  const [integerPart, decimalPart] = formattedNumber.split('.')
 
   const renderIntegerPart = () => {
-    const paddedInteger = integerPart.padStart(3, '0');
+    const paddedInteger = integerPart.padStart(3, '0')
     return paddedInteger.split('').map((digit, index) => (
       <span key={index} className={
         index < paddedInteger.length - integerPart.length
-          ? "text-gray-400 dark:text-gray-500"
-          : "text-gray-800 dark:text-gray-200"
+          ? "text-muted-foreground"
+          : "text-foreground"
       }>
         {digit}
       </span>
-    ));
-  };
+    ))
+  }
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-8 p-8 rounded-2xl shadow-lg
-                    bg-gradient-to-br from-white via-gray-100 to-gray-100
-                    dark:from-gray-800 dark:via-gray-900 dark:to-gray-900
-                    border border-gray-200 dark:border-gray-700
-                    transition-all duration-300 ease-in-out
-                    hover:shadow-xl hover:scale-105">
-      <div className="text-5xl lg:text-7xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-zinc-600 dark:from-gray-300 dark:to-zinc-300">
-        {renderIntegerPart()}.
-        <span className="text-2xl lg:text-4xl">{decimalPart}</span>
-      </div>
-      
-      <div className="w-full max-w-md space-y-6">
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-          <div className="flex justify-between mb-2">
-            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Amount Streamed</span>
-            <span className="text-sm font-bold text-yellow-600 dark:text-yellow-400">{streamedPercentage.toFixed(2)}%</span>
+    <Card className="w-full max-w-md mx-auto">
+      <CardHeader>
+        <CardTitle className="text-2xl font-bold text-center">Token Stream</CardTitle>
+        <CardDescription className="text-center">Current token stream progress</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="text-center">
+          <div className="text-5xl font-bold font-mono">
+            {renderIntegerPart()}.
+            <span className="text-2xl">{decimalPart}</span>
           </div>
-          <div className="relative">
-            <Progress 
-              value={streamedPercentage} 
-              className="h-3 bg-yellow-100 dark:bg-yellow-900 rounded-full" 
-              indicatorClassName="bg-gradient-to-r from-yellow-400 to-yellow-600 dark:from-yellow-500 dark:to-yellow-700 rounded-full"
-            />
-            <div 
-              className={cn(
-                "absolute top-0 w-0.5 h-5 bg-red-500 transition-all duration-300",
-                cliffPercentage > elapsedPercentage ? "animate-pulse" : ""
+          <div className="text-sm text-muted-foreground mt-2">
+            {maxValue.toFixed(4)} {tokenSymbol} Total
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <div className="flex justify-between mb-2">
+              <span className="text-sm font-medium">Amount Streamed</span>
+              <span className="text-sm font-bold">{streamedPercentage.toFixed(2)}%</span>
+            </div>
+            <div className="relative">
+              <Progress value={streamedPercentage} className="h-3" />
+              {cliffPercentage > 0 && (
+                <div 
+                  className="absolute top-0 h-3 border-r-2 border-red-500" 
+                  style={{ left: `${cliffPercentage}%` }}
+                />
               )}
-              style={{ left: `${cliffPercentage}%` }}
-            />
+            </div>
+            <div className="mt-1 text-xs text-muted-foreground text-right">
+              {displayValue.toFixed(4)} / {maxValue} {tokenSymbol}
+            </div>
           </div>
-          <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 text-right">
-            {displayValue.toFixed(4)} / {maxValue} {tokenSymbol}
+
+          <div>
+            <div className="flex justify-between mb-2">
+              <span className="text-sm font-medium">Amount Withdrawn</span>
+              <span className="text-sm font-bold">{withdrawnPercentage.toFixed(2)}%</span>
+            </div>
+            <Progress value={withdrawnPercentage} className="h-3" />
+            <div className="mt-1 text-xs text-muted-foreground text-right">
+              {withdrawnAmount.toFixed(4)} / {maxValue} {tokenSymbol}
+            </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-          <div className="flex justify-between mb-2">
-            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Amount Withdrawn</span>
-            <span className="text-sm font-bold text-green-600 dark:text-green-400">{withdrawnPercentage.toFixed(2)}%</span>
-          </div>
-          <Progress value={withdrawnPercentage} className="h-3 bg-green-100 dark:bg-green-900 rounded-full" 
-                    indicatorClassName="bg-gradient-to-r from-green-400 to-green-600 dark:from-green-500 dark:to-green-700 rounded-full" />
-          <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 text-right">
-            {withdrawnAmount.toFixed(4)} / {maxValue} {tokenSymbol}
-          </div>
+        <div className="flex justify-between items-center">
+          <Badge variant={wasCanceled ? "destructive" : now < cliffEndTime ? "secondary" : "default"}>
+            {wasCanceled ? "Canceled" : now < cliffEndTime ? "In Cliff" : "Streaming"}
+          </Badge>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <InfoIcon className="h-4 w-4 text-muted-foreground" />
+              </TooltipTrigger>
+              <TooltipContent>
+                {wasCanceled ? (
+                  <p>Stream was canceled. Refunded: {Number(formatEther(refundedAmount)).toFixed(4)} {tokenSymbol}</p>
+                ) : now < cliffEndTime ? (
+                  <p>Tokens become withdrawable: {new Date(cliffEndTime * 1000).toLocaleString()}</p>
+                ) : (
+                  <p>Stream is active and tokens are being released</p>
+                )}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
-      </div>
-
-      <div className="text-center text-gray-600 dark:text-gray-400 font-medium">
-        {wasCanceled && (
-          <div className="text-red-500 dark:text-red-400 mt-2">
-            Stream Canceled
-            <div className="text-sm">
-              Refunded: {Number(formatEther(refundedAmount)).toFixed(4)} {tokenSymbol}
-            </div>
-          </div>
-        )}
-        {!wasCanceled && now < cliffEndTime && (
-          <div className="text-blue-500 dark:text-blue-400 mt-2">
-            In Cliff Period
-            <div className="text-sm">
-              Tokens become withdrawable: {new Date(cliffEndTime * 1000).toLocaleString()}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-export default TokenDisplayCliff;
+      </CardContent>
+    </Card>
+  )
+}

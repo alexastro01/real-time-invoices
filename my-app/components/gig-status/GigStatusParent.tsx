@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Skeleton } from "@/components/ui/skeleton"
-import ActionButtonsGig from './ActionButtonsGig'
-
+import ActionButtonsGigTest from './ActionButtonsGigTest'
 import { IInvoiceData } from '@/types/interfaces'
 
 const GigStatusParent = ({
@@ -48,38 +47,40 @@ const GigStatusParent = ({
   }, [requestId]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="w-full h-screen flex items-center justify-center p-4">
+        <div className="max-w-6xl w-full space-y-4">
+          <Skeleton className="h-64 w-full" />
+          <Skeleton className="h-64 w-full" />
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="w-full h-screen flex items-center justify-center p-4">
+        <div className="text-center text-red-500">Error: {error}</div>
+      </div>
+    );
   }
 
   return (
-    <div className='flex items-center justify-center min-h-screen w-full p-4'>
-    <div className='w-full max-w-md'>
-      {loading ? (
-        <div className='space-y-4'>
-          <Skeleton className="h-12 w-full" />
-          <Skeleton className="h-4 w-3/4" />
-          <Skeleton className="h-4 w-1/2" />
-          <Skeleton className="h-10 w-full" />
-        </div>
-      ) : invoiceData && gigData ? (
-        <div className='grid grid-cols-1 lg:grid-cols-1 items-center justify-items-center w-full'>
-          {invoiceData.paymentDetails.stream_id ? (
-            <ActionButtonsGig requestId={requestId} streamId={invoiceData.paymentDetails.stream_id} chain_id={invoiceData.paymentDetails.chain_id} invoiceData={invoiceData} gigData={gigData} />
-
-          ) : (
-          null
-          )}
-     
-        </div>
-      ) : (
-        <div>No invoice data available.</div>
-      )}
+    <div className='w-full h-screen flex items-center justify-center p-4'>
+      <div className='max-w-6xl w-full'>
+        {invoiceData && gigData && invoiceData.paymentDetails.stream_id ? (
+          <ActionButtonsGigTest 
+            requestId={requestId} 
+            streamId={invoiceData.paymentDetails.stream_id} 
+            chain_id={invoiceData.paymentDetails.chain_id} 
+            invoiceData={invoiceData} 
+            gigData={gigData} 
+          />
+        ) : (
+          <div className="text-center">No invoice data available.</div>
+        )}
+      </div>
     </div>
-  </div>
   )
 }
 

@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { timeToCancelationPeriod } from '@/constants/timeToCancelationPeriod';
+import Display from '../gig-status/Display';
 
 interface ChartDataPoint {
   date: Date;
@@ -154,7 +155,8 @@ export default function StreamForecastWithCliff({
          
         </div>
       </CardHeader>
-      <CardContent className="flex-grow">
+      <CardContent className="flex
+      ">
         <ResponsiveContainer width="100%" height={250}>
           <AreaChart
             data={chartData}
@@ -178,8 +180,11 @@ export default function StreamForecastWithCliff({
             <Tooltip content={<CustomTooltip />} />
             <Area type="stepAfter" dataKey="value" stroke={chartColor} fill={chartColor} />
           </AreaChart>
+          
         </ResponsiveContainer>
+   
       </CardContent>
+ 
     </Card>
   )
 }
