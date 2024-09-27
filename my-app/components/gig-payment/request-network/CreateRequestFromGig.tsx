@@ -10,6 +10,7 @@ import RequestConfirmed from "@/components/create-invoice/RequestConfirmed";
 import Spinner from "@/components/helpers/Spinner";
 import Image from "next/image";
 import { generateRequestParamatersFromGig } from "@/utils/request-network/generateRequestParamtersFromGig";
+import PayParentGig from "../sablier/PayParentGig";
 
 interface UserDetails {
   evmAddress: string;
@@ -30,6 +31,7 @@ interface CreateRequestFromGigProps {
   dueDate: number;
   chainId: string;
   gigId: string;
+  durationInDays: number;
 }
 
 const CreateRequestFromGig: React.FC<CreateRequestFromGigProps> = ({
@@ -38,7 +40,8 @@ const CreateRequestFromGig: React.FC<CreateRequestFromGigProps> = ({
   gigId,
   recipientAddress,
   dueDate,
-  chainId
+  chainId,
+  durationInDays
 }) => {
   const { data: walletClient } = useWalletClient();
   const [loading, setLoading] = useState(false);
@@ -83,7 +86,7 @@ const CreateRequestFromGig: React.FC<CreateRequestFromGigProps> = ({
       });
 
       console.log("Request Parameters:", requestParameters);
-      
+
       const request = await requestClient.createRequest(requestParameters);
       setDialogMessage("Request Created Successfully! Confirming Request...");
 
@@ -145,10 +148,20 @@ const CreateRequestFromGig: React.FC<CreateRequestFromGigProps> = ({
               <p>{dialogMessage}</p>
             </div>
           }
-          {isConfirmed &&
-            <div className="flex flex-col items-center justify-center p-4">
-              <RequestConfirmed requestId={requestId} />
-            </div>
+          {
+            isConfirmed && payerDetails &&
+            <PayParentGig
+              requestId={requestId}
+              durationInDays={durationInDays}
+              totalAmount={gigPrice.toString()}
+              payeeAddress={recipientAddress}
+              dueDate={dueDate}
+              chain_id={Number(chainId)}
+              payerAddress={payerDetails?.evmAddress}
+              payerName={payerDetails.name}
+              payeeName={payerDetails.name}
+              receiverEmail={payerDetails.email}
+              link={`https://app.streambill.io/pay/${requestId}`} />
           }
         </DialogContent>
       </Dialog>
