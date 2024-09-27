@@ -68,9 +68,9 @@ const GigStatusParent = ({
 
   return (
     <div className='w-full h-screen flex items-center justify-center p-4'>
-      {/* <div className='max-w-6xl w-full'>
+      <div className='max-w-6xl w-full'>
         {invoiceData && gigData && invoiceData.paymentDetails.stream_id ? (
-          <ActionButtonsGigTest 
+          <GigPaymentDashboard 
             requestId={requestId} 
             streamId={invoiceData.paymentDetails.stream_id} 
             chain_id={invoiceData.paymentDetails.chain_id} 
@@ -80,8 +80,8 @@ const GigStatusParent = ({
         ) : (
           <div className="text-center">No invoice data available.</div>
         )}
-      </div> */}
-      <GigPaymentDashboard />
+      </div>
+     
     </div>
   )
 }

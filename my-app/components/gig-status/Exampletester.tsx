@@ -8,6 +8,20 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Clock, DollarSign, Download, FileText, AlertCircle } from 'lucide-react'
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { useAccount, useReadContract } from 'wagmi';
+import { formatEther } from 'viem';
+import { abi } from '../../abi/SablierLinear';
+import { contracts, ValidChainId } from '@/utils/contracts/contracts';
+import { timeToCancelationPeriod } from '@/constants/timeToCancelationPeriod';
+import { Gig as GigType, StreamData } from '@/types/types';
+import { IInvoiceData } from '@/types/interfaces';
+import ShareInvoiceComponent from '../invoice/ShareInvoiceComponent';
+import WithdrawComponent from '../invoice/WithdrawComponent';
+import ViewInvoiceDialog from '../invoice/ViewInvoiceDialog';
+import StreamForecastWithCliff from '../stream-forecast/StreamForecastWithCliff';
+import Display from './Display';
+import { generateChartDataWithTimeRange } from '@/utils/chart/generateChartDataWithTimeRange'
+import WithdrawGig from './WithdrawGig'
 
 // Mock data for the chart (representing money unlocking over time)
 const chartData = [
@@ -24,10 +38,52 @@ const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value)
 }
 
-export default function GigPaymentDashboard() {
-  const totalAmount = 1000
-  const streamedAmount = 600
-  const withdrawnAmount = 400
+type GigDashBoardProps = {
+    streamId: number,
+    chain_id: number,
+    invoiceData: IInvoiceData,
+    requestId: string,
+    gigData: GigType
+}
+
+export default function GigPaymentDashboard({
+    streamId,
+    chain_id,
+    invoiceData,
+    requestId,
+    gigData
+}: GigDashBoardProps) {
+
+
+  const { data: streamData } = useReadContract({
+    address: contracts[chain_id as ValidChainId].sablierLinearV2LockUpAddress,
+    abi: abi,
+    functionName: 'getStream',
+    args: [BigInt(streamId)],
+    chainId: chain_id
+});
+
+const { address } = useAccount();
+
+const typedStreamData = streamData as StreamData | undefined;
+
+const totalAmount = typedStreamData ? Number(formatEther(typedStreamData.amounts.deposited)) : 0;
+const duration = Number(gigData.delivery_time);
+const totalHours = (duration + timeToCancelationPeriod[duration]) * 24;
+const cliffHour = timeToCancelationPeriod[duration] * 24;
+
+const chartData = typedStreamData ? generateChartDataWithTimeRange(
+    totalHours,
+    cliffHour,
+    totalAmount,
+    Number(typedStreamData.startTime),
+    Number(typedStreamData.endTime)
+) : [];
+
+if (!typedStreamData) {
+    return <div>Loading stream data...</div>;
+}
+
 
   return (
     <div className="container mx-auto p-6 space-y-8 bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
@@ -38,25 +94,15 @@ export default function GigPaymentDashboard() {
         </CardHeader>
         <CardContent className="p-6">
           <div className="grid gap-6 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg font-medium">Payment Schedule</CardTitle>
-              </CardHeader>
-              <CardContent className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-                    <XAxis dataKey="day" label={{ value: 'Days', position: 'insideBottom', offset: -5 }} />
-                    <YAxis label={{ value: 'Amount ($)', angle: -90, position: 'insideLeft' }} />
-                    <Tooltip 
-                      formatter={(value) => formatCurrency(value as number)}
-                      labelFormatter={(label) => `Day ${label}`}
-                    />
-                    <Line type="monotone" dataKey="amount" stroke="#4f46e5" strokeWidth={2} dot={{ r: 4 }} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
+            <StreamForecastWithCliff
+            title="Payment Schedule"
+            description="Track your payment progress"
+            totalAmount={totalAmount}
+            chartColor="blue"
+            duration={duration}
+            startTime={typedStreamData.startTime}
+            endTime={typedStreamData.endTime}
+            />
 
             <div className="space-y-6">
               <Card>
@@ -68,36 +114,26 @@ export default function GigPaymentDashboard() {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg font-medium">Payment Progress</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <div className="flex justify-between mb-1 text-sm font-medium">
-                      <span>Money Streamed Total</span>
-                      <span>{formatCurrency(streamedAmount)}</span>
-                    </div>
-                    <Progress value={(streamedAmount / totalAmount) * 100} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between mb-1 text-sm font-medium">
-                      <span>Money Withdrawn</span>
-                      <span>{formatCurrency(withdrawnAmount)}</span>
-                    </div>
-                    <Progress value={(withdrawnAmount / totalAmount) * 100} className="h-2" />
-                  </div>
-                </CardContent>
-              </Card>
+              <Display
+                 title="Payment Schedule"
+                 description="Track your payment progress"
+                 totalAmount={totalAmount}
+                 chartData={chartData}
+                 cliffHour={cliffHour}
+                 totalHours={totalHours}
+              />
             </div>
           </div>
 
           <Separator className="my-6" />
 
           <div className="flex flex-wrap gap-4 justify-center">
-            <Button className="bg-green-600 hover:bg-green-700">
-              <Download className="mr-2 h-4 w-4" /> Withdraw Available Funds
-            </Button>
+             {streamId && (
+                <WithdrawGig
+                streamId={streamId}
+                chain_id={chain_id}
+                />
+              ) }
             <Button variant="outline">
               <FileText className="mr-2 h-4 w-4" /> View Invoice
             </Button>

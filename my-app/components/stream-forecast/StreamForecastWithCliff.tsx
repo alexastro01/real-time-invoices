@@ -8,7 +8,6 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { timeToCancelationPeriod } from '@/constants/timeToCancelationPeriod';
-import Display from '../gig-status/Display';
 
 interface ChartDataPoint {
   date: Date;
@@ -116,7 +115,7 @@ export default function StreamForecastWithCliff({
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       const currentTime = new Date();
-      const isClosestToCurrent = Math.abs(label.getTime() - currentTime.getTime()) < 0.5 * 60 * 60 * 1000; // Within 30 mins
+      const isClosestToCurrent = Math.abs(label.getTime() - currentTime.getTime()) < 0.5 * 60 * 60 * 1000; // Within 30 mins 
   
       return (
         <div className="bg-primary-foreground p-2 border border-gray-300 rounded shadow">
@@ -143,7 +142,7 @@ export default function StreamForecastWithCliff({
   }, [chartData])
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col h-full">
       <CardHeader className="flex-shrink-0">
         <div className="flex justify-between items-center">
           <div>
@@ -152,12 +151,10 @@ export default function StreamForecastWithCliff({
               {description}
             </CardDescription>
           </div>
-         
         </div>
       </CardHeader>
-      <CardContent className="flex
-      ">
-        <ResponsiveContainer width="100%" height={250}>
+      <CardContent className="flex-grow flex flex-col">
+        <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={chartData}
             margin={{
@@ -180,11 +177,8 @@ export default function StreamForecastWithCliff({
             <Tooltip content={<CustomTooltip />} />
             <Area type="stepAfter" dataKey="value" stroke={chartColor} fill={chartColor} />
           </AreaChart>
-          
         </ResponsiveContainer>
-   
       </CardContent>
- 
     </Card>
   )
 }
