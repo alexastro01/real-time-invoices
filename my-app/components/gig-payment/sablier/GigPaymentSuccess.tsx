@@ -16,24 +16,19 @@ const StreamCreatedSuccess = ({
 GigPaymentSuccessProps
 ) => {
   return (
-    <DialogContent className="sm:max-w-[425px]">
-    <DialogHeader>
-    <DialogTitle></DialogTitle>
-    </DialogHeader>
-    <NeonGradientCard className="max-w-sm items-center justify-center text-center">
-      <span className="pointer-events-none z-10 h-full whitespace-pre-wrap bg-gradient-to-br from-[#77d36f] from-35% to-[#00ff37] bg-clip-text text-center text-6xl font-bold leading-none tracking-tighter text-transparent dark:drop-shadow-[0_2px_4px_rgba(111,211,161,0.4)]">
-        Stream Started
+<div className='flex justify-center'>
+    <NeonGradientCard className="max-w-sm items-center justify-center text-center flex">
+      <span className="pointer-events-none z-10 h-full whitespace-pre-wrap bg-gradient-to-br from-[#67bd6e] from-35% to-[#59ec91] bg-clip-text text-center text-6xl font-bold leading-none tracking-tighter text-transparent dark:drop-shadow-[0_2px_4px_rgba(111,211,161,0.4)]">
+        Gig Started
       </span>
 
       <div className="flex justify-center mt-6 z-10">
-        <Link href={`/invoice/${requestId}`}>
+        <Link href={`/gig-status/${requestId}`}>
           <Button size={"lg"}>Go to Status</Button>
         </Link>
       </div>
     </NeonGradientCard>
-
-    </DialogContent>
-
+    </div>
   )
 }
 
