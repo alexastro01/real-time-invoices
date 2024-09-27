@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Skeleton } from "@/components/ui/skeleton"
 import ActionButtonsGigTest from './ActionButtonsGigTest'
 import { IInvoiceData } from '@/types/interfaces'
+import GigPaymentDashboard from './Exampletester'
 
 const GigStatusParent = ({
     requestId
@@ -67,7 +68,7 @@ const GigStatusParent = ({
 
   return (
     <div className='w-full h-screen flex items-center justify-center p-4'>
-      <div className='max-w-6xl w-full'>
+      {/* <div className='max-w-6xl w-full'>
         {invoiceData && gigData && invoiceData.paymentDetails.stream_id ? (
           <ActionButtonsGigTest 
             requestId={requestId} 
@@ -79,7 +80,8 @@ const GigStatusParent = ({
         ) : (
           <div className="text-center">No invoice data available.</div>
         )}
-      </div>
+      </div> */}
+      <GigPaymentDashboard />
     </div>
   )
 }
