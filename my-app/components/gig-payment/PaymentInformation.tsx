@@ -123,6 +123,7 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
           gigPrice={gigPrice}
           recipientAddress={recipientAddress}
           dueDate={dueDate}
+          durationInDays={Number(duration)}
           gigId={gigId}
           chainId={chainId.toString()}
         />

@@ -7,8 +7,9 @@ import {
 } from "@/components/ui/dialog"
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
-import ApproveUSDCDialog from '@/components/pay-invoice/ApproveUSDCDialog';
+
 import StartLinearStreamWithCliff from './StartLinearStreamWithCliff';
+import ApproveUSDCGig from './ApproveUSDCGig';
 import GigPaymentSuccess from './GigPaymentSuccess';
 
 type PaymentDialogProps = {
@@ -92,7 +93,7 @@ const PayParentGig = ({
     return ( 
 <>
             {
-                step === 0 && <ApproveUSDCDialog setStep={setStep} amountToApprove={totalAmount} chain_id={chain_id} />
+                step === 0 && <ApproveUSDCGig setStep={setStep} amountToApprove={totalAmount} chain_id={chain_id} />
             }
 
             {

@@ -11,6 +11,7 @@ import Spinner from "@/components/helpers/Spinner";
 import Image from "next/image";
 import { generateRequestParamatersFromGig } from "@/utils/request-network/generateRequestParamtersFromGig";
 import PayParentGig from "../sablier/PayParentGig";
+import { timeToCancelationPeriod } from "@/constants/timeToCancelationPeriod";
 
 interface UserDetails {
   evmAddress: string;
@@ -51,6 +52,7 @@ const CreateRequestFromGig: React.FC<CreateRequestFromGigProps> = ({
   const [isConfirmed, setIsConfirmed] = useState(false);
 
   const handleClick = async () => {
+    if(isConfirmed === false) {  
     if (!payerDetails || !gigPrice || !recipientAddress || !dueDate || !chainId) {
       alert("Missing required information");
       return;
@@ -123,6 +125,7 @@ const CreateRequestFromGig: React.FC<CreateRequestFromGigProps> = ({
 
       setDialogMessage("Request Created Successfully");
       setIsConfirmed(true);
+      
     } catch (error: any) {
       console.log(error)
       alert('Error: gnosis gateway')
@@ -130,6 +133,9 @@ const CreateRequestFromGig: React.FC<CreateRequestFromGigProps> = ({
     } finally {
       setLoading(false);
     }
+  } else {
+    setDialogOpen(true);
+  }
   };
 
   return (
@@ -145,6 +151,7 @@ const CreateRequestFromGig: React.FC<CreateRequestFromGigProps> = ({
           {loading && !isConfirmed &&
             <div className="flex flex-col items-center justify-center p-4">
               <Spinner className="mb-4" />
+              <p>{durationInDays} days and {timeToCancelationPeriod[durationInDays]} days after cancelation period</p>
               <p>{dialogMessage}</p>
             </div>
           }

@@ -221,7 +221,7 @@ const StartLinearStreamWithCliff = ({ setStep, amountToStream, payeeAddress, due
                     <div className="text-center">
                         <p className="text-sm text-gray-500 mb-1">over</p>
                         <p className="text-lg font-semibold">
-                            {formatTimeRemaining(getTimeRemainingInSeconds(dueDate))}
+                          {durationInDays + timeToCancelationPeriod[durationInDays]} days ( {timeToCancelationPeriod[durationInDays]} days cancelation period )
                         </p>
                     </div>
                     
