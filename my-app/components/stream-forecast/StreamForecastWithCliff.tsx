@@ -114,10 +114,18 @@ export default function StreamForecastWithCliff({
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
+      const currentTime = new Date();
+      const isClosestToCurrent = Math.abs(label.getTime() - currentTime.getTime()) < 0.5 * 60 * 60 * 1000; // Within 30 mins
+  
       return (
         <div className="bg-primary-foreground p-2 border border-gray-300 rounded shadow">
           <p className="label">{`Date: ${label.toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`}</p>
           <p className="value">{`Tokens: ${Math.round(payload[0].value)}`}</p>
+          {isClosestToCurrent && (
+            <p className="current-time font-semibold text-green-500">
+              Current time: {currentTime.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit' })}
+            </p>
+          )}
         </div>
       );
     }

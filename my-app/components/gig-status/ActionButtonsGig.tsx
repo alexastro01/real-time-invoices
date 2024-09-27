@@ -12,6 +12,7 @@ import { IInvoiceData } from '@/types/interfaces';
 import ViewInvoiceDialog from '../invoice/ViewInvoiceDialog';
 import StreamForecastDialog from '../stream-forecast/StreamForecastDialog';
 import StreamForecastDialogCliff from './StreamForecastDialogCliff';
+import TokenDisplayCliff from './TokenDisplayCliff';
 
 
 type ActionButtonsGigProps = {
@@ -59,17 +60,18 @@ const ActionButtonsGig: React.FC<ActionButtonsGigProps> = ({
 
     return (
         <div className="flex flex-col space-y-4 w-full max-w-md">
-            {streamData ? (
-                <TokenDisplay
-                    maxValue={Number(formatEther(typedStreamData.amounts.deposited))}
-                    tokenSymbol="tUSDC"
-                    startTime={typedStreamData.startTime}
-                    endTime={typedStreamData.endTime}
-                    wasCanceled={typedStreamData.wasCanceled}
-                    refundedAmount={typedStreamData.amounts.refunded}
-                    withdrawnAmount={withdrawnAmount ? Number(formatEther(withdrawnAmount as bigint)) : 0}
-                />
-            ) : null}
+        {streamData ? (
+    <TokenDisplayCliff
+        maxValue={Number(formatEther(typedStreamData.amounts.deposited))}
+        tokenSymbol="tUSDC"
+        startTime={typedStreamData.startTime}
+        endTime={typedStreamData.endTime}
+        wasCanceled={typedStreamData.wasCanceled}
+        refundedAmount={typedStreamData.amounts.refunded}
+        withdrawnAmount={withdrawnAmount ? Number(formatEther(withdrawnAmount as bigint)) : 0}
+        duration={Number(gigData.delivery_time)}
+    />
+) : null}
             {streamData && address === invoiceData.paymentDetails.payeeAddress ? <WithdrawComponent streamId={streamId} chain_id={chain_id} /> : null}
             {streamData && invoiceData.paymentDetails.stream_id ? <StreamForecastDialogCliff
                 title="Stream Forecast"
