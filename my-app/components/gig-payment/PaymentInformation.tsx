@@ -47,12 +47,16 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
 
   const dueDate = useMemo(() => {
     const durationInDays = parseInt(duration);
-    const cancelationPeriod = timeToCancelationPeriod[durationInDays] || 0;
-    const totalDays = durationInDays + cancelationPeriod;
+    const cancelationPeriodDays = timeToCancelationPeriod[durationInDays] || 0;
+    const totalDays = durationInDays + cancelationPeriodDays;
     
     const date = new Date();
-    date.setDate(date.getDate() + totalDays);
+    const totalMilliseconds = totalDays * 24 * 60 * 60 * 1000;
+    date.setTime(date.getTime() + totalMilliseconds);
+    
+    console.log('DUE DATE NEW ', date);
     return Math.floor(date.getTime() / 1000); // Convert to Unix timestamp (seconds)
+   
   }, [duration]);
 
   const handlePayment = () => {
