@@ -171,3 +171,12 @@ export interface IInvoiceData {
    },
    paymentDetails: IPaymentDetails
 }
+
+export interface IInvoiceDataGig {
+  partiesDetails : {
+     seller : UserDetailsFromSupabaseOnInvoice,
+     client : UserDetailsFromSupabaseOnInvoice
+  },
+  paymentDetails: IPaymentDetails,
+  gig_id: string
+}

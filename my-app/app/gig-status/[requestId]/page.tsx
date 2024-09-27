@@ -22,7 +22,7 @@ const Page = () => {
         );
       case 'authenticated':
         return session?.user?.name &&
-        <GigStatusParent gigId={params.gigId as string} />
+        <GigStatusParent requestId={params.requestId as string} />
       
         
       case 'unauthenticated':
