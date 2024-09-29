@@ -86,11 +86,11 @@ if (!typedStreamData) {
 
 
   return (
-    <div className="container mx-auto p-6 space-y-8 bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <div className="container mx-auto p-6 space-y-8 bg-gradient-to-br from-background to-muted min-h-screen">
       <Card className="border-none shadow-lg">
-        <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-t-lg">
-          <CardTitle className="text-3xl font-bold">Gig Payment Status</CardTitle>
-          <CardDescription className="text-blue-100">Track your payment progress</CardDescription>
+        <CardHeader className="bg-gradient-to-r primary-muted to primary-muted-foreground rounded-t-lg">
+          <CardTitle className="text-3xl font-bold text-primary">Gig Payment Status</CardTitle>
+          <CardDescription className="text-primary/80">Track your payment progress</CardDescription>
         </CardHeader>
         <CardContent className="p-6">
           <div className="grid gap-6 md:grid-cols-2">
@@ -98,7 +98,7 @@ if (!typedStreamData) {
             title="Payment Schedule"
             description="Track your payment progress"
             totalAmount={totalAmount}
-            chartColor="blue"
+            chartColor="green-400"
             duration={duration}
             startTime={typedStreamData.startTime}
             endTime={typedStreamData.endTime}
@@ -110,13 +110,13 @@ if (!typedStreamData) {
                   <CardTitle className="text-lg font-medium">Total Gig Value</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-4xl font-bold text-blue-600">{formatCurrency(totalAmount)}</div>
+                  <div className="text-4xl font-bold text-green-600">{formatCurrency(totalAmount)}</div>
                 </CardContent>
               </Card>
 
               <Display
                  title="Payment Schedule"
-                 description="Track your payment progress"
+                 description="Available to withdraw"
                  totalAmount={totalAmount}
                  chartData={chartData}
                  cliffHour={cliffHour}
@@ -146,12 +146,12 @@ if (!typedStreamData) {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-xl font-semibold">Gig Details</CardTitle>
+          <CardTitle className="text-xl font-semibold text-primary">Gig Details</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h3 className="font-bold text-lg">Web Development Project</h3>
+              <h3 className="font-bold text-lg text-primary">Web Development Project</h3>
               <p className="text-muted-foreground">Custom website development using React and Next.js</p>
             </div>
             <div className="flex items-center gap-4">

@@ -53,8 +53,8 @@ export default function GigPage({
   if (!gig) return <div>Gig not found</div>
 
   return (
-    <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-screen">
-      <Card className="mx-auto w-[600px]">
+    <div className="container  flex items-center justify-center">
+      <Card className="mx-auto ">
         <CardHeader>
           <CardTitle className="text-3xl font-bold">{gig.title}</CardTitle>
           <CardDescription className="text-lg mt-2">{gig.description}</CardDescription>

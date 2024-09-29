@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts"
 import {
   Card,
@@ -20,8 +20,8 @@ interface StreamForecastProps {
   totalAmount: number;
   chartColor: string;
   duration: number;
-  startTime?: number;
-  endTime?: number;
+  startTime: number;
+  endTime: number;
 }
 
 function generateChartDataWithTimeRange(totalHours: number, cliffHour: number, totalAmount: number, startTime: number, endTime: number): ChartDataPoint[] {
@@ -33,13 +33,9 @@ function generateChartDataWithTimeRange(totalHours: number, cliffHour: number, t
   const startDate = new Date(startTime * 1000)
   const endDate = new Date(endTime * 1000)
 
-  console.log("Using time range:")
-  console.log("startDate", startDate)
-  console.log("endDate", endDate)
-
   const hourlyIncrement = (endDate.getTime() - startDate.getTime()) / (totalHours * 60 * 60 * 1000)
 
-  for (let i = 0; i < totalHours; i++) {
+  for (let i = 0; i <= totalHours; i++) {
     const currentDate = new Date(startDate.getTime() + i * hourlyIncrement * 60 * 60 * 1000)
     if (i < cliffHour) {
       data.push({ date: currentDate, value: baseValue })
@@ -47,41 +43,9 @@ function generateChartDataWithTimeRange(totalHours: number, cliffHour: number, t
       data.push({ date: currentDate, value: baseValue })
       data.push({ date: currentDate, value: cliffValue })
     } else {
-      const remainingHours = totalHours - cliffHour - 1
+      const remainingHours = totalHours - cliffHour
       const valueIncrement = (maxValue - cliffValue) / remainingHours
       data.push({ date: currentDate, value: cliffValue + (i - cliffHour) * valueIncrement })
-    }
-  }
-
-  return data
-}
-
-function generateChartData(totalHours: number, cliffHour: number, totalAmount: number, startTime?: number, endTime?: number): ChartDataPoint[] {
-  const data: ChartDataPoint[] = []
-  const baseValue = 0
-  const cliffValue = (cliffHour / totalHours) * totalAmount
-  const maxValue = totalAmount
-  
-  // Convert Unix timestamps to Date objects if provided
-  const startDate = startTime ? new Date(startTime * 1000) : new Date()
-  const endDate = endTime ? new Date(endTime * 1000) : new Date(startDate.getTime() + totalHours * 60 * 60 * 1000)
-
-  console.log("New date object", new Date())
-  console.log("startDate", startDate)
-  console.log("endDate", endDate)
-
-  for (let i = 0; i < totalHours; i++) {
-    const currentDate = new Date(startDate.getTime() + i * 60 * 60 * 1000) // Increment by hour
-    if (i < cliffHour) {
-      data.push({ date: currentDate, value: baseValue })
-    } else if (i === cliffHour) {
-      // Add two data points for the cliff hour to create a vertical line
-      data.push({ date: currentDate, value: baseValue })
-      data.push({ date: currentDate, value: cliffValue })
-    } else {
-      const remainingHours = totalHours - cliffHour - 1
-      const hourlyIncrement = (maxValue - cliffValue) / remainingHours
-      data.push({ date: currentDate, value: cliffValue + (i - cliffHour) * hourlyIncrement })
     }
   }
 
@@ -97,29 +61,32 @@ export default function StreamForecastWithCliff({
   startTime,
   endTime
 }: StreamForecastProps) {
-  const totalHours = (duration + timeToCancelationPeriod[duration as number]) * 24 // duration in days
-  const cliffHour = timeToCancelationPeriod[duration as number] * 24  // Cliff at specified time
+  const totalHours = useMemo(() => (duration + timeToCancelationPeriod[duration]) * 24, [duration]);
+  const cliffHour = useMemo(() => timeToCancelationPeriod[duration] * 24, [duration]);
 
-  const chartData = startTime && endTime
-    ? generateChartDataWithTimeRange(totalHours, cliffHour, totalAmount, startTime, endTime)
-    : generateChartData(totalHours, cliffHour, totalAmount)
+  const chartData = useMemo(() => 
+    generateChartDataWithTimeRange(totalHours, cliffHour, totalAmount, startTime, endTime),
+    [totalHours, cliffHour, totalAmount, startTime, endTime]
+  );
 
-  const formatXAxis = (tickItem: Date) => {
-    return tickItem.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+  const formatXAxis = (tickItem: number) => {
+    const date = new Date(tickItem);
+    return date.toLocaleString('en-US', { month: 'short', day: 'numeric' });
   }
 
   const formatYAxis = (tickItem: number) => {
-    return Math.round(tickItem).toString()  // Display as whole numbers
+    return Math.round(tickItem).toString();
   }
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       const currentTime = new Date();
-      const isClosestToCurrent = Math.abs(label.getTime() - currentTime.getTime()) < 0.5 * 60 * 60 * 1000; // Within 30 mins 
+      const labelDate = new Date(label);
+      const isClosestToCurrent = Math.abs(labelDate.getTime() - currentTime.getTime()) < 0.5 * 60 * 60 * 1000;
   
       return (
         <div className="bg-primary-foreground p-2 border border-gray-300 rounded shadow">
-          <p className="label">{`Date: ${label.toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`}</p>
+          <p className="label">{`Date: ${labelDate.toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`}</p>
           <p className="value">{`Tokens: ${Math.round(payload[0].value)}`}</p>
           {isClosestToCurrent && (
             <p className="current-time font-semibold text-green-500">
@@ -133,13 +100,13 @@ export default function StreamForecastWithCliff({
   };
 
   useEffect(() => {
-    console.log("Chart props", {title, description, totalAmount, chartColor, duration})
-    if(startTime && endTime) {
-      console.log("startDate", startTime)
-      console.log("endDate", endTime)
-    }
-    console.log("chartData", chartData)
-  }, [chartData])
+    console.log("StreamForecastWithCliff props:", {title, description, totalAmount, chartColor, duration, startTime, endTime});
+    console.log("Generated chart data:", chartData);
+  }, [title, description, totalAmount, chartColor, duration, startTime, endTime, chartData]);
+
+  if (chartData.length === 0) {
+    return <div>No data available for the chart.</div>;
+  }
 
   return (
     <Card className="flex flex-col h-full">
@@ -154,7 +121,7 @@ export default function StreamForecastWithCliff({
         </div>
       </CardHeader>
       <CardContent className="flex-grow flex flex-col">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height={300}>
           <AreaChart
             data={chartData}
             margin={{
@@ -168,10 +135,12 @@ export default function StreamForecastWithCliff({
             <XAxis 
               dataKey="date" 
               tickFormatter={formatXAxis}
-              // Show ticks every 6 hours to reduce clutter
+              type="number"
+              domain={['dataMin', 'dataMax']}
+              scale="time"
               ticks={chartData
                 .filter((_, index) => index % 6 === 0)
-                .map(point => point.date.getTime())} // Convert Date to number
+                .map(point => point.date.getTime())}
             />
             <YAxis tickFormatter={formatYAxis} domain={[0, totalAmount]} />
             <Tooltip content={<CustomTooltip />} />

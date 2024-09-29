@@ -34,13 +34,13 @@ interface PaymentInformationProps {
   gigId: string;
 }
 
-const PaymentInformation: React.FC<PaymentInformationProps> = ({ 
-  gigPrice, 
-  recipientAddress, 
-  duration, 
+const PaymentInformation: React.FC<PaymentInformationProps> = ({
+  gigPrice,
+  recipientAddress,
+  duration,
   chainId,
   gigId,
-  userDetails 
+  userDetails
 }) => {
   const chainData = chainInfo[chainId];
   const [note, setNote] = useState('');
@@ -49,14 +49,14 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
     const durationInDays = parseInt(duration);
     const cancelationPeriodDays = timeToCancelationPeriod[durationInDays] || 0;
     const totalDays = durationInDays + cancelationPeriodDays;
-    
+
     const date = new Date();
     const totalMilliseconds = totalDays * 24 * 60 * 60 * 1000;
     date.setTime(date.getTime() + totalMilliseconds);
-    
+
     console.log('DUE DATE NEW ', date);
     return Math.floor(date.getTime() / 1000); // Convert to Unix timestamp (seconds)
-   
+
   }, [duration]);
 
   const handlePayment = () => {
@@ -70,7 +70,7 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
         <CardDescription>Payment method details</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-6">
-      <div>
+        <div>
           <Label htmlFor="recipient">Recipient Address</Label>
           <Input id="recipient" value={recipientAddress} readOnly />
         </div>
@@ -99,8 +99,8 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
         </div>
         <div>
           <Label htmlFor="note">Leave a note (requirements, specifics, contact details)</Label>
-          <Textarea 
-            id="note" 
+          <Textarea
+            id="note"
             placeholder="Enter any additional requirements or specifics about the payment..."
             value={note}
             onChange={(e) => setNote(e.target.value)}
@@ -112,7 +112,9 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
           description="Preview of the payment schedule based on the gig price and duration"
           duration={Number(duration)}
           totalAmount={gigPrice}
-          chartColor="#ff9800"
+          chartColor="green-400"
+          startTime={Math.floor(Date.now() / 1000)}
+          endTime={Math.floor(Date.now() / 1000) + (Number(duration) + timeToCancelationPeriod[Number(duration)]) * 24 * 60 * 60}
         />
       </CardContent>
       <CardContent className="text-sm text-gray-500">
@@ -122,7 +124,7 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
       </CardContent>
       <Separator className="my-4" />
       <CardContent>
-        <CreateRequestFromGig 
+        <CreateRequestFromGig
           payerDetails={userDetails}
           gigPrice={gigPrice}
           recipientAddress={recipientAddress}
