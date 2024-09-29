@@ -20,21 +20,37 @@ export async function GET(request: Request) {
   try {
     const supabase = createAuthenticatedSupabaseClient(session);
 
-    const { data: gig, error } = await supabase
+    // Fetch gig data
+    const { data: gig, error: gigError } = await supabase
       .from('gigs')
       .select('*')
       .eq('gig_id', gig_id)
       .single();
 
-    if (error) throw error;
+    if (gigError) throw gigError;
 
     if (!gig) {
       return NextResponse.json({ error: 'Gig not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ gig });
+    // Fetch creator profile data
+    const { data: creatorProfile, error: profileError } = await supabase
+      .from('gig_profile')
+      .select('*')
+      .eq('evmAddress', gig.creator_address)
+      .single();
+
+    if (profileError) throw profileError;
+
+    // Combine gig and creator profile data
+    const responseData = {
+      gig,
+      creatorProfile
+    };
+
+    return NextResponse.json(responseData);
   } catch (error) {
-    console.error('Error fetching gig:', error);
-    return NextResponse.json({ error: 'Failed to fetch gig' }, { status: 500 });
+    console.error('Error fetching gig and profile:', error);
+    return NextResponse.json({ error: 'Failed to fetch gig and profile' }, { status: 500 });
   }
 }
