@@ -112,7 +112,7 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
           description="Preview of the payment schedule based on the gig price and duration"
           duration={Number(duration)}
           totalAmount={gigPrice}
-          chartColor="green-400"
+          chartColor="#14a800"
           startTime={Math.floor(Date.now() / 1000)}
           endTime={Math.floor(Date.now() / 1000) + (Number(duration) + timeToCancelationPeriod[Number(duration)]) * 24 * 60 * 60}
         />

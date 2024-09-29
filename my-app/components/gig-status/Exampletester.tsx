@@ -98,7 +98,7 @@ if (!typedStreamData) {
             title="Payment Schedule"
             description="Track your payment progress"
             totalAmount={totalAmount}
-            chartColor="green-400"
+            chartColor="#00edbe"
             duration={duration}
             startTime={typedStreamData.startTime}
             endTime={typedStreamData.endTime}

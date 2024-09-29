@@ -9,6 +9,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Gig } from '@/types/types'
 import GigCreatorPreview from './GigCreatorPreview'
+import { Skeleton } from '../ui/skeleton'
 
 
 export default function GigPage({
@@ -48,7 +49,28 @@ export default function GigPage({
     return `${address.slice(0, 6)}...${address.slice(-4)}`
   }
 
-  if (loading) return <div>Loading...</div>
+  if (loading) {
+    return (
+      <div className="container flex items-center justify-center">
+        <Card className="mx-auto w-full max-w-2xl">
+          <CardHeader>
+            <Skeleton className="h-9 w-3/4 mb-2" />
+            <Skeleton className="h-6 w-full" />
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex items-center justify-between text-sm space-x-4">
+              <Skeleton className="h-5 w-24" />
+              <Skeleton className="h-8 w-24" />
+            </div>
+            <Skeleton className="h-16 w-full" />
+          </CardContent>
+          <CardFooter>
+            <Skeleton className="h-10 w-full" />
+          </CardFooter>
+        </Card>
+      </div>
+    )
+  }
   if (error) return <div>Error: {error}</div>
   if (!gig) return <div>Gig not found</div>
 
