@@ -22,6 +22,8 @@ import StreamForecastWithCliff from '../stream-forecast/StreamForecastWithCliff'
 import Display from './Display';
 import { generateChartDataWithTimeRange } from '@/utils/chart/generateChartDataWithTimeRange'
 import WithdrawGig from './WithdrawGig'
+import TokenDisplay from '../invoice/TokenDisplay'
+import TokenDisplayWithCliff from './TokenDisplayCliff'
 
 // Mock data for the chart (representing money unlocking over time)
 const chartData = [
@@ -105,23 +107,21 @@ if (!typedStreamData) {
             />
 
             <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg font-medium">Total Gig Value</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-4xl font-bold text-green-600">{formatCurrency(totalAmount)}</div>
-                </CardContent>
-              </Card>
+     
+             
 
-              <Display
-                 title="Payment Schedule"
-                 description="Available to withdraw"
-                 totalAmount={totalAmount}
-                 chartData={chartData}
-                 cliffHour={cliffHour}
-                 totalHours={totalHours}
-              />
+<TokenDisplayWithCliff
+  maxValue={totalAmount}
+  tokenSymbol="tUSDC"
+  startTime={Number(typedStreamData.startTime)}
+  endTime={Number(typedStreamData.endTime)}
+  wasCanceled={typedStreamData.wasCanceled}
+  refundedAmount={typedStreamData.amounts.refunded}
+  withdrawnAmount={Number(formatEther(typedStreamData.amounts.withdrawn))}
+  cliffHour={cliffHour}
+  totalHours={totalHours}
+/>
+
             </div>
           </div>
 
