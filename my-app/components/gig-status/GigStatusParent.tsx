@@ -50,7 +50,7 @@ const GigStatusParent = ({
   if (loading) {
     return (
       <div className="w-full h-screen flex items-center justify-center p-4">
-        <div className="max-w-6xl w-full space-y-4">
+        <div className="max-w-full w-full space-y-4">
           <Skeleton className="h-64 w-full" />
           <Skeleton className="h-64 w-full" />
         </div>
@@ -68,7 +68,7 @@ const GigStatusParent = ({
 
   return (
     <div className='w-full h-screen flex items-center justify-center p-4'>
-      <div className='max-w-6xl w-full'>
+      <div className=' w-full'>
         {invoiceData && gigData && invoiceData.paymentDetails.stream_id ? (
           <GigPaymentDashboard 
             requestId={requestId} 

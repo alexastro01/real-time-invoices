@@ -121,7 +121,7 @@ export default function StreamForecastWithCliff({
         </div>
       </CardHeader>
       <CardContent className="flex-grow flex flex-col">
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={350}>
           <AreaChart
             data={chartData}
             margin={{
@@ -131,7 +131,7 @@ export default function StreamForecastWithCliff({
               bottom: 0,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" />
+
             <XAxis 
               dataKey="date" 
               tickFormatter={formatXAxis}

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { Clock, DollarSign, Download, FileText, AlertCircle } from 'lucide-react'
+import { Clock, DollarSign, Download, FileText, AlertCircle, X } from 'lucide-react'
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { useAccount, useReadContract } from 'wagmi';
@@ -41,19 +41,19 @@ const formatCurrency = (value: number) => {
 }
 
 type GigDashBoardProps = {
-    streamId: number,
-    chain_id: number,
-    invoiceData: IInvoiceData,
-    requestId: string,
-    gigData: GigType
+  streamId: number,
+  chain_id: number,
+  invoiceData: IInvoiceData,
+  requestId: string,
+  gigData: GigType
 }
 
 export default function GigPaymentDashboard({
-    streamId,
-    chain_id,
-    invoiceData,
-    requestId,
-    gigData
+  streamId,
+  chain_id,
+  invoiceData,
+  requestId,
+  gigData
 }: GigDashBoardProps) {
 
 
@@ -63,28 +63,28 @@ export default function GigPaymentDashboard({
     functionName: 'getStream',
     args: [BigInt(streamId)],
     chainId: chain_id
-});
+  });
 
-const { address } = useAccount();
+  const { address } = useAccount();
 
-const typedStreamData = streamData as StreamData | undefined;
+  const typedStreamData = streamData as StreamData | undefined;
 
-const totalAmount = typedStreamData ? Number(formatEther(typedStreamData.amounts.deposited)) : 0;
-const duration = Number(gigData.delivery_time);
-const totalHours = (duration + timeToCancelationPeriod[duration]) * 24;
-const cliffHour = timeToCancelationPeriod[duration] * 24;
+  const totalAmount = typedStreamData ? Number(formatEther(typedStreamData.amounts.deposited)) : 0;
+  const duration = Number(gigData.delivery_time);
+  const totalHours = (duration + timeToCancelationPeriod[duration]) * 24;
+  const cliffHour = timeToCancelationPeriod[duration] * 24;
 
-const chartData = typedStreamData ? generateChartDataWithTimeRange(
+  const chartData = typedStreamData ? generateChartDataWithTimeRange(
     totalHours,
     cliffHour,
     totalAmount,
     Number(typedStreamData.startTime),
     Number(typedStreamData.endTime)
-) : [];
+  ) : [];
 
-if (!typedStreamData) {
+  if (!typedStreamData) {
     return <div>Loading stream data...</div>;
-}
+  }
 
 
   return (
@@ -96,49 +96,46 @@ if (!typedStreamData) {
         </CardHeader>
         <CardContent className="p-6">
           <div className="grid gap-6 md:grid-cols-2">
-            <StreamForecastWithCliff
-            title="Payment Schedule"
-            description="Track your payment progress"
-            totalAmount={totalAmount}
-            chartColor="#00edbe"
-            duration={duration}
-            startTime={typedStreamData.startTime}
-            endTime={typedStreamData.endTime}
+       
+
+              <TokenDisplayWithCliff
+                maxValue={totalAmount}
+                tokenSymbol="tUSDC"
+                startTime={Number(typedStreamData.startTime)}
+                endTime={Number(typedStreamData.endTime)}
+                wasCanceled={typedStreamData.wasCanceled}
+                refundedAmount={typedStreamData.amounts.refunded}
+                withdrawnAmount={Number(formatEther(typedStreamData.amounts.withdrawn))}
+                cliffHour={cliffHour}
+                totalHours={totalHours}
+              />
+
+<StreamForecastWithCliff
+              title="Payment Schedule"
+              description="Track your payment progress"
+              totalAmount={totalAmount}
+              chartColor="#00edbe"
+              duration={duration}
+              startTime={typedStreamData.startTime}
+              endTime={typedStreamData.endTime}
             />
-
-            <div className="space-y-6">
-     
-             
-
-<TokenDisplayWithCliff
-  maxValue={totalAmount}
-  tokenSymbol="tUSDC"
-  startTime={Number(typedStreamData.startTime)}
-  endTime={Number(typedStreamData.endTime)}
-  wasCanceled={typedStreamData.wasCanceled}
-  refundedAmount={typedStreamData.amounts.refunded}
-  withdrawnAmount={Number(formatEther(typedStreamData.amounts.withdrawn))}
-  cliffHour={cliffHour}
-  totalHours={totalHours}
-/>
-
-            </div>
           </div>
 
           <Separator className="my-6" />
 
           <div className="flex flex-wrap gap-4 justify-center">
-             {streamId && (
-                <WithdrawGig
+            {/* {streamId && (
+              <WithdrawGig
                 streamId={streamId}
                 chain_id={chain_id}
-                />
-              ) }
+              />
+            )} */}
             <Button variant="outline">
               <FileText className="mr-2 h-4 w-4" /> View Invoice
             </Button>
-            <Button variant="secondary">
-              <AlertCircle className="mr-2 h-4 w-4" /> Report an Issue
+      
+            <Button variant="destructive">
+              <X className="mr-2 h-4 w-4" /> Reject Gig
             </Button>
           </div>
         </CardContent>
