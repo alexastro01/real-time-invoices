@@ -5,6 +5,7 @@ import BillingInformation from './BillingInformation'
 import PaymentInformation from './PaymentInformation'
 import { ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions'
 import { useAccount } from 'wagmi'
+import { Skeleton } from '../ui/skeleton'
 
 interface GigPaymentParentProps {
   gigId: string;
@@ -72,9 +73,21 @@ export default function GigPaymentParent({ gigId }: GigPaymentParentProps) {
   }, [gigId, address]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="container mx-auto p-6">
+        <Skeleton className="h-10 w-1/4 mb-6" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
+            <Skeleton className="h-64 w-full" />
+            <Skeleton className="h-96 w-full" />
+          </div>
+          <div className="lg:col-span-1">
+            <Skeleton className="h-[400px] w-full" />
+          </div>
+        </div>
+      </div>
+    );
   }
-
   if (!gigData) {
     return <div>Gig not found</div>;
   }

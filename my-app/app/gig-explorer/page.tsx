@@ -1,16 +1,11 @@
 'use client';
 import React, { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Clock, DollarSign, Search, Star } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { chainInfo, ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions'
-import GigCreatorPreview from '@/components/gigs/GigCreatorPreview';
 import GigPage from '@/components/gigs/GigPage';
 import { Gig } from '@/types/types';
 
