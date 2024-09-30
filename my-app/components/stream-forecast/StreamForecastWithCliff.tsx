@@ -22,6 +22,7 @@ interface StreamForecastProps {
   duration: number;
   startTime: number;
   endTime: number;
+  isRejected: boolean;
 }
 
 function generateChartDataWithTimeRange(totalHours: number, cliffHour: number, totalAmount: number, startTime: number, endTime: number): ChartDataPoint[] {
@@ -59,7 +60,8 @@ export default function StreamForecastWithCliff({
   chartColor,
   duration,
   startTime,
-  endTime
+  endTime,
+  isRejected,
 }: StreamForecastProps) {
   const totalHours = useMemo(() => (duration + timeToCancelationPeriod[duration]) * 24, [duration]);
   const cliffHour = useMemo(() => timeToCancelationPeriod[duration] * 24, [duration]);
@@ -115,38 +117,44 @@ export default function StreamForecastWithCliff({
           <div>
             <CardTitle className="text-lg">{title}</CardTitle>
             <CardDescription className="text-sm">
-              {description}
+              {isRejected ? "This gig has been rejected" : description}
             </CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="flex-grow flex flex-col">
-        <ResponsiveContainer width="100%" height={350}>
-          <AreaChart
-            data={chartData}
-            margin={{
-              top: 10,
-              right: 30,
-              left: 10,
-              bottom: 0,
-            }}
-          >
+        {isRejected ? (
+          <div className="flex items-center justify-center h-full text-gray-500">
+            No forecast available for rejected gigs
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height={350}>
+            <AreaChart
+              data={chartData}
+              margin={{
+                top: 10,
+                right: 30,
+                left: 10,
+                bottom: 0,
+              }}
+            >
 
-            <XAxis 
-              dataKey="date" 
-              tickFormatter={formatXAxis}
-              type="number"
-              domain={['dataMin', 'dataMax']}
-              scale="time"
-              ticks={chartData
-                .filter((_, index) => index % 6 === 0)
-                .map(point => point.date.getTime())}
-            />
-            <YAxis tickFormatter={formatYAxis} domain={[0, totalAmount]} />
-            <Tooltip content={<CustomTooltip />} />
-            <Area type="stepAfter" dataKey="value" stroke={chartColor} fill={chartColor} />
-          </AreaChart>
-        </ResponsiveContainer>
+              <XAxis 
+                dataKey="date" 
+                tickFormatter={formatXAxis}
+                type="number"
+                domain={['dataMin', 'dataMax']}
+                scale="time"
+                ticks={chartData
+                  .filter((_, index) => index % 6 === 0)
+                  .map(point => point.date.getTime())}
+              />
+              <YAxis tickFormatter={formatYAxis} domain={[0, totalAmount]} />
+              <Tooltip content={<CustomTooltip />} />
+              <Area type="stepAfter" dataKey="value" stroke={chartColor} fill={chartColor} />
+            </AreaChart>
+          </ResponsiveContainer>
+        )}
       </CardContent>
     </Card>
   )

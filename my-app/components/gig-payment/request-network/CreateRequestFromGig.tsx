@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { generateRequestParameters } from "@/utils/request-network/generateRequestParamaters";
-import { useWalletClient } from "wagmi";
+import { useAccount, useWalletClient } from "wagmi";
 import { Web3SignatureProvider } from "@requestnetwork/web3-signature";
 import { RequestNetwork } from "@requestnetwork/request-client.js";
 import { Button } from "@/components/ui/button";
@@ -51,10 +51,16 @@ const CreateRequestFromGig: React.FC<CreateRequestFromGigProps> = ({
   const [requestId, setRequestId] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
 
+
   const handleClick = async () => {
     if(isConfirmed === false) {  
     if (!payerDetails || !gigPrice || !recipientAddress || !dueDate || !chainId) {
       alert("Missing required information");
+      return;
+    }
+
+    if(payerDetails.evmAddress === recipientAddress) {
+      alert("You can't order your own gig");
       return;
     }
 

@@ -115,6 +115,7 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
           chartColor="#14a800"
           startTime={Math.floor(Date.now() / 1000)}
           endTime={Math.floor(Date.now() / 1000) + (Number(duration) + timeToCancelationPeriod[Number(duration)]) * 24 * 60 * 60}
+          isRejected={false}
         />
       </CardContent>
       <CardContent className="text-sm text-gray-500">

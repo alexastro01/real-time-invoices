@@ -103,7 +103,7 @@ const CancelStream = ({
             </>
           ) : (
             <>
-              <XCircle className="mr-2 h-4 w-4" /> Cancel Stream
+              <XCircle className="mr-2 h-4 w-4" /> Cancel Stream & return funds
             </>
           )}
         </Button>

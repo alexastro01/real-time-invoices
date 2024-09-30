@@ -2,30 +2,24 @@
 
 import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { Clock, DollarSign, Download, FileText, AlertCircle, X } from 'lucide-react'
-import { Badge } from "@/components/ui/badge"
+import {  AlertCircle} from 'lucide-react'
+
 import { Separator } from "@/components/ui/separator"
-import { useAccount, useReadContract } from 'wagmi';
+import { useReadContract } from 'wagmi';
 import { formatEther } from 'viem';
 import { abi } from '../../abi/SablierLinear';
 import { contracts, ValidChainId } from '@/utils/contracts/contracts';
 import { timeToCancelationPeriod } from '@/constants/timeToCancelationPeriod';
 import { Gig as GigType, StreamData } from '@/types/types';
 import { IInvoiceData } from '@/types/interfaces';
-import ShareInvoiceComponent from '../invoice/ShareInvoiceComponent';
-import WithdrawComponent from '../invoice/WithdrawComponent';
-import ViewInvoiceDialog from '../invoice/ViewInvoiceDialog';
+
 import StreamForecastWithCliff from '../stream-forecast/StreamForecastWithCliff';
-import Display from './Display';
 import { generateChartDataWithTimeRange } from '@/utils/chart/generateChartDataWithTimeRange'
-import WithdrawGig from './WithdrawGig'
-import TokenDisplay from '../invoice/TokenDisplay'
+
 import TokenDisplayWithCliff from './TokenDisplayCliff'
 import GigDetails from './GigDetails'
 import GigActionButtons from './GigActionButtons'
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 // Mock data for the chart (representing money unlocking over time)
 const chartData = [
@@ -58,7 +52,6 @@ export default function GigPaymentDashboard({
   gigData
 }: GigDashBoardProps) {
 
-
   const { data: streamData } = useReadContract({
     address: contracts[chain_id as ValidChainId].sablierLinearV2LockUpAddress,
     abi: abi,
@@ -67,9 +60,16 @@ export default function GigPaymentDashboard({
     chainId: chain_id
   });
 
-  const { address } = useAccount();
+  const { data: ownerOf } = useReadContract({
+    address: contracts[chain_id as ValidChainId].sablierLinearV2LockUpAddress,
+    abi: abi,
+    functionName: 'ownerOf',
+    args: [BigInt(streamId)],
+    chainId: chain_id
+  });
 
   const typedStreamData = streamData as StreamData | undefined;
+  const isRejected = ownerOf === gigData.creator_address;
 
   const totalAmount = typedStreamData ? Number(formatEther(typedStreamData.amounts.deposited)) : 0;
   const duration = Number(gigData.delivery_time);
@@ -88,9 +88,18 @@ export default function GigPaymentDashboard({
     return <div>Loading stream data...</div>;
   }
 
-
   return (
     <div className="container mx-auto p-6 space-y-8 bg-gradient-to-br from-background to-muted min-h-screen">
+      {isRejected && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Gig Rejected</AlertTitle>
+          <AlertDescription>
+            This gig has been rejected. The Stream nft have been returned to the creator.
+          </AlertDescription>
+        </Alert>
+      )}
+
       <Card className="border-none shadow-lg">
         <CardHeader className="bg-gradient-to-r primary-muted to primary-muted-foreground rounded-t-lg">
           <CardTitle className="text-3xl font-bold text-primary">Gig Payment Status</CardTitle>
@@ -98,21 +107,20 @@ export default function GigPaymentDashboard({
         </CardHeader>
         <CardContent className="p-6">
           <div className="grid gap-6 md:grid-cols-2">
-       
+            <TokenDisplayWithCliff
+              maxValue={totalAmount}
+              tokenSymbol="tUSDC"
+              startTime={Number(typedStreamData.startTime)}
+              endTime={Number(typedStreamData.endTime)}
+              wasCanceled={typedStreamData.wasCanceled}
+              refundedAmount={typedStreamData.amounts.refunded}
+              withdrawnAmount={Number(formatEther(typedStreamData.amounts.withdrawn))}
+              cliffHour={cliffHour}
+              totalHours={totalHours}
+              isRejected={isRejected}
+            />
 
-              <TokenDisplayWithCliff
-                maxValue={totalAmount}
-                tokenSymbol="tUSDC"
-                startTime={Number(typedStreamData.startTime)}
-                endTime={Number(typedStreamData.endTime)}
-                wasCanceled={typedStreamData.wasCanceled}
-                refundedAmount={typedStreamData.amounts.refunded}
-                withdrawnAmount={Number(formatEther(typedStreamData.amounts.withdrawn))}
-                cliffHour={cliffHour}
-                totalHours={totalHours}
-              />
-
-<StreamForecastWithCliff
+            <StreamForecastWithCliff
               title="Payment Schedule"
               description="Track your payment progress"
               totalAmount={totalAmount}
@@ -120,24 +128,29 @@ export default function GigPaymentDashboard({
               duration={duration}
               startTime={typedStreamData.startTime}
               endTime={typedStreamData.endTime}
+              isRejected={isRejected}
             />
           </div>
 
           <Separator className="my-6" />
 
-     <GigActionButtons streamId={streamId} chain_id={chain_id} creator={gigData.creator_address} />
+          <GigActionButtons 
+            streamId={streamId} 
+            chain_id={chain_id} 
+            creator={gigData.creator_address}
+            isRejected={isRejected}
+          />
         </CardContent>
       </Card>
- 
-     <GigDetails
-     title={gigData.title ?? ''}
-     description={gigData.description ?? ''}
-     delivery_time={Number(gigData.delivery_time) ?? 0}
-     totalAmount={totalAmount}
-     creator={gigData.creator_address}
- /> 
- 
 
+      <GigDetails
+        title={gigData.title ?? ''}
+        description={gigData.description ?? ''}
+        delivery_time={Number(gigData.delivery_time) ?? 0}
+        totalAmount={totalAmount}
+        creator={gigData.creator_address}
+        isRejected={isRejected}
+      />
     </div>
   )
 }

@@ -14,6 +14,7 @@ interface TokenDisplayWithCliffProps {
   withdrawnAmount: number;
   cliffHour: number;
   totalHours: number;
+  isRejected: boolean;
 }
 
 const TokenDisplayWithCliff: React.FC<TokenDisplayWithCliffProps> = ({ 
@@ -25,7 +26,8 @@ const TokenDisplayWithCliff: React.FC<TokenDisplayWithCliffProps> = ({
   refundedAmount,
   withdrawnAmount,
   cliffHour,
-  totalHours
+  totalHours,
+  isRejected
 }) => {
   const totalDuration = endTime - startTime;
   const [currentValue, setCurrentValue] = useState(0);
@@ -40,9 +42,9 @@ const TokenDisplayWithCliff: React.FC<TokenDisplayWithCliffProps> = ({
       const elapsedTime = Math.max(now - startTime, 0);
       const percentageElapsed = Math.min((elapsedTime / totalDuration) * 100, 100);
       
-      if (wasCanceled) {
+      if (wasCanceled || isRejected) {
         const refundedEther = Number(formatEther(refundedAmount));
-        const finalStreamedAmount = maxValue - refundedEther;
+        const finalStreamedAmount = isRejected ? 0 : maxValue - refundedEther;
         setCurrentValue(finalStreamedAmount);
         setProgress(100);
       } else {
@@ -65,11 +67,11 @@ const TokenDisplayWithCliff: React.FC<TokenDisplayWithCliffProps> = ({
     updateValues();
     const interval = setInterval(updateValues, 1000);
     return () => clearInterval(interval);
-  }, [wasCanceled, startTime, endTime, totalDuration, maxValue, refundedAmount, cliffHour]);
+  }, [wasCanceled, isRejected, startTime, endTime, totalDuration, maxValue, refundedAmount, cliffHour]);
 
-  const remainingDuration = wasCanceled ? 0 : Math.max(endTime - Date.now() / 1000, 0);
+  const remainingDuration = wasCanceled || isRejected ? 0 : Math.max(endTime - Date.now() / 1000, 0);
   const countUpValue = useCountUp(currentValue, maxValue, remainingDuration * 1000);
-  const displayValue = wasCanceled ? currentValue : countUpValue;
+  const displayValue = wasCanceled || isRejected ? currentValue : countUpValue;
 
   const streamedPercentage = (currentValue / maxValue) * 100;
   const withdrawnPercentage = (withdrawnAmount / maxValue) * 100;
@@ -128,7 +130,7 @@ const TokenDisplayWithCliff: React.FC<TokenDisplayWithCliffProps> = ({
           <div className="mt-2 text-xs text-gray-600 dark:text-gray-400">
             Cliff ends at {cliffEndPercent.toFixed(2)}% of the total duration
           </div>
-          {isInCliff && (
+          {isInCliff && !isRejected && (
             <div className="mt-2 text-xs font-semibold text-blue-600 dark:text-blue-400">
               Cliff ends in {formatRemainingCliffTime(remainingCliffTime)}
             </div>
@@ -149,14 +151,22 @@ const TokenDisplayWithCliff: React.FC<TokenDisplayWithCliffProps> = ({
       </div>
 
       <div className="text-center text-gray-600 dark:text-gray-400 font-medium">
-        <Badge variant={isInCliff ? "secondary" : "default"}>
-          {isInCliff ? "In Cliff" : "Streaming"}
+        <Badge variant={isRejected ? "destructive" : isInCliff ? "secondary" : "default"}>
+          {isRejected ? "Rejected" : isInCliff ? "In Cliff" : "Streaming"}
         </Badge>
         {wasCanceled && (
           <div className="text-red-500 dark:text-red-400 mt-2">
             Stream Canceled
             <div className="text-sm">
               Refunded: {Number(formatEther(refundedAmount)).toFixed(4)} {tokenSymbol}
+            </div>
+          </div>
+        )}
+        {isRejected && (
+          <div className="text-red-500 dark:text-red-400 mt-2">
+            Gig Rejected
+            <div className="text-sm">
+             Stream returned to creator
             </div>
           </div>
         )}
