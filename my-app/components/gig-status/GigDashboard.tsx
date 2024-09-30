@@ -24,6 +24,8 @@ import { generateChartDataWithTimeRange } from '@/utils/chart/generateChartDataW
 import WithdrawGig from './WithdrawGig'
 import TokenDisplay from '../invoice/TokenDisplay'
 import TokenDisplayWithCliff from './TokenDisplayCliff'
+import GigDetails from './GigDetails'
+import GigActionButtons from './GigActionButtons'
 
 // Mock data for the chart (representing money unlocking over time)
 const chartData = [
@@ -123,47 +125,19 @@ export default function GigPaymentDashboard({
 
           <Separator className="my-6" />
 
-          <div className="flex flex-wrap gap-4 justify-center">
-            {/* {streamId && (
-              <WithdrawGig
-                streamId={streamId}
-                chain_id={chain_id}
-              />
-            )} */}
-            <Button variant="outline">
-              <FileText className="mr-2 h-4 w-4" /> View Invoice
-            </Button>
-      
-            <Button variant="destructive">
-              <X className="mr-2 h-4 w-4" /> Reject Gig
-            </Button>
-          </div>
+     <GigActionButtons streamId={streamId} chain_id={chain_id} creator={gigData.creator_address} />
         </CardContent>
       </Card>
+ 
+     <GigDetails
+     title={gigData.title ?? ''}
+     description={gigData.description ?? ''}
+     delivery_time={Number(gigData.delivery_time) ?? 0}
+     totalAmount={totalAmount}
+     creator={gigData.creator_address}
+ /> 
+ 
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl font-semibold text-primary">Gig Details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-              <h3 className="font-bold text-lg text-primary">Web Development Project</h3>
-              <p className="text-muted-foreground">Custom website development using React and Next.js</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <Badge variant="secondary" className="text-sm">
-                <Clock className="mr-1 h-4 w-4" />
-                30 days project
-              </Badge>
-              <Badge variant="outline" className="text-lg font-bold">
-                <DollarSign className="h-4 w-4 mr-1" />
-                {formatCurrency(totalAmount)}
-              </Badge>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   )
 }

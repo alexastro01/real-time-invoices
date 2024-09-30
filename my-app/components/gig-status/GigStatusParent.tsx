@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Skeleton } from "@/components/ui/skeleton"
-import ActionButtonsGigTest from './ActionButtonsGigTest'
 import { IInvoiceData } from '@/types/interfaces'
-import GigPaymentDashboard from './Exampletester'
+import GigPaymentDashboard from './GigDashboard'
 
 const GigStatusParent = ({
     requestId
@@ -67,7 +66,7 @@ const GigStatusParent = ({
   }
 
   return (
-    <div className='w-full h-screen flex items-center justify-center p-4'>
+    <div className='w-full  flex items-center justify-center p-4'>
       <div className=' w-full'>
         {invoiceData && gigData && invoiceData.paymentDetails.stream_id ? (
           <GigPaymentDashboard 

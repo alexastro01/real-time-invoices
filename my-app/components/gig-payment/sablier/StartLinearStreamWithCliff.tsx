@@ -72,7 +72,7 @@ const StartLinearStreamWithCliff = ({ setStep, amountToStream, payeeAddress, due
                         parseEther(amountToStream),
                         tUSDCAddress,
                         true,
-                        false,
+                        true,
                         [(timeToCancelationPeriod[durationInDays] * 24 * 60 * 60), (durationInDays * 24 * 60 * 60) + (timeToCancelationPeriod[durationInDays] * 24 * 60 * 60)],
                         ['0x909957dcc1B114Fe262F4779e6aeD4d034D96B0f', 0]
                     ]

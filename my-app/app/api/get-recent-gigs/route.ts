@@ -18,7 +18,7 @@ export async function GET(request: Request) {
       .from('gigs')
       .select('*')
       .order('created_at', { ascending: false })
-      .limit(3);
+      .limit(9);
 
     if (gigsError) throw gigsError;
 
