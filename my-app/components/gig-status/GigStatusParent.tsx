@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Skeleton } from "@/components/ui/skeleton"
 import { IInvoiceData } from '@/types/interfaces'
 import GigPaymentDashboard from './GigDashboard'
+import { useAccount } from 'wagmi'
+import { AlertCircle } from 'lucide-react' // Import the AlertCircle icon from lucide-react
 
 const GigStatusParent = ({
     requestId
@@ -12,6 +14,7 @@ const GigStatusParent = ({
   const [error, setError] = useState<string | null>(null);
   const [invoiceData, setInvoiceData] = useState<IInvoiceData | null>(null);
   const [gigData, setGigData] = useState(null);
+  const {address} = useAccount()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,9 +68,23 @@ const GigStatusParent = ({
     );
   }
 
+  const isUserInvolved = address && invoiceData && (
+    address.toLowerCase() === invoiceData.paymentDetails.payeeAddress.toLowerCase() ||
+    address.toLowerCase() === invoiceData.paymentDetails.payerAddress.toLowerCase()
+  );
+
+  if (!isUserInvolved) {
+    return (
+      <div className="w-full h-screen flex flex-col items-center justify-center p-4 space-y-4">
+        <AlertCircle size={48} className="text-yellow-500" />
+        <div className="text-center text-xl font-semibold">You're not part of this transaction</div>
+      </div>
+    );
+  }
+
   return (
-    <div className='w-full  flex items-center justify-center p-4'>
-      <div className=' w-full'>
+    <div className='w-full flex items-center justify-center p-4'>
+      <div className='w-full'>
         {invoiceData && gigData && invoiceData.paymentDetails.stream_id ? (
           <GigPaymentDashboard 
             requestId={requestId} 
@@ -80,7 +97,6 @@ const GigStatusParent = ({
           <div className="text-center">No invoice data available.</div>
         )}
       </div>
-     
     </div>
   )
 }

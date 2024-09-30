@@ -11,9 +11,10 @@ interface RejectGigProps {
   streamId: number;
   chain_id: number;
   creator: string;
+  client: string;
 }
 
-const RejectGig: React.FC<RejectGigProps> = ({ streamId, chain_id, creator }) => {
+const RejectGig: React.FC<RejectGigProps> = ({ streamId, chain_id, creator, client }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { address } = useAccount();
   const { toast } = useToast();
@@ -32,7 +33,7 @@ const RejectGig: React.FC<RejectGigProps> = ({ streamId, chain_id, creator }) =>
       address: contracts[chain_id as ValidChainId].sablierLinearV2LockUpAddress,
       abi: abi,
       functionName: 'withdrawMaxAndTransfer',
-      args: [streamId, creator],
+      args: [streamId, client],
       chainId: chain_id
     });
   };

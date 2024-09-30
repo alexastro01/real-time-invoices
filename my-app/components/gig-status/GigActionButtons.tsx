@@ -10,14 +10,16 @@ interface GigActionButtonsProps {
     chain_id: number;
     creator: string;
     isRejected: boolean;
+    loggedInAddress: string;
+    client: string;
 }
 
-const GigActionButtons: React.FC<GigActionButtonsProps> = ({ streamId, chain_id, creator, isRejected }) => {
+const GigActionButtons: React.FC<GigActionButtonsProps> = ({ streamId, chain_id, creator, isRejected, loggedInAddress, client }) => {
 
 
     return (
         <div className="flex flex-wrap gap-4 justify-center">
-            {streamId && !isRejected && (
+            {streamId && !isRejected && loggedInAddress === creator && (
                 <WithdrawGig
                     streamId={streamId}
                     chain_id={chain_id}
@@ -27,9 +29,9 @@ const GigActionButtons: React.FC<GigActionButtonsProps> = ({ streamId, chain_id,
             {!isRejected && <Button variant="outline">
                 <FileText className="mr-2 h-4 w-4" /> View Invoice
             </Button>}
-            {!isRejected && <RejectGig streamId={streamId} chain_id={chain_id} creator={creator} />}
+            {!isRejected && loggedInAddress === creator && <RejectGig streamId={streamId} chain_id={chain_id} creator={creator} client={client} />}
             {
-                isRejected && (
+                isRejected && loggedInAddress === creator === false && (
                     <CancelStream streamId={streamId} chain_id={chain_id} />
                 )
             }

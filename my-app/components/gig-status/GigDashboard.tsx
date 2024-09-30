@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import {  AlertCircle} from 'lucide-react'
 
 import { Separator } from "@/components/ui/separator"
-import { useReadContract } from 'wagmi';
+import { useAccount, useReadContract } from 'wagmi';
 import { formatEther } from 'viem';
 import { abi } from '../../abi/SablierLinear';
 import { contracts, ValidChainId } from '@/utils/contracts/contracts';
@@ -69,7 +69,8 @@ export default function GigPaymentDashboard({
   });
 
   const typedStreamData = streamData as StreamData | undefined;
-  const isRejected = ownerOf === gigData.creator_address;
+  const isRejected = ownerOf === typedStreamData?.sender;
+  const {address} = useAccount()
 
   const totalAmount = typedStreamData ? Number(formatEther(typedStreamData.amounts.deposited)) : 0;
   const duration = Number(gigData.delivery_time);
@@ -95,7 +96,7 @@ export default function GigPaymentDashboard({
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Gig Rejected</AlertTitle>
           <AlertDescription>
-            This gig has been rejected. The Stream nft have been returned to the creator.
+            This gig has been rejected. The Stream nft have been returned to the client.
           </AlertDescription>
         </Alert>
       )}
@@ -139,6 +140,8 @@ export default function GigPaymentDashboard({
             chain_id={chain_id} 
             creator={gigData.creator_address}
             isRejected={isRejected}
+            loggedInAddress={address as string}
+            client={typedStreamData.sender}
           />
         </CardContent>
       </Card>

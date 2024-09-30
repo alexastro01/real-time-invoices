@@ -166,7 +166,7 @@ const TokenDisplayWithCliff: React.FC<TokenDisplayWithCliffProps> = ({
           <div className="text-red-500 dark:text-red-400 mt-2">
             Gig Rejected
             <div className="text-sm">
-             Stream returned to creator
+             Stream returned to client
             </div>
           </div>
         )}
