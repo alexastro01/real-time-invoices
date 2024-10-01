@@ -26,6 +26,7 @@ const GigStatusParent = ({
           throw new Error('Failed to fetch invoice data');
         }
         const invoiceData = await invoiceResponse.json();
+        console.log("invoice data", invoiceData)
         setInvoiceData(invoiceData);
 
         // Fetch gig data using the gig_id from the invoice data

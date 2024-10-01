@@ -4,6 +4,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from 'next/link'
 import { Button } from '../ui/button'
+import { Share2Icon } from 'lucide-react'
+import { useToast } from "@/components/ui/use-toast"
+import { useRouter } from 'next/navigation'
 
 const GigProfile = ({
     creator,
@@ -16,6 +19,9 @@ const GigProfile = ({
   const [profileImage, setProfileImage] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  const { toast } = useToast()
+  const router = useRouter()
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -38,6 +44,23 @@ const GigProfile = ({
 
     fetchProfile()
   }, [creator])
+
+  const handleShare = () => {
+    const shareUrl = `${window.location.origin}/gigs/${creator}`
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      toast({
+        title: "Link copied successfully",
+        description: "The profile link has been copied to your clipboard.",
+      })
+    }).catch((err) => {
+      console.error('Failed to copy: ', err)
+      toast({
+        title: "Failed to copy link",
+        description: "An error occurred while copying the link.",
+        variant: "destructive",
+      })
+    })
+  }
 
   if (loading) {
     return (
@@ -82,13 +105,19 @@ const GigProfile = ({
               <p className="text-sm text-muted-foreground break-all">{creator}</p>
             </div>
           </div>
-          {editMode && (
-          <Link href="/profile">
-            <Button variant="outline">
-              Edit profile
+          <div className="flex space-x-2">
+            {editMode && (
+              <Link href="/profile">
+                <Button variant="outline">
+                  Edit profile
+                </Button>
+              </Link>
+            )}
+            <Button variant="outline" onClick={handleShare}>
+              <Share2Icon className="mr-2 h-4 w-4" />
+              Share
             </Button>
-          </Link>
-          )}
+          </div>
         </div>
       </CardContent>
     </Card>

@@ -9,6 +9,7 @@ import Link from "next/link"
 import Gig from "./Gig"
 import AddGigCard from "./AddGigCard"
 import GigProfile from './GigProfile';
+import GigsTable from "@/components/dashboard/GigsTable";
 
 interface GigType {
   gig_id: string;
@@ -54,11 +55,11 @@ export default function Gigs({ creator, editMode }: GigsProps) {
   if (error) return <div>Error: {error}</div>
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4">
+    <div className="w-full mx-auto p-4">
      <GigProfile creator={creator} editMode={editMode} />
 
       <h3 className="text-2xl font-semibold mb-4">Gigs</h3>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {gigs.map((gig) => (
           <Gig 
             key={gig.gig_id}
@@ -72,6 +73,11 @@ export default function Gigs({ creator, editMode }: GigsProps) {
           />
         ))}
         <AddGigCard />
+      </div>
+
+      {/* Add the GigsTable component here */}
+      <div className="mt-8">
+        <GigsTable />
       </div>
     </div>
   )

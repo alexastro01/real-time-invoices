@@ -1,63 +1,30 @@
+import { useEffect, useState } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { CalendarIcon, DollarSignIcon } from "lucide-react"
+import { CalendarIcon, DollarSignIcon, ExternalLinkIcon } from "lucide-react"
+import Link from "next/link"
 
 type Gig = {
   id: string
-  createdDate: Date
-  clientAvatar: string
+  createdDate: string
   clientName: string
-  freelancerAvatar: string
+  clientEmail: string
   freelancerName: string
+  freelancerEmail: string
   progress: number
   amountStreaming: number
-  endDate: Date
+  endDate: string
   status: 'in cliff' | 'rejected' | 'canceled' | 'streaming' | 'settled'
+  requestId: string
+  streamId: number
+  chainId: number
 }
 
-const gigs: Gig[] = [
-  {
-    id: '1',
-    createdDate: new Date('2023-09-01'),
-    clientAvatar: '/placeholder.svg?height=40&width=40',
-    clientName: 'Alice Johnson',
-    freelancerAvatar: '/placeholder.svg?height=40&width=40',
-    freelancerName: 'Bob Smith',
-    progress: 75,
-    amountStreaming: 1500,
-    endDate: new Date('2023-10-15'),
-    status: 'streaming',
-  },
-  {
-    id: '2',
-    createdDate: new Date('2023-08-15'),
-    clientAvatar: '/placeholder.svg?height=40&width=40',
-    clientName: 'Carol Davis',
-    freelancerAvatar: '/placeholder.svg?height=40&width=40',
-    freelancerName: 'David Wilson',
-    progress: 30,
-    amountStreaming: 800,
-    endDate: new Date('2023-11-30'),
-    status: 'in cliff',
-  },
-  {
-    id: '3',
-    createdDate: new Date('2023-09-10'),
-    clientAvatar: '/placeholder.svg?height=40&width=40',
-    clientName: 'Eve Brown',
-    freelancerAvatar: '/placeholder.svg?height=40&width=40',
-    freelancerName: 'Frank Miller',
-    progress: 100,
-    amountStreaming: 2000,
-    endDate: new Date('2023-10-01'),
-    status: 'settled',
-  },
-]
-
-const formatDate = (date: Date) => {
-  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+const formatDate = (date: string) => {
+  return new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
 const formatCurrency = (amount: number) => {
@@ -81,11 +48,43 @@ const getStatusColor = (status: Gig['status']) => {
   }
 }
 
-export default function GigsInProgress() {
+export default function GigsTable() {
+  const [gigs, setGigs] = useState<Gig[]>([])
+
+  useEffect(() => {
+    const fetchGigs = async () => {
+      try {
+        const response = await fetch('/api/get-paid-gigs-of-freelancer')
+        if (!response.ok) {
+          throw new Error('Failed to fetch gig data')
+        }
+        const data: Gig[] = await response.json()
+        setGigs(data)
+      } catch (error) {
+        console.error('Error fetching gig data:', error)
+      }
+    }
+
+    fetchGigs()
+  }, [])
+
+  const handleSeeGig = (gigId: string) => {
+    console.log(`Viewing gig with ID: ${gigId}`)
+    // In a real application, you would navigate to a detailed view of the gig here
+  }
+
+  const shortenAddress = (address: string) => {
+    if (address.startsWith('0x') && address.length === 42) {
+      return `${address.slice(0, 4)}...${address.slice(-2)}`
+    }
+    return address
+  }
+  
+
   return (
-    <div className="container mx-auto py-10">
+    <div className="mx-auto py-10">
       <h1 className="text-2xl font-bold mb-4">Gigs in Progress</h1>
-      <div className="border rounded-lg">
+      <div className="border rounded-lg overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -96,6 +95,7 @@ export default function GigsInProgress() {
               <TableHead>Amount Streaming</TableHead>
               <TableHead>End Date</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -110,19 +110,17 @@ export default function GigsInProgress() {
                 <TableCell>
                   <div className="flex items-center">
                     <Avatar className="h-8 w-8 mr-2">
-                      <AvatarImage src={gig.clientAvatar} alt={gig.clientName} />
                       <AvatarFallback>{gig.clientName.slice(0, 2)}</AvatarFallback>
                     </Avatar>
-                    {gig.clientName}
+                    {shortenAddress(gig.clientName) }
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center">
                     <Avatar className="h-8 w-8 mr-2">
-                      <AvatarImage src={gig.freelancerAvatar} alt={gig.freelancerName} />
                       <AvatarFallback>{gig.freelancerName.slice(0, 2)}</AvatarFallback>
                     </Avatar>
-                    {gig.freelancerName}
+                    {shortenAddress(gig.freelancerName) }
                   </div>
                 </TableCell>
                 <TableCell>
@@ -146,6 +144,19 @@ export default function GigsInProgress() {
                     {gig.status}
                   </Badge>
                 </TableCell>
+                <TableCell>
+              <Link href={`/gig-status/${gig.requestId}`} >
+                <Button
+    
+                  variant="outline"
+                  size="sm"
+                  className="cursor-pointer"
+                >
+                  <ExternalLinkIcon className="mr-2 h-4 w-4" />
+                  See Gig
+                </Button>
+              </Link>
+            </TableCell>
               </TableRow>
             ))}
           </TableBody>

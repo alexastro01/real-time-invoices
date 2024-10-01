@@ -112,7 +112,7 @@ const CreateRequestFromGig: React.FC<CreateRequestFromGigProps> = ({
         body: JSON.stringify({
           requestId: confirmedRequestData.requestId,
           payeeDetails: { evmAddress: recipientAddress },
-          payerDetails,
+          payerDetails: {evmAddress: payerDetails.evmAddress},
           payerEVMAddress: payerDetails.evmAddress,
           payeeEVMAddress: recipientAddress,
           expectedAmount: gigPrice,
