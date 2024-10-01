@@ -1,4 +1,4 @@
-import CreateGig from '@/components/gigs/CreateGig'
+import CreateGig from '@/components/my-gigs/CreateGig'
 import React from 'react'
 
 const Page = () => {

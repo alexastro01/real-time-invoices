@@ -34,13 +34,13 @@ export default function Navbar() {
 
   const pathname = usePathname();
   const { authState: eduConnectAuthState, ocAuth } = useOCAuth();
-  const { chain, address } = useAccount();
+  const { chain } = useAccount();
 
   const navItems = [
     { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { href: "/create-invoice", icon: FileText, label: "Create Invoice" },
     { href: '/gig-explorer', icon: Search, label: "Gig Explorer" },
-    { href: `/gigs/${address}`, icon: Briefcase, label: "My Gigs" },
+    { href: `/my-gigs`, icon: Briefcase, label: "My Gigs" },
     { href: "/profile", icon: UserCircle, label: "Profile" },
     { href: '/mint-tusdc', icon: DollarSign, label: "Get test stablecoin" },
   ];

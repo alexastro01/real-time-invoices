@@ -9,6 +9,7 @@ import Spinner from '@/components/helpers/Spinner';
 import Invoice from '@/components/invoice/Invoice';
 import Gigs from '@/components/gigs/Gigs';
 import { useAccount } from 'wagmi';
+import GigDashBoardFreelancer from '@/components/my-gigs/GigDashBoardFreelancer';
 
 const Page = () => {
   const { data: session, status } = useSession();
@@ -27,7 +28,7 @@ const Page = () => {
         );
       case 'authenticated':
         //@ts-ignore
-        return <Gigs creator={params.user as string} editMode={false} />;
+        return <GigDashBoardFreelancer  editMode={session?.user?.address === params.user ? true : false} />;
       case 'unauthenticated':
         return <NotConnected />;
       default:

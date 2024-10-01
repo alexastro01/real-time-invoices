@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { CalendarIcon, DollarSignIcon, ExternalLinkIcon } from "lucide-react"
 import Link from "next/link"
 
-type Gig = {
+export type Gig = {
   id: string
   createdDate: string
   clientName: string
@@ -90,8 +90,7 @@ export default function GigsTable() {
             <TableRow>
               <TableHead>Created Date</TableHead>
               <TableHead>Client</TableHead>
-              <TableHead>Freelancer</TableHead>
-              <TableHead>Progress</TableHead>
+   
               <TableHead>Amount Streaming</TableHead>
               <TableHead>End Date</TableHead>
               <TableHead>Status</TableHead>
@@ -112,21 +111,10 @@ export default function GigsTable() {
                     <Avatar className="h-8 w-8 mr-2">
                       <AvatarFallback>{gig.clientName.slice(0, 2)}</AvatarFallback>
                     </Avatar>
-                    {shortenAddress(gig.clientName) }
+                    {shortenAddress(gig.clientName)}
                   </div>
                 </TableCell>
-                <TableCell>
-                  <div className="flex items-center">
-                    <Avatar className="h-8 w-8 mr-2">
-                      <AvatarFallback>{gig.freelancerName.slice(0, 2)}</AvatarFallback>
-                    </Avatar>
-                    {shortenAddress(gig.freelancerName) }
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Progress value={gig.progress} className="w-[60%]" />
-                  <span className="ml-2 text-sm text-muted-foreground">{gig.progress}%</span>
-                </TableCell>
+           
                 <TableCell>
                   <div className="flex items-center">
                     <DollarSignIcon className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -153,7 +141,7 @@ export default function GigsTable() {
                   className="cursor-pointer"
                 >
                   <ExternalLinkIcon className="mr-2 h-4 w-4" />
-                  See Gig
+                  See Status
                 </Button>
               </Link>
             </TableCell>

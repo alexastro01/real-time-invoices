@@ -1,15 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react'
-import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Clock, DollarSign } from "lucide-react"
-import Link from "next/link"
-import Gig from "./Gig"
+
 import AddGigCard from "../my-gigs/AddGigCard"
-import GigProfile from './GigProfile';
+
 import GigsTable from "@/components/my-gigs/GigsTable";
+import GigProfile from '../gigs/GigProfile';
+import Gig from '../gigs/Gig';
+import { useAccount } from 'wagmi';
 
 interface GigType {
   gig_id: string;
@@ -20,20 +18,17 @@ interface GigType {
   // Add other fields as necessary
 }
 
-interface GigsProps {
-  creator: string;
-  editMode: boolean;
-}
 
-export default function Gigs({ creator, editMode }: GigsProps) {
+export default function GigDashBoardFreelancer() {
   const [gigs, setGigs] = useState<GigType[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const {address} = useAccount();
 
   useEffect(() => {
     const fetchGigs = async () => {
       try {
-        const response = await fetch(`/api/get-user-gigs?creator=${creator}`)
+        const response = await fetch(`/api/get-user-gigs?creator=${address as string}`)
         if (!response.ok) {
           throw new Error('Failed to fetch gigs')
         }
@@ -49,17 +44,17 @@ export default function Gigs({ creator, editMode }: GigsProps) {
     }
 
     fetchGigs()
-  }, [creator])
+  }, [address])
 
   if (loading) return <div>Loading...</div>
   if (error) return <div>Error: {error}</div>
 
   return (
-    <div className="max-w-4xl  mx-auto p-4">
-     <GigProfile creator={creator} editMode={editMode} />
+    <div className="w-full mx-auto p-4">
+     <GigProfile creator={address as string} editMode={true} />
 
       <h3 className="text-2xl font-semibold mb-4">Gigs</h3>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 ">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {gigs.map((gig) => (
           <Gig 
             key={gig.gig_id}
@@ -72,10 +67,13 @@ export default function Gigs({ creator, editMode }: GigsProps) {
             viewGig={true}
           />
         ))}
-
+        <AddGigCard />
       </div>
 
- 
+      {/* Add the GigsTable component here */}
+      <div className="mt-8">
+        <GigsTable />
+      </div>
     </div>
   )
 }
