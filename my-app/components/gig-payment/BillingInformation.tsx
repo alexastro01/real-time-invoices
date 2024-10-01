@@ -32,31 +32,34 @@ const BillingInformation: React.FC<BillingInformationProps> = ({ userDetails }) 
         <CardDescription>Your invoice will be issued according to the details listed here.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
-        <div className="flex justify-between">
+        <p className="text-md font-semiboldtext-primary mb-4">
+          To protect your data during testnet, only your wallet address will appear on the invoice
+        </p>
+        <div className="flex justify-between text-muted-foreground">
           <span className="font-semibold">Name:</span>
           <span>{userDetails?.name || 'No name provided'}</span>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between text-muted-foreground">
           <span className="font-semibold">Email:</span>
           <span>{userDetails?.email || 'No email provided'}</span>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between text-muted-foreground">
           <span className="font-semibold">Address:</span>
           <span>{userDetails?.address || 'No address provided'}</span>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between text-muted-foreground">
           <span className="font-semibold">City:</span>
           <span>{userDetails?.city || 'No city provided'}</span>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between text-muted-foreground">
           <span className="font-semibold">State:</span>
           <span>{userDetails?.state || 'No state provided'}</span>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between text-muted-foreground">
           <span className="font-semibold">Zip/Postal Code:</span>
           <span>{userDetails?.zip || 'No zip code provided'}</span>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between text-muted-foreground">
           <span className="font-semibold">Country:</span>
           <span>{userDetails?.country || 'No country provided'}</span>
         </div>
