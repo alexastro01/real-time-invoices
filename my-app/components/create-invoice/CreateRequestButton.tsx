@@ -131,7 +131,7 @@ const CreateRequestButton: React.FC<CreateRequestButtonProps> = ({
 
     } catch (error: any) {
       console.log(error)
-      alert('Error : gnosis gateway')
+      alert('Error : gnosis gateway | We are aware of it and we are working on it ! :) | Update time : 1 OCTOBER 2024')
       setDialogMessage(`Error: ${error}`);
       setLoading(false)
     } finally {
