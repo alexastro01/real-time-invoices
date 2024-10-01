@@ -47,7 +47,7 @@ export default function EnhancedExplorerGigsPage() {
 
             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mb-8">
                 <SearchBar searchTerm={searchTerm} onSearch={handleSearch} />
-                <ChainSelector selectedChain={selectedChain} onChainSelect={setSelectedChain} />
+                {/* <ChainSelector selectedChain={selectedChain} onChainSelect={setSelectedChain} /> */}
             </div>
 
             <section className="mb-12">
