@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { CalendarIcon, DollarSignIcon, ExternalLinkIcon } from "lucide-react"
-import Link from "next/link"
+import GigTableRow from "./GigTableRow"
+import GigsTableSkeleton from "./GigTableSkeleton"
+
 
 export type Gig = {
   id: string
@@ -50,10 +48,12 @@ const getStatusColor = (status: Gig['status']) => {
 
 export default function GigsTable() {
   const [gigs, setGigs] = useState<Gig[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchGigs = async () => {
       try {
+        setIsLoading(true)
         const response = await fetch('/api/get-paid-gigs-of-freelancer')
         if (!response.ok) {
           throw new Error('Failed to fetch gig data')
@@ -62,6 +62,8 @@ export default function GigsTable() {
         setGigs(data)
       } catch (error) {
         console.error('Error fetching gig data:', error)
+      } finally {
+        setIsLoading(false)
       }
     }
 
@@ -79,7 +81,11 @@ export default function GigsTable() {
     }
     return address
   }
-  
+
+
+  if (isLoading) {
+    return <GigsTableSkeleton />
+  }
 
   return (
     <div className="mx-auto py-10">
@@ -90,7 +96,7 @@ export default function GigsTable() {
             <TableRow>
               <TableHead>Created Date</TableHead>
               <TableHead>Client</TableHead>
-   
+
               <TableHead>Amount Streaming</TableHead>
               <TableHead>End Date</TableHead>
               <TableHead>Status</TableHead>
@@ -99,53 +105,7 @@ export default function GigsTable() {
           </TableHeader>
           <TableBody>
             {gigs.map((gig) => (
-              <TableRow key={gig.id}>
-                <TableCell>
-                  <div className="flex items-center">
-                    <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground" />
-                    {formatDate(gig.createdDate)}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center">
-                    <Avatar className="h-8 w-8 mr-2">
-                      <AvatarFallback>{gig.clientName.slice(0, 2)}</AvatarFallback>
-                    </Avatar>
-                    {shortenAddress(gig.clientName)}
-                  </div>
-                </TableCell>
-           
-                <TableCell>
-                  <div className="flex items-center">
-                    <DollarSignIcon className="mr-2 h-4 w-4 text-muted-foreground" />
-                    {formatCurrency(gig.amountStreaming)}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center">
-                    <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground" />
-                    {formatDate(gig.endDate)}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge className={`${getStatusColor(gig.status)} text-white`}>
-                    {gig.status}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-              <Link href={`/gig-status/${gig.requestId}`} >
-                <Button
-    
-                  variant="outline"
-                  size="sm"
-                  className="cursor-pointer"
-                >
-                  <ExternalLinkIcon className="mr-2 h-4 w-4" />
-                  See Status
-                </Button>
-              </Link>
-            </TableCell>
-              </TableRow>
+              <GigTableRow key={gig.id} gig={gig} formatDate={formatDate} formatCurrency={formatCurrency} getStatusColor={getStatusColor} shortenAddress={shortenAddress} />
             ))}
           </TableBody>
         </Table>
