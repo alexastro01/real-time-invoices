@@ -10,15 +10,27 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
   }
 
+  const { searchParams } = new URL(request.url);
+  const page = parseInt(searchParams.get('page') || '1', 10);
+  const limit = parseInt(searchParams.get('limit') || '9', 10);
+  const search = searchParams.get('search') || '';
+  const offset = (page - 1) * limit;
+
   try {
     const supabase = createAuthenticatedSupabaseClient(session);
 
-    // Fetch the 3 most recent gigs
-    const { data: recentGigs, error: gigsError } = await supabase
+    // Fetch gigs with pagination and search
+    let query = supabase
       .from('gigs')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(9);
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false });
+
+    if (search) {
+      query = query.ilike('title', `%${search}%`);
+    }
+
+    const { data: recentGigs, error: gigsError, count } = await query
+      .range(offset, offset + limit - 1);
 
     if (gigsError) throw gigsError;
 
@@ -41,7 +53,12 @@ export async function GET(request: Request) {
       creatorProfile: creatorProfiles.find(profile => profile.evmAddress === gig.creator_address)
     }));
 
-    return NextResponse.json(responseData);
+    return NextResponse.json({
+      gigs: responseData,
+      totalCount: count,
+      currentPage: page,
+      totalPages: Math.ceil((count ?? 0) / limit)
+    });
   } catch (error) {
     console.error('Error fetching recent gigs and profiles:', error);
     return NextResponse.json({ error: 'Failed to fetch recent gigs and profiles' }, { status: 500 });

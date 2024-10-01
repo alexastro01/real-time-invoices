@@ -113,4 +113,13 @@ export interface SenderDetails {
     delivery_time: string;
     created_at: string;
   }
+
+  export interface GigData {
+    gig: Gig;
+    creatorProfile: {
+      name: string;
+      profile_image: string;
+      evmAddress: string;
+    };
+  }
   

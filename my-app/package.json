@@ -63,6 +63,7 @@
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.6.4",
+    "@types/lodash": "^4.17.9",
     "@types/node": "^20",
     "@types/pdfkit": "^0.13.4",
     "@types/react": "^18",
