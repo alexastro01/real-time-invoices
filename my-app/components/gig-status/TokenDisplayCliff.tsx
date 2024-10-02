@@ -99,18 +99,18 @@ const TokenDisplayWithCliff: React.FC<TokenDisplayWithCliffProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-8 p-8 rounded-2xl shadow-lg
+    <div className="flex flex-col items-center justify-center space-y-4 sm:space-y-8 p-4 sm:p-8 rounded-2xl shadow-lg
                     bg-gradient-to-br from-white via-gray-100 to-gray-100
                     dark:from-gray-800 dark:via-gray-900 dark:to-gray-900
                     border border-gray-200 dark:border-gray-700
                     transition-all duration-300 ease-in-out
                     hover:shadow-xl hover:scale-105">
-      <div className="text-5xl lg:text-7xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-zinc-600 dark:from-gray-300 dark:to-zinc-300">
+      <div className="text-3xl sm:text-5xl lg:text-7xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-zinc-600 dark:from-gray-300 dark:to-zinc-300">
         {renderIntegerPart()}.
-        <span className="text-2xl lg:text-4xl">{decimalPart}</span>
+        <span className="text-xl sm:text-2xl lg:text-4xl">{decimalPart}</span>
       </div>
       
-      <div className="w-full max-w-md space-y-6">
+      <div className="w-full max-w-md space-y-4 sm:space-y-6">
         <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
           <div className="flex justify-between mb-2">
             <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Amount Streamed</span>

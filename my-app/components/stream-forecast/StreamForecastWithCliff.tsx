@@ -112,33 +112,32 @@ export default function StreamForecastWithCliff({
 
   return (
     <Card className="flex flex-col h-full">
-      <CardHeader className="flex-shrink-0">
-        <div className="flex justify-between items-center">
+      <CardHeader className="flex-shrink-0 p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
           <div>
-            <CardTitle className="text-lg">{title}</CardTitle>
+            <CardTitle className="text-lg sm:text-xl">{title}</CardTitle>
             <CardDescription className="text-sm">
               {isRejected ? "This gig has been rejected" : description}
             </CardDescription>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="flex-grow flex flex-col">
+      <CardContent className="flex-grow flex flex-col p-2 sm:p-4">
         {isRejected ? (
           <div className="flex items-center justify-center h-full text-gray-500">
             No forecast available for rejected gigs
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height={350}>
+          <ResponsiveContainer width="100%" height={300} minHeight={300}>
             <AreaChart
               data={chartData}
               margin={{
                 top: 10,
-                right: 30,
-                left: 10,
+                right: 10,
+                left: 0,
                 bottom: 0,
               }}
             >
-
               <XAxis 
                 dataKey="date" 
                 tickFormatter={formatXAxis}

@@ -90,9 +90,9 @@ export default function GigPaymentDashboard({
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-8 bg-gradient-to-br from-background to-muted min-h-screen">
+    <div className="container mx-auto mt-8 md:mt-0 p-0 sm:p-6 space-y-6 sm:space-y-8 bg-gradient-to-br from-background to-muted min-h-screen">
       {isRejected && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="mb-4 sm:mb-6">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Gig Rejected</AlertTitle>
           <AlertDescription>
@@ -102,12 +102,12 @@ export default function GigPaymentDashboard({
       )}
 
       <Card className="border-none shadow-lg">
-        <CardHeader className="bg-gradient-to-r primary-muted to primary-muted-foreground rounded-t-lg">
-          <CardTitle className="text-3xl font-bold text-primary">Gig Payment Status</CardTitle>
+        <CardHeader className="bg-gradient-to-r primary-muted to primary-muted-foreground rounded-t-lg p-4 sm:p-6">
+          <CardTitle className="text-2xl sm:text-3xl font-bold text-primary">Gig Payment Status</CardTitle>
           <CardDescription className="text-primary/80">Track your payment progress</CardDescription>
         </CardHeader>
-        <CardContent className="p-6">
-          <div className="grid gap-6 md:grid-cols-2">
+        <CardContent className="p-4 sm:p-6">
+          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
             <TokenDisplayWithCliff
               maxValue={totalAmount}
               tokenSymbol="tUSDC"
@@ -133,7 +133,7 @@ export default function GigPaymentDashboard({
             />
           </div>
 
-          <Separator className="my-6" />
+          <Separator className="my-4 sm:my-6" />
 
           <GigActionButtons 
             streamId={streamId} 
@@ -153,6 +153,7 @@ export default function GigPaymentDashboard({
         totalAmount={totalAmount}
         creator={gigData.creator_address}
         isRejected={isRejected}
+        client={invoiceData.paymentDetails.payerAddress}
       />
     </div>
   )

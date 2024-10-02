@@ -15,10 +15,8 @@ interface GigActionButtonsProps {
 }
 
 const GigActionButtons: React.FC<GigActionButtonsProps> = ({ streamId, chain_id, creator, isRejected, loggedInAddress, client }) => {
-
-
     return (
-        <div className="flex flex-wrap gap-4 justify-center">
+        <div className="flex flex-wrap gap-2 sm:gap-4 justify-center">
             {streamId && !isRejected && loggedInAddress === creator && (
                 <WithdrawGig
                     streamId={streamId}
