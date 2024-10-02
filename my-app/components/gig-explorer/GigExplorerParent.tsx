@@ -43,7 +43,8 @@ export default function EnhancedExplorerGigsPage() {
 
     return (
         <div className="container mx-auto px-4 py-8 mt-8 lg:mt-0">
-            <h1 className="text-4xl font-bold mb-8">Explore Gigs</h1>
+            <h1 className="text-4xl font-bold mb-4">Explore Gigs</h1>
+            <p className="text-sm text-gray-600 mb-8">While in testnet, current gig listings are made with the purpose of testing the functionalities of the dApp. They don't represent real opportunities.</p>
 
             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mb-8">
                 <SearchBar searchTerm={searchTerm} onSearch={handleSearch} />
