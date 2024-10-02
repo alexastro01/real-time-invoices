@@ -12,16 +12,14 @@ export async function POST(request: Request) {
   
     try {
       const body = await request.json();
-      const { title, description, price, chain_id, delivery_time } = body;
+      const { title, description, price, chain_id, delivery_time, mainnet_accept, contact_info } = body;
   
       const supabase = createAuthenticatedSupabaseClient(session);
   
       // Validate required fields
-      if (!title || price == null || !chain_id || !delivery_time) {
+      if (!title || price == null || !chain_id || !delivery_time || !contact_info) {
         return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
       }
-  
-     
   
       // Insert the new gig
       const { data, error } = await supabase
@@ -34,6 +32,8 @@ export async function POST(request: Request) {
           price,
           chain_id,
           delivery_time,
+          mainnet_accept: mainnet_accept ?? false, // Use the provided value or default to false
+          contact_info, // Add this field
         })
         .select();
   

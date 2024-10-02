@@ -50,7 +50,7 @@ export default function GigDashBoardFreelancer() {
   if (error) return <div>Error: {error}</div>
 
   return (
-    <div className="w-full mx-auto p-4">
+    <div className="w-full mx-auto p-4  mt-8 lg:mt-0">
      <GigProfile creator={address as string} editMode={true} />
 
       <h3 className="text-2xl font-semibold mb-4">Gigs</h3>
