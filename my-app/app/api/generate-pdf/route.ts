@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import PDFDocument from 'pdfkit';
-import path from 'path';
 import { IInvoiceData } from '@/types/interfaces';
 import { chainInfo, ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions';
 
@@ -13,63 +12,87 @@ export async function POST(req: NextRequest) {
   });
 
   const chunks: Buffer[] = [];
-
   doc.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
 
-  // Define colors
-  const primaryColor = '#000000';  // Black
-  const secondaryColor = '#333333';  // Dark Gray
+  // Define colors for a more professional look
+  const backgroundColor = '#ffffff';
+  const textColor = '#333333';
+  const accentColor = '#00b496';
+  const warningColor = '#e74c3c';
+  const borderColor = '#e0e0e0';
 
-  // Add logo and title
-  doc.image(path.resolve('./public/logo_cropped.png'), 50, 45, { width: 50 })
+  // Set background color
+  doc.rect(0, 0, doc.page.width, doc.page.height).fill(backgroundColor);
+
+  // Add a header with a colored bar
+  doc.rect(0, 0, doc.page.width, 15).fill(accentColor);
+
+  // Add title with a more professional font and styling
+  doc.font('Helvetica-Bold')
      .fontSize(28)
-     .fillColor(primaryColor)
-     .text('Invoice [testnet]', 110, 57);
+     .fillColor(textColor)
+     .text('INVOICE', 50, 50, { align: 'center' });
 
-  // Add a colored rectangle
-  doc.rect(0, 120, 595.28, 10).fill(primaryColor);
-
-  // Add seller and client information
-  doc.fontSize(10);
-  addInformation(doc, 'Seller:', invoiceData.partiesDetails.seller, invoiceData.paymentDetails.payeeAddress, 50, 150);
-  addInformation(doc, 'Client:', invoiceData.partiesDetails.client, invoiceData.paymentDetails.payerAddress, 300, 150);
-
-  // Add a separating line
-  doc.moveTo(50, 300).lineTo(545, 300).stroke(secondaryColor);
-
-  // Format the due date
-  const formattedDueDate = formatDate(invoiceData.paymentDetails.dueDate as number);
-
-  // Add payment details
-  doc.fontSize(16)
-     .fillColor(primaryColor)
-     .text('Payment Details', 50, 320);
-  doc.moveTo(50, 345).lineTo(545, 345).stroke(primaryColor);
-
+  // Add invoice number and date
   doc.fontSize(10)
-     .fillColor(secondaryColor);
+     .font('Helvetica')
+     .text(`Date: ${formatDate(new Date().getTime())}`, 50, 105, { align: 'right' });
 
-  addDetailRow(doc, 'Chain:', chainInfo[invoiceData.paymentDetails.chain as ValidChainId].name, 50, 360);
-  addDetailRow(doc, 'Currency:', 'tUSDC', 50, 380);
-  addDetailRow(doc, 'Stream Type:', invoiceData.paymentDetails.streamType, 50, 400);
-  addDetailRow(doc, 'Due Date:', formattedDueDate, 50, 420);
+  // Add warning if past due with improved styling
+  const currentDate = new Date();
+  const dueDate = new Date(invoiceData.paymentDetails.dueDate);
+  if (currentDate > dueDate) {
+    doc.fontSize(12)
+       .font('Helvetica-Bold')
+       .fillColor(warningColor)
+       .text('PAST DUE', 50, 130, { align: 'center' })
+       .rect(200, 125, 200, 25).stroke(warningColor);
+  }
 
-  // Add invoice items
+  // Add seller and client information with improved layout
+  doc.font('Helvetica-Bold')
+     .fontSize(14)
+     .fillColor(textColor);
+  const infoY = 160;
+  addInformation(doc, 'From:', invoiceData.partiesDetails.seller, invoiceData.paymentDetails.payeeAddress, 50, infoY);
+  addInformation(doc, 'To:', invoiceData.partiesDetails.client, invoiceData.paymentDetails.payerAddress, 300, infoY);
+  
+  // Add subtle border around seller and client information
+  doc.rect(40, infoY - 10, 515, 200).lineWidth(0.5).stroke(borderColor);
+
+  // Add payment details with improved styling
+  const paymentY = 380;
   doc.fontSize(16)
-     .fillColor(primaryColor)
-     .text('Invoice Items', 50, 460);
-  doc.moveTo(50, 485).lineTo(545, 485).stroke(primaryColor);
+     .font('Helvetica-Bold')
+     .text('Payment Details', 50, paymentY);
+  
+  doc.fontSize(10)
+     .font('Helvetica');
+  addDetailRow(doc, 'Chain:', chainInfo[invoiceData.paymentDetails.chain as ValidChainId].name, 50, paymentY + 25);
+  addDetailRow(doc, 'Currency:', invoiceData.paymentDetails.currency, 50, paymentY + 45);
+  addDetailRow(doc, 'Stream Type:', invoiceData.paymentDetails.streamType, 50, paymentY + 65);
+  addDetailRow(doc, 'Due Date:', formatDate(invoiceData.paymentDetails.dueDate as any), 50, paymentY + 85);
 
-  const tableTop = 500;
-  generateTable(doc, invoiceData.paymentDetails.invoiceItems, tableTop, secondaryColor);
+  // Add subtle border around payment details
+  doc.rect(40, paymentY - 10, 515, 120).lineWidth(0.5).stroke(borderColor);
 
-  // Add total amount
+  // Add invoice items with improved table styling
+  const itemsY = 520;
+  doc.fontSize(16)
+     .font('Helvetica-Bold')
+     .text('Invoice Items', 50, itemsY);
+
+  const tableTop = itemsY + 25;
+  generateTable(doc, invoiceData.paymentDetails.invoiceItems, tableTop, borderColor, accentColor);
+
+  // Add total amount with improved styling
   const totalTop = tableTop + (invoiceData.paymentDetails.invoiceItems.length + 1) * 30 + 20;
-  doc.fontSize(14)
-     .fillColor(primaryColor)
-     .text(`Total Amount:`, 400, totalTop)
-     .fontSize(16)
-     .text(`$${invoiceData.paymentDetails.totalAmount}`, 400, totalTop + 20);
+  doc.fontSize(16)
+     .font('Helvetica-Bold')
+     .fillColor('black')
+     .text(`Total Amount: ${invoiceData.paymentDetails.totalAmount} USDC`, 50, totalTop, { align: 'right' });
+
+
 
   doc.end();
 
@@ -89,46 +112,46 @@ export async function POST(req: NextRequest) {
 }
 
 function addInformation(doc: PDFKit.PDFDocument, title: string, data: any, evmAddress: string, x: number, y: number) {
-  doc.fontSize(14)
-     .fillColor('#000000')  // Black
+  doc.fontSize(12)
+     .font('Helvetica-Bold')
      .text(title, x, y);
   doc.fontSize(10)
-     .fillColor('#333333')  // Dark Gray
-     .text(data.name, x, y + 25)
-     .text(data.email, x, y + 40)
-     .text(data.address || '', x, y + 55)
-     .text(`${data.city || ''}, ${data.state || ''} ${data.zip || ''}`, x, y + 70)
-     .text(data.country || '', x, y + 85)
-     .fontSize(8)
-     .text('EVM Address:', x, y + 100)
-     .text(evmAddress, x, y + 115, { width: 200, align: 'left' });
+     .font('Helvetica')
+     .text(data.name, x, y + 20)
+     .text(data.email, x, y + 35)
+     .text(data.address || '', x, y + 50)
+     .text(`${data.city || ''}, ${data.state || ''} ${data.zip || ''}`, x, y + 65)
+     .text(data.country || '', x, y + 80)
+     .text('EVM Address:', x, y + 95)
+     .text(evmAddress, x, y + 110, { width: 200, align: 'left' });
 }
 
 function addDetailRow(doc: PDFKit.PDFDocument, label: string, value: string, x: number, y: number) {
-  doc.fillColor('#000000')  // Black
-     .text(label, x, y)
-     .fillColor('#333333')  // Dark Gray
-     .text(value, x + 100, y);
+  doc.font('Helvetica-Bold').text(label, x, y)
+     .font('Helvetica').text(value, x + 100, y);
 }
 
-function generateTable(doc: PDFKit.PDFDocument, items: any[], y: number, color: string) {
-  const headers = ['Item', 'Quantity', 'Price', 'Amount'];
+function generateTable(doc: PDFKit.PDFDocument, items: any[], y: number, borderColor: string, headerColor: string) {
+  const headers = ['Item', 'Quantity', 'Price', 'Total'];
+  const columnWidth = 128;
   
-  doc.fontSize(10)
-     .fillColor(color);
+  doc.fontSize(10).font('Helvetica-Bold');
 
+  // Draw table header with colored background
+  doc.rect(50, y, 515, 25).fill(headerColor);
   headers.forEach((header, i) => {
-    doc.text(header, 50 + i * 125, y);
+    doc.fillColor('#ffffff').text(header, 55 + i * columnWidth, y + 8);
   });
 
-  doc.moveTo(50, y + 15).lineTo(545, y + 15).stroke(color);
-
+  // Draw table rows
+  doc.font('Helvetica').fillColor('black');
   items.forEach((item, i) => {
     const rowY = y + 25 + (i * 25);
-    doc.text(item.name, 50, rowY)
-       .text(item.quantity.toString(), 175, rowY)
-       .text(`$${item.price.toFixed(2)}`, 300, rowY)
-       .text(`$${(item.quantity * item.price).toFixed(2)}`, 425, rowY);
+    doc.rect(50, rowY, 515, 25).lineWidth(0.5).stroke(borderColor);
+    doc.text(item.name, 55, rowY + 8)
+       .text(item.quantity.toString(), 55 + columnWidth, rowY + 8)
+       .text(item.price.toFixed(2), 55 + 2 * columnWidth, rowY + 8)
+       .text((item.quantity * item.price).toFixed(2), 55 + 3 * columnWidth, rowY + 8);
   });
 }
 

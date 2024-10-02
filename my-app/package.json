@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@next/third-parties": "^14.2.6",
-    "@opencampus/ocid-connect-js": "^1.0.1",
+    "@opencampus/ocid-connect-js": "^1.2.0",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-checkbox": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.1",
@@ -49,6 +49,7 @@
     "next": "^14.2.6",
     "next-auth": "^4.24.7",
     "next-themes": "^0.3.0",
+    "pdf-lib": "^1.17.1",
     "react": "^18",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",

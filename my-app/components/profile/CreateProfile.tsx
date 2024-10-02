@@ -1,14 +1,10 @@
 "use client";
 import React, { useEffect, useState } from 'react'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "../ui/card"
-
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../ui/card"
 import { useToast } from '../ui/use-toast';
 import { useAccount } from 'wagmi';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Skeleton } from '../ui/skeleton';
 import { ProfileForm } from './ProfileForm';
-
-
 
 interface SenderDetails {
   evmAddress: string
@@ -21,10 +17,7 @@ interface SenderDetails {
   country: string
 }
 
-
-
 export function CreateProfile() {
-
   const { address } = useAccount();
   const [senderDetails, setSenderDetails] = useState<SenderDetails>({
     evmAddress: address as string,
@@ -38,16 +31,10 @@ export function CreateProfile() {
   })
   const [editMode, setEditMode] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-
   const { toast } = useToast();
-  const [isFetching, setIsFetching] = useState(true)
-
-
+  const [isFetching, setIsFetching] = useState(false)
   const router = useRouter();
   const searchParams = useSearchParams();
-
-
-
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target
@@ -72,38 +59,27 @@ export function CreateProfile() {
       }
     } catch (error) {
       console.error('Error fetching user details:', error);
-      const redirect = searchParams.get('redirect');
-      if (!redirect) {
-        toast({
-          title: "Error",
-          description: "Failed to fetch user details. You may enter them manually.",
-          variant: "destructive",
-        });
-      }
+      toast({
+        title: "Error",
+        description: "Failed to fetch user details. You may enter them manually.",
+        variant: "destructive",
+      });
     } finally {
       setIsFetching(false);
     }
   };
 
-
   const toggleEditMode = () => {
     setEditMode(!editMode);
   }
-  const SkeletonField = () => (
-    <div className="flex flex-col space-y-1.5">
-      <Skeleton className="h-4 w-[50px]" />
-      <Skeleton className="h-10 w-full" />
-    </div>
-  );
 
   useEffect(() => {
-    if (address) {
-      fetchUserDetails();
-    }
-
     const redirect = searchParams.get('redirect');
+    
     if (redirect) {
       setEditMode(true);
+    } else if (address) {
+      fetchUserDetails();
     }
   }, [address, searchParams]);
 
@@ -140,14 +116,9 @@ export function CreateProfile() {
         description: "Profile updated successfully",
       });
 
-      // Check for redirect parameter
       const redirect = searchParams.get('redirect');
       if (redirect) {
         router.push(`/${redirect}`);
-      } else {
-        // Default redirection or stay on the same page
-        // You can modify this as needed
-
       }
 
     } catch (error) {
@@ -163,7 +134,7 @@ export function CreateProfile() {
   };
 
   return (
-    <div className="w-[90%] lg:w-[85%] xl:w-[65%] mt-20 md:mt-0" >
+    <div className="w-[90%] lg:w-[85%] xl:w-[65%] mt-20 md:mt-0">
       <Card className="">
         <CardHeader>
           <CardTitle>Your profile</CardTitle>
