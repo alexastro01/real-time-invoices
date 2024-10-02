@@ -2,13 +2,12 @@
 import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Button } from '../ui/button'
-
 import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
 import { useRouter } from 'next/navigation'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { Checkbox } from '../ui/checkbox' // Add this import
-
+import { checkForBadWords } from '@/utils/language/badWordsChecker'; // Import the new function
 import { ValidChainId } from '../../utils/multi-chain/MultiChainSelectOptions';
 import ChainSelector from '../helpers/ChainSelector'
 import { useAccount } from 'wagmi'
@@ -30,20 +29,39 @@ const CreateGig: React.FC<CreateGigProps> = () => {
   const { toast } = useToast() // Initialize useToast
   const [mainnetAccept, setMainnetAccept] = useState(false) // Add this state
   const [contactInfo, setContactInfo] = useState('') // Add this state
+  const [hasBadWords, setHasBadWords] = useState(false);
+
 
   const router = useRouter()
 
   const handleCreateGig = async () => {
+    // Check for bad words in title and description
+    const titleHasBadWords = checkForBadWords(title);
+    const descriptionHasBadWords = checkForBadWords(description);
+
+    if (titleHasBadWords || descriptionHasBadWords) {
+      setHasBadWords(true);
+      toast({
+        title: 'Inappropriate Content',
+        description: 'Please remove any inappropriate language from the title or description.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    // Reset bad words flag
+    setHasBadWords(false);
+
     // Validate inputs
     if (!title || !description || !deliveryTime || !price || selectedChain === null) {
       toast({
         title: 'Validation Error',
         description: 'Please fill in all required fields, including contact information.',
         variant: 'destructive',
-      })
-      return
+      });
+      return;
     }
-  
+
     const newGig = {
       title,
       description,
@@ -53,7 +71,7 @@ const CreateGig: React.FC<CreateGigProps> = () => {
       mainnet_accept: mainnetAccept, // Add this field
       contact_info: contactInfo, // Add this field
     }
-  
+
     toast({
       title: "Creating Gig",
       description: (
@@ -64,7 +82,7 @@ const CreateGig: React.FC<CreateGigProps> = () => {
       ),
       variant: "default",
     })
-  
+
     try {
       const response = await fetch('/api/create-gig', {
         method: 'POST',
@@ -73,7 +91,7 @@ const CreateGig: React.FC<CreateGigProps> = () => {
         },
         body: JSON.stringify(newGig),
       })
-  
+
       if (response.ok) {
         toast({
           title: 'Success',
@@ -99,6 +117,7 @@ const CreateGig: React.FC<CreateGigProps> = () => {
       })
     }
   }
+
   return (
     <div className="flex items-center justify-center min-h-screen">
       <Card className="max-w-lg w-full">
@@ -116,6 +135,7 @@ const CreateGig: React.FC<CreateGigProps> = () => {
                 onChange={(e) => setTitle(e.target.value)}
                 required
                 placeholder="Gig Title"
+                className={hasBadWords ? 'border-red-500' : ''}
               />
             </div>
             <div>
@@ -125,8 +145,14 @@ const CreateGig: React.FC<CreateGigProps> = () => {
                 onChange={(e) => setDescription(e.target.value)}
                 required
                 placeholder="Gig Description"
+                className={hasBadWords ? 'border-red-500' : ''}
               />
             </div>
+            {hasBadWords && (
+              <p className="text-red-500 text-sm">
+                Please remove any inappropriate language from the title or description.
+              </p>
+            )}
             <div>
               <label className="block text-sm font-medium">Delivery Time</label>
               <Select value={deliveryTime} onValueChange={setDeliveryTime}>
@@ -169,7 +195,7 @@ const CreateGig: React.FC<CreateGigProps> = () => {
                 I want this gig to be live on mainnet launch as well
               </label>
             </div>
-         
+
             <p className="text-sm text-gray-500">
               If you selected that you want the gig to be live on launch as well, we may contact you for additional information.
               The gigs listed on mainnet will have to pass certain quality checks. (e.g. no spam)
