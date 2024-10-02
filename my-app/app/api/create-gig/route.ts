@@ -12,12 +12,12 @@ export async function POST(request: Request) {
   
     try {
       const body = await request.json();
-      const { title, description, price, chain_id, delivery_time, mainnet_accept, contact_info } = body;
+      const { title, description, price, chain_id, delivery_time, mainnet_accept } = body;
   
       const supabase = createAuthenticatedSupabaseClient(session);
   
       // Validate required fields
-      if (!title || price == null || !chain_id || !delivery_time || !contact_info) {
+      if (!title || price == null || !chain_id || !delivery_time ) {
         return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
       }
   
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
           chain_id,
           delivery_time,
           mainnet_accept: mainnet_accept ?? false, // Use the provided value or default to false
-          contact_info, // Add this field
+
         })
         .select();
   

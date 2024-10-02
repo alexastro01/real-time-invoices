@@ -3,9 +3,11 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { CalendarIcon, DollarSignIcon, ExternalLinkIcon } from "lucide-react";
+import { AlertCircle, CalendarIcon, DollarSignIcon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { Gig } from './GigsTable'; // Make sure to export the Gig type from GigsTable
+import Image from 'next/image';
+import { chainInfo, ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions';
 
 
 
@@ -53,12 +55,10 @@ const GigTableRow: React.FC<GigTableRowProps> = ({
         </div>
       </TableCell>
       <TableCell>
-        <Badge className={`${getStatusColor(gig.status)} text-white`}>
-          {gig.status}
-        </Badge>
+         <Image src={chainInfo[gig.chainId as ValidChainId].logoUrl} alt={chainInfo[gig.chainId as ValidChainId].name} width={20} height={20} />
       </TableCell>
       <TableCell>
-        <Link href={`/gig-status/${gig.requestId}`}>
+{   gig.streamId > 0 ?     <Link href={`/gig-status/${gig.requestId}`}>
           <Button
             variant="outline"
             size="sm"
@@ -67,7 +67,16 @@ const GigTableRow: React.FC<GigTableRowProps> = ({
             <ExternalLinkIcon className="mr-2 h-4 w-4" />
             See Status
           </Button>
-        </Link>
+        </Link> : 
+              <Button
+              variant="destructive"
+              size="sm"
+              className="cursor-pointer"
+            >
+              <AlertCircle className="mr-2 h-4 w-4" />
+                  No stream ID Found
+                   </Button>
+        }
       </TableCell>
     </TableRow>
   );

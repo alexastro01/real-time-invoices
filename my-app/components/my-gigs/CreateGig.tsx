@@ -35,7 +35,7 @@ const CreateGig: React.FC<CreateGigProps> = () => {
 
   const handleCreateGig = async () => {
     // Validate inputs
-    if (!title || !description || !deliveryTime || !price || selectedChain === null || !contactInfo) {
+    if (!title || !description || !deliveryTime || !price || selectedChain === null) {
       toast({
         title: 'Validation Error',
         description: 'Please fill in all required fields, including contact information.',
@@ -169,19 +169,7 @@ const CreateGig: React.FC<CreateGigProps> = () => {
                 I want this gig to be live on mainnet launch as well
               </label>
             </div>
-            <div>
-              <label className="block text-sm font-medium">Contact Info</label>
-              <Input
-                type="text"
-                value={contactInfo}
-                onChange={(e) => setContactInfo(e.target.value)}
-                required
-                placeholder="Telegram handle, X handle, or email"
-              />
-              <p className="text-sm text-gray-500 mt-1">
-                Please provide your Telegram handle, X handle, or email for contact.
-              </p>
-            </div>
+         
             <p className="text-sm text-gray-500">
               If you selected that you want the gig to be live on launch as well, we may contact you for additional information.
               The gigs listed on mainnet will have to pass certain quality checks. (e.g. no spam)

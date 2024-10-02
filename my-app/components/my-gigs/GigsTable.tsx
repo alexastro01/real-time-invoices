@@ -99,7 +99,7 @@ export default function GigsTable() {
 
               <TableHead>Amount Streaming</TableHead>
               <TableHead>End Date</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>Chain</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>

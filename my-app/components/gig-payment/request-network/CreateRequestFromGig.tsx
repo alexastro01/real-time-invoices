@@ -111,8 +111,8 @@ const CreateRequestFromGig: React.FC<CreateRequestFromGigProps> = ({
         },
         body: JSON.stringify({
           requestId: confirmedRequestData.requestId,
-          payeeDetails: { evmAddress: recipientAddress },
-          payerDetails: {evmAddress: payerDetails.evmAddress},
+          payeeDetails: { evmAddress: recipientAddress, name: recipientAddress, email: recipientAddress },
+          payerDetails: {evmAddress: payerDetails.evmAddress, name: payerDetails.evmAddress, email: payerDetails.evmAddress},
           payerEVMAddress: payerDetails.evmAddress,
           payeeEVMAddress: recipientAddress,
           expectedAmount: gigPrice,
@@ -157,7 +157,7 @@ const CreateRequestFromGig: React.FC<CreateRequestFromGigProps> = ({
           {loading && !isConfirmed &&
             <div className="flex flex-col items-center justify-center p-4">
               <Spinner className="mb-4" />
-              <p>{durationInDays} days and {timeToCancelationPeriod[durationInDays]} days after cancelation period</p>
+
               <p>{dialogMessage}</p>
             </div>
           }
