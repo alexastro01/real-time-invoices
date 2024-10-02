@@ -81,6 +81,7 @@ export interface SenderDetails {
     state: string;
     zip: string;
     country: string;
+    profile_image?: string;
   }
 
   export type StreamData = {
@@ -100,5 +101,25 @@ export interface SenderDetails {
     sender: string;
     startTime: number;
     wasCanceled: boolean;
+  }
+  
+  export type Gig = {
+    gig_id: string;
+    creator_address: string;  // This is now the evmAddress
+    title: string;
+    description: string | null;
+    price: number;
+    chain_id: number;
+    delivery_time: string;
+    created_at: string;
+  }
+
+  export interface GigData {
+    gig: Gig;
+    creatorProfile: {
+      name: string;
+      profile_image: string;
+      evmAddress: string;
+    };
   }
   

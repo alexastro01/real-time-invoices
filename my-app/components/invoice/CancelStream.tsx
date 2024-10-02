@@ -23,12 +23,14 @@ type CancelStreamProps = {
   streamId: number,
   chain_id: number,
   wasCanceled?: boolean
+  isFromGig?: boolean
 }
 
 const CancelStream = ({
   streamId,
   chain_id,
-  wasCanceled
+  wasCanceled,
+  isFromGig
 }: CancelStreamProps) => {
   const router = useRouter()
   const { toast } = useToast();
@@ -94,7 +96,7 @@ const CancelStream = ({
       <DialogTrigger asChild>
         <Button
           variant="destructive"
-          className="w-full"
+          className={isFromGig ? 'w-auto' :  `w-full`}
           disabled={isPending || isConfirming || wasCanceled}
         >
           {isConfirming ? (
@@ -103,7 +105,7 @@ const CancelStream = ({
             </>
           ) : (
             <>
-              <XCircle className="mr-2 h-4 w-4" /> Cancel Stream
+              <XCircle className="mr-2 h-4 w-4" /> Cancel Stream & return funds
             </>
           )}
         </Button>

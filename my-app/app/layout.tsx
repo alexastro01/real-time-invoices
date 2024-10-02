@@ -48,6 +48,7 @@ export const metadata: Metadata = {
 const opts = {
   redirectUri: process.env.NEXT_PUBLIC_ENVIRONMENT === 'prod' ? 'https://app.streambill.xyz/edu-redirect' : 'http://localhost:3000/edu-redirect', // Adjust this URL
   referralCode: 'PARTNER6'
+
 };
 
 export default function RootLayout({
