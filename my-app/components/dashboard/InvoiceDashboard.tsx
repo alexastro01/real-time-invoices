@@ -6,7 +6,7 @@ import { InvoiceChart } from './Chart';
 import { useAccount } from 'wagmi';
 import { useWithdrawableAmounts } from '@/hooks/useWithdrawableAmounts';
 import { useToast } from '../ui/use-toast';
-
+import Link from 'next/link';
 
 interface InvoiceStats {
   totalExpectedAmount: string;
@@ -124,6 +124,12 @@ const InvoiceDashboard = () => {
 
   return (
     <div className="container mx-auto p-4">
+      <div className="bg-yellow-100 dark:bg-yellow-900 border-l-4 border-yellow-500 text-yellow-700 dark:text-yellow-200 p-4 mb-4">
+        <p className="font-bold">
+          Gigs is shutting down. Introducing <Link href="/discover" className="underline hover:text-yellow-800 dark:hover:text-yellow-100">Discover</Link>
+        </p>
+      </div>
+
       <h1 className="text-2xl font-bold mb-4">Invoice Dashboard</h1>
       
       {/* Stats Cards */}
