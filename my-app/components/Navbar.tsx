@@ -39,8 +39,8 @@ export default function Navbar() {
   const navItems = [
     { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { href: "/create-invoice", icon: FileText, label: "Create Invoice" },
-    { href: '/gig-explorer', icon: Search, label: "Gig Explorer" },
-    { href: `/my-gigs`, icon: Briefcase, label: "My Gigs" },
+    { href: "/discover", icon: Search, label: "Discover (soon)" },
+
     { href: "/profile", icon: UserCircle, label: "Profile" },
     { href: '/mint-tusdc', icon: DollarSign, label: "Get test stablecoin" },
   ];
