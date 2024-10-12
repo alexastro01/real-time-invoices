@@ -14,6 +14,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import FreelancerCard from './FreelancerCard'
+import { freelancers } from '@/helper/freelancerData';
 
 export default function DiscoverParent() {
     const [email, setEmail] = useState('')
@@ -218,21 +219,16 @@ export default function DiscoverParent() {
                 >
                     <h2 className="text-2xl sm:text-3xl font-bold mb-6">Already in!</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6 text-left">
-                        <FreelancerCard
-                            name="blackicon.eth"
-                            profileImage="/blackicon.png"
-                            role="Full Stack Developer"
-                            description="Winner of multiple hackathons and part of builder.garden - A community of freelancers building web3 MVPs"
-                            link="https://app.icebreaker.xyz/profiles/RupHAjifKuuYAA-DBcHfv?key=y06TwE2vdsT3yEJGrkwRD"
-                        />
-                        <FreelancerCard
-                            name="Alex Astro"
-                            profileImage="/alexastro.png"
-                            role="Dapp Developer"
-                            description="Web3 developer with 3 years of experience building products from scratch, currently working on streambill"
-                            link="https://x.com/_AlexAstro"
-                        />
-                  
+                        {freelancers.map((freelancer, index) => (
+                            <FreelancerCard
+                                key={index}
+                                name={freelancer.name}
+                                profileImage={freelancer.profileImage}
+                                role={freelancer.role}
+                                description={freelancer.description}
+                                link={freelancer.link}
+                            />
+                        ))}
                     </div>
                 </motion.div>
 

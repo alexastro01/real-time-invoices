@@ -13,7 +13,7 @@ interface FreelancerProps {
 
 export default function FreelancerCard({ name, profileImage, role, description, link }: FreelancerProps) {
   return (
-    <Card className="w-full">
+    <Card className="w-full flex flex-col h-full">
       <CardHeader className="flex flex-row items-center gap-4 pb-2">
         <Avatar className="h-16 w-16">
           <AvatarImage src={profileImage} alt={name} />
@@ -24,10 +24,10 @@ export default function FreelancerCard({ name, profileImage, role, description, 
           <p className="text-sm text-muted-foreground">{role}</p>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-grow mt-2">
         <p className="text-sm text-muted-foreground">{description}</p>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="mt-auto">
         <Button variant="outline" className="w-full" asChild>
           <a href={link} target="_blank" rel="noopener noreferrer">
             View Profile
