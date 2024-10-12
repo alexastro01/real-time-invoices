@@ -34,5 +34,19 @@ export interface Freelancer {
         role: "Developer",
         description: "erevald at @_buildspace. Member @developer_dao. Building DailyWiser",
         link: "https://x.com/giovannifulin"
+    },
+    {
+        name: "Look-man Yegbe",
+        profileImage: "/lookman.jpg",
+        role: "Moderator / Content Creator",
+        description: "Content creator focused on increasing farcaster and twitter reach for my clients | Morph L2 Discord Moderator",
+        link: "https://x.com/lookmanyegbe"  
+    },
+    {
+        name: "Viktoria",
+        profileImage: "/viktoria.jpg",
+        role: "Content Creator",
+        description: " Digital Content Creator with 2 years of experience, Morph Ambassador | Swistronik, influencer ",
+        link: "https://x.com/angel_viktoriaa"
     }       
   ];
