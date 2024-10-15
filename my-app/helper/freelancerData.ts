@@ -55,5 +55,12 @@ export interface Freelancer {
       role: "Content creator",
       description: "Video creator focused on delivering engaging content to my audiences",
       link: "https://x.com/Lunchmancreates"
-  }           
+  },
+  {
+    name: "arjanjohan",
+    profileImage: "/arjanjohan.jpg",
+    role: "Developer",
+    description: "Hackathon winner with a background in banking and iGaming. Currently building Scaffold Move, a tool to build on Aptos/Move.",
+    link: "https://x.com/arjanjohan"
+}           
   ];
