@@ -40,7 +40,7 @@ export interface Freelancer {
         profileImage: "/lookman.jpg",
         role: "Moderator / Content Creator",
         description: "Content creator focused on increasing farcaster and twitter reach for my clients | Morph L2 Discord Moderator",
-        link: "https://x.com/lookmanyegbe"  
+        link: "https://x.com/LookYegbe"  
     },
     {
         name: "Viktoria",
