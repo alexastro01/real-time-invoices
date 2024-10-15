@@ -5,6 +5,7 @@ import React from 'react'
 const Page = () => {
   return (
     <div className='mt-12 lg:mt-0'>
+      
      <DiscoverParent />
 
      </div>

@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server'
 import { supabaseClient } from '@/lib/supabaseClient'
 
 export async function POST(request: Request) {
-  const { email, xHandle, tgHandle, role, otherRole } = await request.json()
+  const { email, xHandle, tgHandle, role, otherRole, description } = await request.json()
 
-  if (!email || !xHandle || !tgHandle || !role) {
+  if (!email || !xHandle || !tgHandle || !role || !description) {
     return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
   }
 
@@ -19,6 +19,7 @@ export async function POST(request: Request) {
           x_handle: xHandle,
           tg_handle: tgHandle,
           role: finalRole,
+          description,
         }
       ])
 

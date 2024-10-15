@@ -48,5 +48,12 @@ export interface Freelancer {
         role: "Content Creator",
         description: " Digital Content Creator with 2 years of experience, Morph Ambassador | Swistronik, influencer ",
         link: "https://x.com/angel_viktoriaa"
-    }       
+    },
+    {
+      name: "LunchMan",
+      profileImage: "/lunchman.jpg",
+      role: "Content creator",
+      description: "Video creator focused on delivering engaging content to my audiences",
+      link: "https://x.com/Lunchmancreates"
+  }           
   ];

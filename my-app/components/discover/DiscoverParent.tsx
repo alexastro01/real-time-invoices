@@ -13,7 +13,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import FreelancerCard from './FreelancerCard'
+import FreelancerCard from './FreelancerCard';
 import { freelancers } from '@/helper/freelancerData';
 
 export default function DiscoverParent() {
@@ -24,6 +24,7 @@ export default function DiscoverParent() {
     const { toast } = useToast()
     const [role, setRole] = useState('')
     const [otherRole, setOtherRole] = useState('')
+    const [description, setDescription] = useState('')
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -40,6 +41,7 @@ export default function DiscoverParent() {
                     tgHandle,
                     role,
                     otherRole,
+                    description,
                 }),
             })
 
@@ -65,6 +67,7 @@ export default function DiscoverParent() {
             setTgHandle('')
             setRole('')
             setOtherRole('')
+            setDescription('')
         }
     }
 
@@ -109,8 +112,8 @@ export default function DiscoverParent() {
                         <h3 className="text-sm sm:text-md  font-light text-muted-foreground mt-4 mb-4">Do you want to</h3>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                             <div className="bg-card border border-border rounded-lg p-4 flex flex-col items-center text-center">
-                                <Clock className="w-12 h-12 mb-2 text-primary" />
-                                <span className="text-md font-medium">Reach hundreds of visitors daily</span>
+                                <Users className="w-12 h-12 mb-2 text-primary" />
+                                <span className="text-md font-medium">Expand your network</span>
                             </div>
                             <div className="bg-card border border-border rounded-lg p-4 flex flex-col items-center text-center">
                                 <DollarSign className="w-12 h-12 mb-2 text-primary" />
@@ -193,6 +196,15 @@ export default function DiscoverParent() {
                                     />
                                     <Send className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                 </div>
+                            </div>
+                            <div className="w-full">
+                                <textarea
+                                    placeholder="A few words about yourself ( example : Video creator with 2 years of experience in creating short-form and long-form videos for my clients )"
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    required
+                                    className="w-full h-24 p-2 bg-input border-input text-foreground placeholder-muted-foreground rounded-md resize-none"
+                                />
                             </div>
                         </div>
                         <Button
