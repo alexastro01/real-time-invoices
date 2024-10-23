@@ -8,5 +8,6 @@ Streambill - Onchain Real Time Payments & Invoicing
 
 ![ss.png](https://cdn.dorahacks.io/static/files/1914c14d0cd514410f5b03e42a6aaefd.png)
 
-### License
-GPLv3  
+### LICENSE
+
+AGPLv3
