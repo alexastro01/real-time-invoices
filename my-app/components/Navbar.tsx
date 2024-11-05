@@ -43,6 +43,7 @@ export default function Navbar() {
 
     { href: "/profile", icon: UserCircle, label: "Profile" },
     { href: '/mint-tusdc', icon: DollarSign, label: "Get test stablecoin" },
+    { href: '/feedback', icon: MessageCircle, label: "Feedback" },
   ];
 
   useEffect(() => {
