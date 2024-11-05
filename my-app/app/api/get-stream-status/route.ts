@@ -78,7 +78,7 @@ export async function POST(request: Request) {
     
 
     const { data, error } = await supabase
-      .from('invoices')
+      .from('testnet_invoices')
       .select('stream_id, chain_id')
       .eq('request_id', requestId)
       .single();

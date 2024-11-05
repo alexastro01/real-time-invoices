@@ -23,7 +23,7 @@ export async function GET(request: Request) {
 
       const supabase = createAuthenticatedSupabaseClient(session);
       const { data, error } = await supabase
-        .from('invoices')
+        .from('testnet_invoices')
         .select('stream_id, chain_id')
         .eq('payee_evm_address', address)
         .not('stream_id', 'is', null);

@@ -27,7 +27,7 @@ export async function GET(request: Request) {
         const supabase = createAuthenticatedSupabaseClient(session);
 
         const { data, error } = await supabase
-            .from('invoices')
+            .from('testnet_invoices')
             .select('*')
             .eq('request_id', requestId)
             .single();

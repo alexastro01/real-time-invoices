@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
     startDate.setMonth(startDate.getMonth() - 3); // Get data for the last 3 months
     const supabase = createAuthenticatedSupabaseClient(session);
     const { data, error } = await supabase
-      .from('invoices')
+      .from('testnet_invoices')
       .select('due_date, expected_amount')
       .eq('payee_evm_address', user_address)
       .gte('created_at', startDate.toISOString())

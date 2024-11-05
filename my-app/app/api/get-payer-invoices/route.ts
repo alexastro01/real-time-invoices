@@ -53,7 +53,7 @@ export async function GET(request: Request) {
     const supabase = createAuthenticatedSupabaseClient(session);
 
     const { data, error } = await supabase
-      .from('invoices')
+      .from('testnet_invoices')
       .select('created_at, payer_evm_address, payee_evm_address, expected_amount, request_id, chain_id, stream_id, due_date')
       .eq('payer_evm_address', payer_address)
       .order('created_at', { ascending: false });

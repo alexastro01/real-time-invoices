@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     const supabase = createAuthenticatedSupabaseClient(session);
 
     const { data, error } = await supabase
-      .from('invoices')
+      .from('testnet_invoices')
       .update({ txn_hash: txn_hash })
       .eq('request_id', requestId)
       .select();

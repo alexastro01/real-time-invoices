@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     
 
     const { data, error } = await supabaseClient
-      .from('invoices')
+      .from('testnet_invoices')
       .update({ stream_id: streamId })
       .eq('request_id', requestId)
       .select();

@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     const supabase = createAuthenticatedSupabaseClient(session);
 
     const { data, error } = await supabase
-      .from('invoices')
+      .from('testnet_invoices')
       .select('expected_amount')
       .eq('payee_evm_address', user_address);
 

@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     // Format the date as an ISO string for PostgreSQL timestamptz
     const formattedDueDate = dueDateObject.toISOString();
     const { data, error } = await supabase
-      .from('invoices')
+      .from('testnet_invoices')
       .insert({
         request_id: requestId,
         payee_name: payeeDetails.name || '',
