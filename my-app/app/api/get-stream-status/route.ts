@@ -1,36 +1,37 @@
 import { NextResponse } from 'next/server';
-import { contracts, ValidChainId } from '@/utils/contracts/contracts';
+import { contracts } from '@/utils/contracts/contracts';
 import { Chain, createPublicClient, http, defineChain } from 'viem';
-import { arbitrumSepolia, baseSepolia } from 'viem/chains';
+import { arbitrum, base } from 'viem/chains';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { createAuthenticatedSupabaseClient } from '@/lib/createAuthenticatedSupabaseClient';
+import { ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions';
 
 const openCampus = defineChain({
-  id: 656476,
+  id: 41923,
   name: 'Open Campus',
   nativeCurrency: { name: 'EDU', symbol: 'EDU', decimals: 18 },
   rpcUrls: {
-    default: { http: ['https://rpc.open-campus-codex.gelato.digital'] },
+    default: { http: ['https://rpc.edu-chain.raas.gelato.cloud'] },
   },
 });
 
-const morphholesky = defineChain({
-  id: 2810,
-  name: 'Morph Holesky',
+const morph = defineChain({
+  id: 2818,
+  name: 'Morph',
   nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
   rpcUrls: {
-    default: { http: ['https://rpc-quicknode-holesky.morphl2.io'] },
+    default: { http: ['https://rpc-quicknode.morphl2.io'] },
   },
 });
 
 
 
 const chains: Record<ValidChainId, Chain> = {
-  656476: openCampus,
-  84532: baseSepolia,
-  421614: arbitrumSepolia,
-  2810: morphholesky
+  41923: openCampus,
+  8453: base,
+  42161: arbitrum,
+  2818: morph
 };
 
 // Add this ABI fragment for the statusOf function

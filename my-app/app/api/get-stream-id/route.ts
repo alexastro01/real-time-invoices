@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { createPublicClient, http, decodeEventLog, Chain, Hex } from 'viem';
 import { abi } from '@/abi/SablierLinear';
-import { baseSepolia, arbitrumSepolia } from 'viem/chains';
-import { contracts, ValidChainId } from '@/utils/contracts/contracts';
+import {  base, arbitrum } from 'viem/chains';
+import { contracts } from '@/utils/contracts/contracts';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { ValidChainId } from '@/utils/multi-chain/MultiChainSelectOptions';
 
 
 
@@ -13,22 +14,22 @@ const INITIAL_RETRY_INTERVAL = 500;
 const MAX_RETRY_INTERVAL = 5000;
 
 const chains: Record<ValidChainId, Chain> = {
-    656476: {
-        id: 656476,
+    41923: {
+        id: 41923,
         name: 'Open Campus',
         nativeCurrency: { name: 'EDU', symbol: 'EDU', decimals: 18 },
         rpcUrls: {
-            default: { http: ['https://rpc.open-campus-codex.gelato.digital'] },
+            default: { http: ['https://rpc.edu-chain.raas.gelato.cloud'] },
         },
     } as const,
-    84532: baseSepolia,
-    421614: arbitrumSepolia,
-    2810: {
-        id: 2810,
-        name: 'Morph Holesky',
+    8453: base,
+    42161: arbitrum,
+    2818: {
+        id: 2818,
+        name: 'Morph',
         nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
         rpcUrls: {
-            default: { http: ['https://rpc-quicknode-holesky.morphl2.io'] },
+            default: { http: ['https://rpc-quicknode.morphl2.io'] },
         },
     } as const,
 };
