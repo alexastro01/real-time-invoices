@@ -5,3 +5,9 @@ New chain integration checklist :
 -Add chain in wagmi.ts
 -Add chain in get-stream-status
 -Add chain in get-stream-id
+
+
+to add :
+
+mainnet db table
+test app on all chains

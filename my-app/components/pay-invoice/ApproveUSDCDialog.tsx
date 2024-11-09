@@ -54,7 +54,7 @@ const ApproveUSDCDialog = ({
             if (chainId && (chainId as ValidChainId) in contracts) {
                 writeContract({
 
-                    address: contracts[chainId as ValidChainId].tUSDCAddress,
+                    address: contracts[chainId as ValidChainId].USDCAddress,
                     abi,
                     functionName: 'approve',
                     args: [contracts[chainId as ValidChainId].sablierLinearV2LockUpAddress, parseEther(amountToApprove)],

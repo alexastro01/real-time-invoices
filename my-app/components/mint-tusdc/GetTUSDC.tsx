@@ -29,7 +29,7 @@ export function GetTUSDC() {
 
         if (chainId && (chainId as ValidChainId) in contracts) {
             writeContract({
-                address: contracts[chainId as ValidChainId].tUSDCAddress,
+                address: contracts[chainId as ValidChainId].USDCAddress,
                 abi,
                 functionName: 'mint',
                 args: [address as string, parseEther('10000')],

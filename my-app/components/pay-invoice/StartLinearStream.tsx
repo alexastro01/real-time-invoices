@@ -54,7 +54,7 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
 
     const StartStreaming = useCallback(() => {
         const sablierLinearV2LockUpAddress = contracts[chain_id as ValidChainId]?.sablierLinearV2LockUpAddress
-        const tUSDCAddress = contracts[chain_id as ValidChainId]?.tUSDCAddress
+        const USDCAddress = contracts[chain_id as ValidChainId]?.USDCAddress
 
       
         if (chainId === chain_id) {
@@ -68,7 +68,7 @@ const StartLinearStream = ({ setStep, amountToStream, payeeAddress, dueDate, req
                         address,
                         payeeAddress,
                         parseEther(amountToStream),
-                        tUSDCAddress,
+                        USDCAddress,
                         true,
                         false,
                         [parseEther('0'), getTimeRemainingInSeconds(dueDate)],

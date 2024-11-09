@@ -60,7 +60,7 @@ export default function InvoiceContent({ invoiceData }: InvoiceContentProps) {
               <p className='mr-2'>Chain:</p>
               <Image src={chainInfo[chain_id as ValidChainId].logoUrl} alt="chain logo" width={24} height={24} />
             </div>
-            <p>Currency: {contracts[chain_id as ValidChainId].tUSDCAddress}</p>
+            <p>Currency: {contracts[chain_id as ValidChainId].USDCAddress}</p>
             <p>Stream Type: {streamType}</p>
             <p>Due Date: {dueDate ? format(new Date(dueDate), 'PP') : 'Not set'}</p>
           </div>

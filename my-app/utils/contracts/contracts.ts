@@ -1,27 +1,27 @@
-export type ValidChainId = 656476 | 84532 | 421614 | 2810;
+import { ValidChainId } from "../multi-chain/MultiChainSelectOptions";
 
 export const contracts: Record<ValidChainId, {
-    tUSDCAddress: `0x${string}`;
+    USDCAddress: `0x${string}`;
     sablierLinearV2LockUpAddress: `0x${string}`;
 }> = {
     //OPEN CAMPUS
-    656476: {
-        tUSDCAddress: "0x8c88F4205D24619cB3F11B3925312Df0d484F4e7",
-        sablierLinearV2LockUpAddress: "0x6B2Dbd50b57c0b3D4324734076248A3A81A92270"
+    41923: {
+        USDCAddress: "0x836d275563bAb5E93Fd6Ca62a95dB7065Da94342",
+        sablierLinearV2LockUpAddress: "0x6874D9b968Fc5438C596776AEa48944B3155F6E6"
     },
-    //BASE SEPOLIA
-    84532: {
-        tUSDCAddress: "0xf6dC757C9F7E5e5eE5787c31f2aBEa4B19001015",
-        sablierLinearV2LockUpAddress: "0xFE7fc0Bbde84C239C0aB89111D617dC7cc58049f"
+    //BASE 
+    8453: {
+        USDCAddress: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        sablierLinearV2LockUpAddress: "0x4CB16D4153123A74Bc724d161050959754f378D8"
     },
-    //ARBITRUM SEPOLIA
-    421614: {
-        tUSDCAddress: "0x37ff5b5f37038db083957c415d5b105ee2e27e4f",
-        sablierLinearV2LockUpAddress: "0x9D1C257d9bc09E6E6B8E7e7c2496C12000f55457"
+    //ARBITRUM 
+    42161: {
+        USDCAddress: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        sablierLinearV2LockUpAddress: "0x05a323a4C936fed6D02134c5f0877215CD186b51"
     },
-    //MORPH holesky
-    2810: {
-        tUSDCAddress: "0x06e6eAd6899F44441a187d4bA907D1f527C7536c",
-        sablierLinearV2LockUpAddress: "0x4b4126036726085636BC2A4788a448d5C26705E4"
+    //MORPH 
+    2818: {
+        USDCAddress: "0x1199E23C0baE9710cCd9F645FA57794e5D469D06 ",
+        sablierLinearV2LockUpAddress: "0xAC19F4181E58efb7094e0cb4e1BB18c79F6AAdf4"
     }
 };

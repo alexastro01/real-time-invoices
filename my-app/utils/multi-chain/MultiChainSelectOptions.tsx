@@ -1,25 +1,25 @@
 import Image from 'next/image';
 
-export type ValidChainId = 656476 | 84532 | 421614 | 2810;
+export type ValidChainId = 42161 | 8453 | 41923 | 2818;
 
 export const chainInfo: Record<ValidChainId, {
     name: string;
     logoUrl: string;
 }> = {
-    421614: {
-        name: "Arbitrum Sepolia",
+    42161: {
+        name: "Arbitrum",
         logoUrl: "/arbitrum-logo.png" // Replace with actual Arbitrum logo URL
     },
-    84532: {
-        name: "Base Sepolia",
+    8453: {
+        name: "Base",
         logoUrl: "/base-logo.png" // Replace with actual Base logo URL
     },
-    656476: {
+    41923: {
         name: "EDU Chain",
         logoUrl: "https://www.opencampus.xyz/static/media/coin-logo.39cbd6c42530e57817a5b98ac7621ca7.svg"
     },
-    2810: {
-        name: "Morph Holesky",
+    2818: {
+        name: "Morph",
         logoUrl: "/morph-logo.png"
     }
 
